@@ -20,6 +20,14 @@ allprojects {
         google()
         jcenter()
     }
+
+    configurations {
+        all {
+            resolutionStrategy {
+                force "android.arch.core:runtime:1.1.0"
+            }
+        }
+    }
 }
 
 task clean(type: Delete) {
