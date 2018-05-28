@@ -1,6 +1,6 @@
 package com.gaurav.domain.models;
 
-public class Song {
+public class Song implements Comparable {
     public long songId;
     public long albumId;
     public long artistId;
@@ -27,18 +27,7 @@ public class Song {
     }
 
     @Override
-    public String toString() {
-        return "Song = [ " +
-                "songId=" + songId +
-                ", albumId=" + albumId +
-                ", artistId=" + artistId +
-                ", data='" + data +
-                ", title='" + title +
-                ", duration=" + duration +
-                ", album='" + album +
-                ", artist='" + artist +
-                ", year=" + year +
-                ", track=" + track +
-                " ] \n";
+    public int compareTo(Object o) {
+        return songId < ((Song) o).songId ? -1 : 1;
     }
 }
