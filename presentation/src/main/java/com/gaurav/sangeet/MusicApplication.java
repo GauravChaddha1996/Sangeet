@@ -1,6 +1,7 @@
 package com.gaurav.sangeet;
 
 import android.app.Application;
+import android.arch.persistence.room.Room;
 
 import com.gaurav.data.MusicDatabase;
 import com.gaurav.data.MusicRepositoryImpl;
@@ -19,7 +20,8 @@ public class MusicApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-//        musicDatabase =
+        musicDatabase = Room.databaseBuilder(this, MusicDatabase.class, "sangeet-db")
+                .build();
         musicRepository = new MusicRepositoryImpl(getContentResolver(),
                 getSharedPreferences("sangeet", MODE_PRIVATE),
                 musicDatabase);

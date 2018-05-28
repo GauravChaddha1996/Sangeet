@@ -11,6 +11,7 @@ import com.gaurav.data.models.SongEntity;
 import com.gaurav.domain.interfaces.MusicRepository;
 import com.gaurav.domain.models.Album;
 import com.gaurav.domain.models.Artist;
+import com.gaurav.domain.models.Playlist;
 import com.gaurav.domain.models.Song;
 
 import java.util.ArrayList;
@@ -83,6 +84,36 @@ public class MusicRepositoryImpl implements MusicRepository {
                 .subscribeOn(Schedulers.io())
                 .map(modelMapper::convertArtistEntityToArtist)
                 .toList();
+    }
+
+    @Override
+    public Single<List<Playlist>> getAllPlaylists() {
+        return Observable.fromCallable(() -> musicDatabase.playlistDao().getAllPlaylists())
+                .subscribeOn(Schedulers.io())
+                .flatMapIterable(playlistEntities -> playlistEntities)
+                .map(modelMapper::convertPlaylistEntityToPlaylist)
+                .toList();
+    }
+
+    @Override
+    public Completable insertPlaylist(Playlist playlist) {
+        return Completable.fromAction(() -> musicDatabase.playlistDao()
+                .insert(modelMapper.convertPlaylistToPlaylistEntity(playlist)))
+                .subscribeOn(Schedulers.io());
+    }
+
+    @Override
+    public Completable updatePlaylist(Playlist playlist) {
+        return Completable.fromAction(() -> musicDatabase.playlistDao()
+                .update(modelMapper.convertPlaylistToPlaylistEntity(playlist)))
+                .subscribeOn(Schedulers.io());
+    }
+
+    @Override
+    public Completable deletePlaylist(long id) {
+        return Completable.fromAction(() -> musicDatabase.playlistDao()
+                .deletePlaylist(id))
+                .subscribeOn(Schedulers.io());
     }
 
     /*
@@ -176,6 +207,4 @@ public class MusicRepositoryImpl implements MusicRepository {
         artistEntityList.sort((artist1, artist2) -> artist1.name.compareToIgnoreCase(artist2.name));
         return artistEntityList;
     }
-
-
 }

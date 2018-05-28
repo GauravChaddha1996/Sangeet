@@ -2,9 +2,11 @@ package com.gaurav.data;
 
 import com.gaurav.data.models.AlbumEntity;
 import com.gaurav.data.models.ArtistEntity;
+import com.gaurav.data.models.PlaylistEntity;
 import com.gaurav.data.models.SongEntity;
 import com.gaurav.domain.models.Album;
 import com.gaurav.domain.models.Artist;
+import com.gaurav.domain.models.Playlist;
 import com.gaurav.domain.models.Song;
 
 import java.util.TreeSet;
@@ -35,5 +37,13 @@ public class ModelMapper {
                         .map(this::convertSongEntityToSong)
                         .collect(Collectors.toCollection(TreeSet::new))
         );
+    }
+
+    public Playlist convertPlaylistEntityToPlaylist(PlaylistEntity playlistEntity) {
+        return new Playlist(playlistEntity.id, playlistEntity.name, playlistEntity.songIds);
+    }
+
+    public PlaylistEntity convertPlaylistToPlaylistEntity(Playlist playlist) {
+        return new PlaylistEntity(playlist.id, playlist.name, playlist.songIds);
     }
 }
