@@ -1,29 +1,50 @@
 package com.gaurav.sangeet;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
 
 import com.gaurav.domain.interfaces.MusicInteractor;
-import com.gaurav.domain.models.Playlist;
-
-import java.util.Random;
-import java.util.TreeSet;
-
-import io.reactivex.schedulers.Schedulers;
+import com.gaurav.sangeet.home.FakeFragment;
+import com.gaurav.sangeet.home.HomeViewModel;
+import com.github.florent37.bubbletab.BubbleTab;
 
 public class HomeActivity extends AppCompatActivity {
 
     MusicInteractor musicInteractor;
+    HomeViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        musicInteractor  = ((MusicApplication)getApplication()).musicInteractor;
+        musicInteractor = ((MusicApplication) getApplication()).musicInteractor;
+        viewModel = ViewModelProviders.of(this).get(HomeViewModel.class);
+        viewModel.setMusicInteractor(musicInteractor);
+        ((ViewPager) findViewById(R.id.viewPager))
+                .setAdapter(
+                        new FragmentStatePagerAdapter(getSupportFragmentManager()) {
+                            @Override
+                            public Fragment getItem(int position) {
+                                return new FakeFragment(viewModel);
+                            }
+
+                            @Override
+                            public int getCount() {
+                                return 5;
+                            }
+                        });
+        ((ViewPager) findViewById(R.id.viewPager)).setCurrentItem(0);
+        ((BubbleTab) findViewById(R.id.bubbleTab)).setupWithViewPager(findViewById(R.id.viewPager));
     }
 
+
+    @Override
+    public void onDestroy() {
+        musicInteractor.destroy();
+        super.onDestroy();
+    }
 }

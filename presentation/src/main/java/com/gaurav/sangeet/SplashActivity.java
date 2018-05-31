@@ -4,14 +4,10 @@ import android.animation.Animator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.ViewPropertyAnimator;
 import android.widget.TextView;
 
 import com.gaurav.domain.interfaces.MusicInteractor;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-
-import java.util.TreeSet;
 
 import io.reactivex.disposables.Disposable;
 
@@ -21,6 +17,7 @@ public class SplashActivity extends AppCompatActivity {
     private MusicInteractor musicInteractor;
     private TextView titleView;
     private boolean animate = true;
+    private ViewPropertyAnimator viewPropertyAnimator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,21 +30,23 @@ public class SplashActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         musicInteractor = ((MusicApplication) getApplication()).musicInteractor;
-
-        titleView.animate()
-                .setDuration(2000)
+        viewPropertyAnimator = titleView.animate()
+                .setDuration(1000)
                 .rotationBy(360)
                 .setListener(new Animator.AnimatorListener() {
                     @Override
                     public void onAnimationStart(Animator animation) {
-
+                        System.out.println("anim start");
                     }
 
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         animation.removeListener(this);
+                        System.out.println("anim end");
                         if (animate) {
-                            animation.start();
+                            viewPropertyAnimator
+                                    .setListener(this)
+                                    .start();
                         } else {
                             SplashActivity.this
                                     .startActivity(new Intent(SplashActivity.this,
@@ -64,10 +63,16 @@ public class SplashActivity extends AppCompatActivity {
                     public void onAnimationRepeat(Animator animation) {
 
                     }
-                }).start();
+                });
         initTasksDisposable = ((MusicApplication) getApplication())
                 .init()
-                .subscribe(() -> animate = false, Throwable::printStackTrace);
+                .doOnSubscribe(disposable -> System.out.println("starts subs"))
+                .subscribe(() -> {
+                    animate = false;
+                    SplashActivity.this
+                            .startActivity(new Intent(SplashActivity.this,
+                                    HomeActivity.class));
+                }, Throwable::printStackTrace);
     }
 
     @Override

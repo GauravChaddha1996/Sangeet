@@ -1,5 +1,6 @@
 package com.gaurav.domain.interfaces;
 
+import com.gaurav.domain.MusicState;
 import com.gaurav.domain.models.Album;
 import com.gaurav.domain.models.Artist;
 import com.gaurav.domain.models.Playlist;
@@ -27,4 +28,6 @@ public interface MusicRepository {
     Completable updatePlaylist(Playlist playlist);
 
     Completable deletePlaylist(long id);
+
+    Single<MusicState> getMusicStateOrDefault();
 }

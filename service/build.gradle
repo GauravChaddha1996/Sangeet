@@ -19,15 +19,22 @@ android {
         }
     }
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     // Testing related
     testImplementation libraries.junit
     androidTestImplementation libraries.testRunner
     androidTestImplementation libraries.espressoCore
+
+    //RxJava and RxAndroid
+    implementation libraries.rxjava
+    implementation libraries.rxandroid
 
     // Module dependencies
     implementation project(':domain')

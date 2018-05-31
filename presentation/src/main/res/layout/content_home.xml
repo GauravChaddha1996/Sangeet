@@ -8,4 +8,11 @@
     tools:context=".HomeActivity"
     tools:showIn="@layout/activity_home">
 
+
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
 </android.support.constraint.ConstraintLayout>

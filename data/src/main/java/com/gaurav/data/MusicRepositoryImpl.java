@@ -8,6 +8,8 @@ import android.provider.MediaStore;
 import com.gaurav.data.models.AlbumEntity;
 import com.gaurav.data.models.ArtistEntity;
 import com.gaurav.data.models.SongEntity;
+import com.gaurav.domain.MusicState;
+import com.gaurav.domain.MusicStateReducer;
 import com.gaurav.domain.interfaces.MusicRepository;
 import com.gaurav.domain.models.Album;
 import com.gaurav.domain.models.Artist;
@@ -113,6 +115,13 @@ public class MusicRepositoryImpl implements MusicRepository {
     public Completable deletePlaylist(long id) {
         return Completable.fromAction(() -> musicDatabase.playlistDao()
                 .deletePlaylist(id))
+                .subscribeOn(Schedulers.io());
+    }
+
+    @Override
+    public Single<MusicState> getMusicStateOrDefault() {
+        // TODO: 5/31/18 Make sure to save music state in database and query it. If not return default
+        return Single.just(new MusicStateReducer().emptyState())
                 .subscribeOn(Schedulers.io());
     }
 

@@ -1,5 +1,7 @@
 package com.gaurav.domain.models;
 
+import java.util.Objects;
+
 public class Song implements Comparable {
     public long songId;
     public long albumId;
@@ -29,5 +31,19 @@ public class Song implements Comparable {
     @Override
     public int compareTo(Object o) {
         return songId < ((Song) o).songId ? -1 : 1;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Song)) return false;
+        Song song = (Song) o;
+        return songId == song.songId;
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(songId);
     }
 }

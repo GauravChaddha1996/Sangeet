@@ -8,6 +8,7 @@ import com.gaurav.data.MusicRepositoryImpl;
 import com.gaurav.domain.MusicInteractorImpl;
 import com.gaurav.domain.interfaces.MusicInteractor;
 import com.gaurav.domain.interfaces.MusicRepository;
+import com.gaurav.service.MusicServiceImpl;
 
 import io.reactivex.Completable;
 
@@ -25,10 +26,11 @@ public class MusicApplication extends Application {
         musicRepository = new MusicRepositoryImpl(getContentResolver(),
                 getSharedPreferences("sangeet", MODE_PRIVATE),
                 musicDatabase);
-        musicInteractor = new MusicInteractorImpl(musicRepository);
+        musicInteractor = new MusicInteractorImpl(musicRepository,new MusicServiceImpl());
     }
 
     public Completable init() {
-        return musicRepository.init();
+        return musicRepository.init()
+                .andThen(musicInteractor.init());
     }
 }
