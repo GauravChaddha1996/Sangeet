@@ -1,23 +1,20 @@
 package com.gaurav.sangeet;
 
-import android.animation.Animator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.ViewPropertyAnimator;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.TextView;
-
-import com.gaurav.domain.interfaces.MusicInteractor;
 
 import io.reactivex.disposables.Disposable;
 
 public class SplashActivity extends AppCompatActivity {
 
     private Disposable initTasksDisposable;
-    private MusicInteractor musicInteractor;
+
     private TextView titleView;
     private boolean animate = true;
-    private ViewPropertyAnimator viewPropertyAnimator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,50 +26,13 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        musicInteractor = ((MusicApplication) getApplication()).musicInteractor;
-        viewPropertyAnimator = titleView.animate()
-                .setDuration(1000)
-                .rotationBy(360)
-                .setListener(new Animator.AnimatorListener() {
-                    @Override
-                    public void onAnimationStart(Animator animation) {
-                        System.out.println("anim start");
-                    }
 
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        animation.removeListener(this);
-                        System.out.println("anim end");
-                        if (animate) {
-                            viewPropertyAnimator
-                                    .setListener(this)
-                                    .start();
-                        } else {
-                            SplashActivity.this
-                                    .startActivity(new Intent(SplashActivity.this,
-                                            HomeActivity.class));
-                        }
-                    }
+        // start logo animation
+        startLogoAnimation();
 
-                    @Override
-                    public void onAnimationCancel(Animator animation) {
-
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animator animation) {
-
-                    }
-                });
-        initTasksDisposable = ((MusicApplication) getApplication())
-                .init()
-                .doOnSubscribe(disposable -> System.out.println("starts subs"))
-                .subscribe(() -> {
-                    animate = false;
-                    SplashActivity.this
-                            .startActivity(new Intent(SplashActivity.this,
-                                    HomeActivity.class));
-                }, Throwable::printStackTrace);
+        // Call initialization for modules.
+        initTasksDisposable = ((MusicApplication) getApplication()).init()
+                .subscribe(() -> animate = false, Throwable::printStackTrace);
     }
 
     @Override
@@ -81,5 +41,37 @@ public class SplashActivity extends AppCompatActivity {
             initTasksDisposable.dispose();
         }
         super.onStop();
+    }
+
+    private void startLogoAnimation() {
+        Animation animation = getSplashAnimation();
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                Animation anim = getSplashAnimation();
+                anim.setAnimationListener(this);
+                if (animate) {
+                    titleView.startAnimation(anim);
+                } else {
+                    SplashActivity.this.startActivity(
+                            new Intent(SplashActivity.this, HomeActivity.class));
+                }
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        titleView.startAnimation(animation);
+    }
+
+    public Animation getSplashAnimation() {
+        return AnimationUtils.makeInChildBottomAnimation(this);
     }
 }

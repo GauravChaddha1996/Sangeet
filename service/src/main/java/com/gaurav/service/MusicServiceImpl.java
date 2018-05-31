@@ -17,7 +17,7 @@ import io.reactivex.Completable;
 * 2. make communication to this service clear.
 * 3. Handle illegal states in media player
 *
-* 4. Clean splash activity animation and activity code itself
+* 4. [DONE] Clean splash activity animation and activity code itself
 * 5. clean musicpplication class
 * 6. clean home activity
 * 7. clean viewmodel and rvadapter
