@@ -18,27 +18,34 @@ import io.reactivex.Completable;
 /*
  * Todos for tomorrow:
  *
- * 1. Make this service actually a service and let it start with appropriate place and handle itself well
- * 2. make communication to this service clear. - bind in application init
- * 3. Handle illegal states in media player
+ * [DONE] Make this service actually a service and let it start with appropriate place and handle itself well
+ * [DONE] make communication to this service clear. - bind in application init
+ * [DONE] Handle illegal states in media player
  *
- * 4. [DONE] Clean splash activity animation and activity code itself
- * 5. [DONE] clean musicpplication class
- * 6. clean home activity
- * 7. clean viewmodel and rvadapter
- * 8. clean fakefragment to give actions to viewmodel instead of commands
+ * [DONE] Clean splash activity animation and activity code itself
+ * [DONE] clean musicpplication class
+ * [DONE] clean home activity
+ * [DONE] clean viewmodel and rvadapter
+ * [DONE] clean fakefragment
  *
- * 9. better state reducer code
- * 10. clean music interactor impl
+ * [] To give events to viewmodel instead of commands and actions flowing out from view models
+ * [] better state reducer code
+ * [] clean music interactor impl
  *
- * 11. make presentation show MusicState data - observe music state
- * 12. implement music state save
- * 13. add callback listeners for updating duration
+ * [] remove the useless data model transformations
  *
- * 13. add other functionality like play pause next  - view queue
- * 14. add play for album, artist and stuff
- * 15. implement addToQueue for people
- * 16. implement playNext
+ * [] show albums and artists and playlists
+ * [] handle their clicking and stuff
+ * [] make presentation show MusicState data - observe music state
+ * [] implement music state save
+ * [] add callback listeners for updating duration
+ *
+ *
+ * [] add other functionality like play pause next  - view queue
+ * [] implement addToQueue for people
+ * [] implement playNext
+ *
+ * [] Presentation layer + notification
  * */
 public class MusicServiceImpl extends Service implements MusicService {
 

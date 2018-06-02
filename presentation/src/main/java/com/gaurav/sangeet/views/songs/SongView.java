@@ -1,4 +1,4 @@
-package com.gaurav.sangeet.home;
+package com.gaurav.sangeet.views.songs;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -11,45 +11,40 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.gaurav.domain.models.Song;
+import com.gaurav.sangeet.HomeViewModel;
 import com.gaurav.sangeet.R;
+
+import java.util.ArrayList;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
 @SuppressLint("ValidFragment")
-public class FakeFragment extends Fragment {
+public class SongView extends Fragment {
     HomeViewModel viewModel;
+    RecyclerView recyclerView;
+    SongRVAdapter songRVAdapter;
 
-    public FakeFragment(HomeViewModel viewModel) {
+    public SongView(HomeViewModel viewModel) {
         this.viewModel = viewModel;
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fake_frag, container, false);
-    }
-
-    @Override
-    @SuppressLint("CheckResult")
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
+        View view = inflater.inflate(R.layout.songs_view, container, false);
+        songRVAdapter = new SongRVAdapter(new ArrayList<>(), inflater, song -> viewModel.play(song));
+        recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);
-
-        viewModel.getAllSongs()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(songs -> {
-                    RVAdapter rvAdapter = new RVAdapter(songs, getLayoutInflater(),
-                            new RVAdapter.OnClickListener() {
-                                @Override
-                                public void onClick(Song song) {
-                                    viewModel.play(song);
-                                }
-                            });
-                    recyclerView.setAdapter(rvAdapter);
-
-                });
+        recyclerView.setAdapter(songRVAdapter);
+        return view;
     }
 
+    @SuppressLint("CheckResult")
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        viewModel.getAllSongs()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(songRVAdapter::updateData);
+    }
 }
