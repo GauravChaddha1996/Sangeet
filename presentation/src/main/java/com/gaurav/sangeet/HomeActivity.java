@@ -21,8 +21,11 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        // TODO: 6/1/18 improve via DI
         musicInteractor = ((MusicApplication) getApplication()).musicInteractor;
         viewModel = ViewModelProviders.of(this).get(HomeViewModel.class);
+        // todo find a better way for this
         viewModel.setMusicInteractor(musicInteractor);
         ((ViewPager) findViewById(R.id.viewPager))
                 .setAdapter(
@@ -39,12 +42,5 @@ public class HomeActivity extends AppCompatActivity {
                         });
         ((ViewPager) findViewById(R.id.viewPager)).setCurrentItem(0);
         ((BubbleTab) findViewById(R.id.bubbleTab)).setupWithViewPager(findViewById(R.id.viewPager));
-    }
-
-
-    @Override
-    public void onDestroy() {
-        musicInteractor.destroy();
-        super.onDestroy();
     }
 }

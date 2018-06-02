@@ -24,9 +24,8 @@ public class MusicInteractorImpl implements MusicInteractor {
     private MusicStateReducer musicStateReducer;
     private ObservableEmitter<MusicState> musicStateEmitter;
 
-    public MusicInteractorImpl(MusicRepository musicRepository, MusicService musicService) {
+    public MusicInteractorImpl(MusicRepository musicRepository) {
         this.musicRepository = musicRepository;
-        this.musicService = musicService;
         musicStateReducer = new MusicStateReducer();
     }
 
@@ -36,6 +35,12 @@ public class MusicInteractorImpl implements MusicInteractor {
                 .subscribeOn(Schedulers.io())
                 .map(musicState1 -> musicState = musicState1)
                 .ignoreElement();
+    }
+
+
+    @Override
+    public void attachMusicService(MusicService musicService) {
+        this.musicService = musicService;
     }
 
     @Override
@@ -80,10 +85,6 @@ public class MusicInteractorImpl implements MusicInteractor {
 
     @Override
     public Completable play(Song song) {
-        // make all song queue
-        // shuffle if needed
-        // find song index and change current song index to it
-        // play the song
         return makeQueue()
                 .map(this::shuffleQueueIfNeeded)
                 .map(musicState1 -> markCurrentSongIndex(musicState1, song))
@@ -119,9 +120,4 @@ public class MusicInteractorImpl implements MusicInteractor {
         return musicStateReducer.playCurrentSongIndex(musicState);
     }
 
-
-    @Override
-    public void destroy() {
-        musicService.release();
-    }
 }

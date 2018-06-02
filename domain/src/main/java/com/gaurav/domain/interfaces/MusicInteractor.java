@@ -15,8 +15,7 @@ import io.reactivex.Single;
 public interface MusicInteractor {
 
     Completable init();
-    void destroy();
-
+    void attachMusicService(MusicService musicService);
     Observable<MusicState> observeMusicState();
 
     Single<List<Song>> getAllSongs();
@@ -28,34 +27,35 @@ public interface MusicInteractor {
     Completable updatePlaylist(Playlist playlist);
     Completable deletePlaylist(long id);
 
-
- /*
-    Completable makeQueue(Album album);
-    Completable makeQueue(Artist artist);
-    Completable makeQueue(Playlist playlist);
-
-    Completable addToQueue(Song song);
-    Completable addToQueue(Album album);
-    Completable addToQueue(Artist artist);
-    Completable addToQueue(Playlist playlist);
-
-    Completable playNext(Song song);
-    Completable playNext(Album album);
-    Completable playNext(Artist artist);
-    Completable playNext(Playlist playlist);
-
-    Completable play(Album album,long id);
-    Completable play(Artist artist,long id);
-    Completable play(Playlist playlist,long id);
-
-    Completable bringSongIdToTop(long id);
-
-    Completable pause();
-    Completable next();
-    Completable prev();
-
-*/
     Completable play(Song song);
+
+
+    /*
+       Completable makeQueue(Album album);
+       Completable makeQueue(Artist artist);
+       Completable makeQueue(Playlist playlist);
+
+       Completable addToQueue(Song song);
+       Completable addToQueue(Album album);
+       Completable addToQueue(Artist artist);
+       Completable addToQueue(Playlist playlist);
+
+       Completable playNext(Song song);
+       Completable playNext(Album album);
+       Completable playNext(Artist artist);
+       Completable playNext(Playlist playlist);
+
+       Completable play(Album album,long id);
+       Completable play(Artist artist,long id);
+       Completable play(Playlist playlist,long id);
+
+       Completable bringSongIdToTop(long id);
+
+       Completable pause();
+       Completable next();
+       Completable prev();
+
+   */
 
 
 }
