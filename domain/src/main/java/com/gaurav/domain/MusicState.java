@@ -2,9 +2,7 @@ package com.gaurav.domain;
 
 import com.gaurav.domain.models.Song;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.LinkedBlockingQueue;
 
 public class MusicState {
     public boolean showStatus;

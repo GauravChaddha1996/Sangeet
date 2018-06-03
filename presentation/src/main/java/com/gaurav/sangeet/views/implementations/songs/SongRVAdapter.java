@@ -1,4 +1,4 @@
-package com.gaurav.sangeet.views.songs;
+package com.gaurav.sangeet.views.implementations.songs;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -14,26 +14,27 @@ import java.util.List;
 
 public class SongRVAdapter extends RecyclerView.Adapter<SongRVAdapter.SongItemViewHolder> {
 
-    private List<Song> data;
-    private LayoutInflater layoutInflater;
-    private OnClickListener listener;
+    List<Song> data;
 
-    public SongRVAdapter(List<Song> data, LayoutInflater layoutInflater, OnClickListener listener) {
+    public SongRVAdapter(List<Song> data) {
         this.data = data;
-        this.layoutInflater = layoutInflater;
-        this.listener = listener;
     }
 
     @NonNull
     @Override
     public SongItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new SongItemViewHolder(layoutInflater.inflate(R.layout.rv_item, parent, false));
+        return new SongItemViewHolder(LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.rv_item, parent, false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull SongItemViewHolder holder, int position) {
         holder.text.setText(data.get(position).title);
-        holder.view.setOnClickListener((View v) -> listener.onClick(data.get(position)));
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return data.get(position).songId;
     }
 
     @Override
@@ -41,23 +42,21 @@ public class SongRVAdapter extends RecyclerView.Adapter<SongRVAdapter.SongItemVi
         return data.size();
     }
 
-    public void updateData(List<Song> data) {
-        this.data = data;
+    void updateData(List<Song> newData) {
+        this.data = newData;
         notifyDataSetChanged();
+    }
+
+    Song getSong(int pos) {
+        return data.get(pos);
     }
 
     class SongItemViewHolder extends RecyclerView.ViewHolder {
         TextView text;
-        View view;
 
         SongItemViewHolder(View itemView) {
             super(itemView);
-            view = itemView;
             text = itemView.findViewById(R.id.rv_item_text);
         }
-    }
-
-    public interface OnClickListener {
-        void onClick(Song song);
     }
 }

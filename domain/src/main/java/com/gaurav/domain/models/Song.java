@@ -14,6 +14,10 @@ public class Song implements Comparable {
     public long year;
     public long track;
 
+    public Song() {
+
+    }
+
     public Song(long songId, long albumId, long artistId, String data, String title,
                 long duration, String album, String artist, long year, long track) {
         this.songId = songId;

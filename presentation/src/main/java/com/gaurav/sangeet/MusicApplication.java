@@ -13,6 +13,10 @@ import com.gaurav.domain.MusicInteractorImpl;
 import com.gaurav.domain.interfaces.MusicInteractor;
 import com.gaurav.domain.interfaces.MusicRepository;
 import com.gaurav.domain.interfaces.MusicService;
+import com.gaurav.domain.usecases.CommandUseCases;
+import com.gaurav.domain.usecases.FetchUseCases;
+import com.gaurav.domain.usecases.impls.CommandUseCasesImpl;
+import com.gaurav.domain.usecases.impls.FetchUseCasesImpl;
 import com.gaurav.service.MusicServiceImpl;
 
 import io.reactivex.Completable;
@@ -24,6 +28,8 @@ public class MusicApplication extends Application {
     MusicRepository musicRepository;
     MusicService musicService;
     MusicInteractor musicInteractor;
+    FetchUseCases fetchUseCases;
+    CommandUseCases commandUseCases;
 
     @Override
     public void onCreate() {
@@ -35,6 +41,8 @@ public class MusicApplication extends Application {
                 getSharedPreferences("sangeet", MODE_PRIVATE),
                 musicDatabase);
         musicInteractor = new MusicInteractorImpl(musicRepository);
+        fetchUseCases = new FetchUseCasesImpl(musicRepository);
+        commandUseCases = new CommandUseCasesImpl(musicInteractor);
     }
 
     public Completable init() {

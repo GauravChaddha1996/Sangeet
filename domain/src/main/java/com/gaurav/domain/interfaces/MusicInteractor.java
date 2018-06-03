@@ -15,16 +15,21 @@ import io.reactivex.Single;
 public interface MusicInteractor {
 
     Completable init();
+
     void attachMusicService(MusicService musicService);
+
     Observable<MusicState> observeMusicState();
 
-    Single<List<Song>> getAllSongs();
     Single<List<Album>> getAllAlbums();
+
     Single<List<Artist>> getAllArtists();
+
     Single<List<Playlist>> getAllPlaylists();
 
     Completable insertPlaylist(Playlist playlist);
+
     Completable updatePlaylist(Playlist playlist);
+
     Completable deletePlaylist(long id);
 
     Completable play(Song song);

@@ -28,22 +28,22 @@ import io.reactivex.Completable;
  * [DONE] clean viewmodel and rvadapter
  * [DONE] clean fakefragment
  *
- * [] To give events to viewmodel instead of commands and actions flowing out from view models
+ * [DONE] Give each view it's own model.
+ * [DONE] To give events to viewmodel instead of commands and actions flowing out from view models
+ * [DONE] remove the useless data model transformations
+
+ * [] show albums and artists and playlists
+ * [] handle their clicking and stuff and playing
+
  * [] better state reducer code
  * [] clean music interactor impl
  *
- * [] remove the useless data model transformations
- *
- * [] show albums and artists and playlists
- * [] handle their clicking and stuff
  * [] make presentation show MusicState data - observe music state
  * [] implement music state save
  * [] add callback listeners for updating duration
  *
  *
- * [] add other functionality like play pause next  - view queue
- * [] implement addToQueue for people
- * [] implement playNext
+ * [] add other functionality like play pause next  - play next - and queue actions
  *
  * [] Presentation layer + notification
  * */

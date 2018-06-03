@@ -5,9 +5,6 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.provider.MediaStore;
 
-import com.gaurav.data.models.AlbumEntity;
-import com.gaurav.data.models.ArtistEntity;
-import com.gaurav.data.models.SongEntity;
 import com.gaurav.domain.MusicState;
 import com.gaurav.domain.MusicStateReducer;
 import com.gaurav.domain.interfaces.MusicRepository;
@@ -33,10 +30,9 @@ public class MusicRepositoryImpl implements MusicRepository {
     private SharedPreferences sharedPreferences;
     private MusicDatabase musicDatabase;
     private ModelMapper modelMapper;
-    private List<SongEntity> songList;
-    private List<AlbumEntity> albumList;
-    private List<ArtistEntity> artistList;
-
+    private List<Song> songList;
+    private List<Album> albumList;
+    private List<Artist> artistList;
 
     public MusicRepositoryImpl(ContentResolver contentResolver,
                                SharedPreferences sharedPreferences,
@@ -49,12 +45,12 @@ public class MusicRepositoryImpl implements MusicRepository {
 
     @Override
     public Completable init() {
-        Single<List<SongEntity>> songEntitySingle = Single.fromCallable(this::scanSongs)
+        Single<List<Song>> songEntitySingle = Single.fromCallable(this::scanSongs)
                 .subscribeOn(Schedulers.io())
                 .map(this::processForSongs)
                 .map(this::saveSongs)
                 .cache();
-        Single<List<AlbumEntity>> albumEntitySingle = songEntitySingle
+        Single<List<Album>> albumEntitySingle = songEntitySingle
                 .subscribeOn(Schedulers.io())
                 .map(this::processForAlbums)
                 .map(this::saveAlbums);
@@ -65,18 +61,14 @@ public class MusicRepositoryImpl implements MusicRepository {
     }
 
     @Override
-    public Single<List<Song>> getAllSongs() {
-        return Observable.fromIterable(songList)
-                .subscribeOn(Schedulers.io())
-                .map(modelMapper::convertSongEntityToSong)
-                .toList();
+    public Observable<List<Song>> getAllSongs() {
+        return Observable.just(songList).cache();
     }
 
     @Override
     public Single<List<Album>> getAllAlbums() {
         return Observable.fromIterable(albumList)
                 .subscribeOn(Schedulers.io())
-                .map(modelMapper::convertAlbumEntityToAlbum)
                 .toList();
     }
 
@@ -84,7 +76,6 @@ public class MusicRepositoryImpl implements MusicRepository {
     public Single<List<Artist>> getAllArtists() {
         return Observable.fromIterable(artistList)
                 .subscribeOn(Schedulers.io())
-                .map(modelMapper::convertArtistEntityToArtist)
                 .toList();
     }
 
@@ -129,91 +120,91 @@ public class MusicRepositoryImpl implements MusicRepository {
      * Helper functions
      * */
 
-    private List<SongEntity> scanSongs() {
-        List<SongEntity> songEntityList = new ArrayList<>();
+    private List<Song> scanSongs() {
+        List<Song> songList = new ArrayList<>();
         String[] columns = Constants.getSongColumns();
         Cursor c = contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                 columns, null, null, null);
-        SongEntity songEntity;
+        Song song;
         while (c != null && c.moveToNext()) {
-            songEntity = new SongEntity();
-            songEntity.songId = c.getInt(c.getColumnIndex("_id"));
-            songEntity.albumId = c.getInt(c.getColumnIndex("album_id"));
-            songEntity.artistId = c.getInt(c.getColumnIndex("artist_id"));
-            songEntity.data = c.getString(c.getColumnIndex("_data"));
-            songEntity.title = c.getString(c.getColumnIndex("title"));
-            songEntity.duration = c.getLong(c.getColumnIndex("duration"));
-            songEntity.album = c.getString(c.getColumnIndex("album"));
-            songEntity.artist = c.getString(c.getColumnIndex("artist"));
-            songEntity.year = c.getInt(c.getColumnIndex("year"));
-            songEntity.track = c.getInt(c.getColumnIndex("track"));
-            songEntityList.add(songEntity);
+            song = new Song();
+            song.songId = c.getInt(c.getColumnIndex("_id"));
+            song.albumId = c.getInt(c.getColumnIndex("album_id"));
+            song.artistId = c.getInt(c.getColumnIndex("artist_id"));
+            song.data = c.getString(c.getColumnIndex("_data"));
+            song.title = c.getString(c.getColumnIndex("title"));
+            song.duration = c.getLong(c.getColumnIndex("duration"));
+            song.album = c.getString(c.getColumnIndex("album"));
+            song.artist = c.getString(c.getColumnIndex("artist"));
+            song.year = c.getInt(c.getColumnIndex("year"));
+            song.track = c.getInt(c.getColumnIndex("track"));
+            songList.add(song);
         }
         if (c != null) {
             c.close();
         }
-        return songEntityList;
+        return songList;
     }
 
-    private List<SongEntity> saveSongs(List<SongEntity> songEntityList) {
-        this.songList = songEntityList;
-        return songEntityList;
+    private List<Song> saveSongs(List<Song> songList) {
+        this.songList = songList;
+        return songList;
     }
 
-    private List<AlbumEntity> saveAlbums(List<AlbumEntity> albumEntityList) {
-        this.albumList = albumEntityList;
-        return albumEntityList;
+    private List<Album> saveAlbums(List<Album> albumList) {
+        this.albumList = albumList;
+        return albumList;
     }
 
-    private List<ArtistEntity> saveArtists(List<ArtistEntity> artistEntityList) {
-        this.artistList = artistEntityList;
-        return artistEntityList;
+    private List<Artist> saveArtists(List<Artist> artistList) {
+        this.artistList = artistList;
+        return artistList;
     }
 
-    private List<SongEntity> processForSongs(List<SongEntity> songEntityList) {
-        songEntityList.sort((song1, song2) -> song1.title.compareToIgnoreCase(song2.title));
-        return songEntityList;
+    private List<Song> processForSongs(List<Song> songList) {
+        songList.sort((song1, song2) -> song1.title.compareToIgnoreCase(song2.title));
+        return songList;
     }
 
-    private List<AlbumEntity> processForAlbums(List<SongEntity> songEntityList) {
-        Map<String, AlbumEntity> albumEntityMap = new HashMap<>();
-        for (SongEntity songEntity : songEntityList) {
-            AlbumEntity albumEntity = albumEntityMap
-                    .getOrDefault(songEntity.album.toLowerCase().trim(),
-                            new AlbumEntity(songEntity.albumId, songEntity.album,
-                                    songEntity.artistId, songEntity.artist,
+    private List<Album> processForAlbums(List<Song> songList) {
+        Map<String, Album> albumMap = new HashMap<>();
+        for (Song song : songList) {
+            Album album = albumMap
+                    .getOrDefault(song.album.toLowerCase().trim(),
+                            new Album(song.albumId, song.album,
+                                    song.artistId, song.artist,
                                     new TreeSet<>((song1, song2) -> song1.track < song2.track ? -1 : 1)));
-            albumEntity.songSet.add(songEntity);
-            albumEntityMap.put(albumEntity.name.toLowerCase().trim(), albumEntity);
+            album.songSet.add(song);
+            albumMap.put(album.name.toLowerCase().trim(), album);
         }
-        List<AlbumEntity> albumEntityList = new ArrayList<>(albumEntityMap.values());
-        albumEntityList.sort((album1, album2) -> album1.name.compareToIgnoreCase(album2.name));
-        return albumEntityList;
+        List<Album> albumList = new ArrayList<>(albumMap.values());
+        albumList.sort((album1, album2) -> album1.name.compareToIgnoreCase(album2.name));
+        return albumList;
     }
 
-    private List<ArtistEntity> processForArtists(List<SongEntity> songEntityList,
-                                                 List<AlbumEntity> albumEntityList) {
-        Map<String, ArtistEntity> artistEntityMap = new HashMap<>();
-        for (SongEntity songEntity : songEntityList) {
-            ArtistEntity artistEntity = artistEntityMap
-                    .getOrDefault(songEntity.artist.toLowerCase().trim(),
-                            new ArtistEntity(songEntity.artistId, songEntity.artist,
+    private List<Artist> processForArtists(List<Song> songList,
+                                           List<Album> albumList) {
+        Map<String, Artist> artistMap = new HashMap<>();
+        for (Song song : songList) {
+            Artist artist = artistMap
+                    .getOrDefault(song.artist.toLowerCase().trim(),
+                            new Artist(song.artistId, song.artist,
                                     new TreeSet<>((album1, album2) -> album1.name.compareToIgnoreCase(album2.name)),
                                     new TreeSet<>((song1, song2) -> song1.title.compareToIgnoreCase(song2.title))));
-            artistEntity.songSet.add(songEntity);
-            artistEntityMap.put(artistEntity.name.toLowerCase().trim(), artistEntity);
+            artist.songSet.add(song);
+            artistMap.put(artist.name.toLowerCase().trim(), artist);
         }
-        for (AlbumEntity albumEntity : albumEntityList) {
-            ArtistEntity artistEntity = artistEntityMap
-                    .getOrDefault(albumEntity.artistName.toLowerCase().trim(),
-                            new ArtistEntity(albumEntity.artistId, albumEntity.artistName,
+        for (Album album : albumList) {
+            Artist artist = artistMap
+                    .getOrDefault(album.artistName.toLowerCase().trim(),
+                            new Artist(album.artistId, album.artistName,
                                     new TreeSet<>((album1, album2) -> album1.name.compareToIgnoreCase(album2.name)),
                                     new TreeSet<>((song1, song2) -> song1.title.compareToIgnoreCase(song2.title))));
-            artistEntity.albumSet.add(albumEntity);
-            artistEntityMap.put(artistEntity.name.toLowerCase().trim(), artistEntity);
+            artist.albumSet.add(album);
+            artistMap.put(artist.name.toLowerCase().trim(), artist);
         }
-        List<ArtistEntity> artistEntityList = new ArrayList<>(artistEntityMap.values());
-        artistEntityList.sort((artist1, artist2) -> artist1.name.compareToIgnoreCase(artist2.name));
-        return artistEntityList;
+        List<Artist> artistList = new ArrayList<>(artistMap.values());
+        artistList.sort((artist1, artist2) -> artist1.name.compareToIgnoreCase(artist2.name));
+        return artistList;
     }
 }

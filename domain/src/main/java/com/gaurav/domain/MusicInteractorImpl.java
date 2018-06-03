@@ -8,6 +8,7 @@ import com.gaurav.domain.models.Artist;
 import com.gaurav.domain.models.Playlist;
 import com.gaurav.domain.models.Song;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Completable;
@@ -49,11 +50,6 @@ public class MusicInteractorImpl implements MusicInteractor {
     }
 
     @Override
-    public Single<List<Song>> getAllSongs() {
-        return musicRepository.getAllSongs();
-    }
-
-    @Override
     public Single<List<Album>> getAllAlbums() {
         return musicRepository.getAllAlbums();
     }
@@ -90,18 +86,18 @@ public class MusicInteractorImpl implements MusicInteractor {
                 .map(musicState1 -> markCurrentSongIndex(musicState1, song))
                 .map(this::playCurrentSongIndex)
                 .map(this::updateMusicState)
-                .ignoreElement();
+                .ignoreElements();
     }
 
     private MusicState updateMusicState(MusicState musicState) {
         this.musicState = musicState;
-        if(musicStateEmitter!=null) musicStateEmitter.onNext(this.musicState);
+        if (musicStateEmitter != null) musicStateEmitter.onNext(this.musicState);
         return this.musicState;
     }
 
-    private Single<MusicState> makeQueue() {
+    private Observable<MusicState> makeQueue() {
         return musicRepository.getAllSongs()
-                .map(songs -> musicStateReducer.allSongState(musicState, songs));
+                .map(songs -> musicStateReducer.allSongState(musicState, new ArrayList<>(songs)));
     }
 
     private MusicState shuffleQueueIfNeeded(MusicState musicState) {

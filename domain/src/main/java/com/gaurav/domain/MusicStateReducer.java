@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import sun.nio.cs.ext.MS874;
-
 public class MusicStateReducer {
 
     public MusicState emptyState() {
