@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.provider.MediaStore;
 
 import com.gaurav.domain.MusicState;
-import com.gaurav.domain.MusicStateReducer;
 import com.gaurav.domain.interfaces.MusicRepository;
 import com.gaurav.domain.models.Album;
 import com.gaurav.domain.models.Artist;
@@ -20,6 +19,7 @@ import java.util.Map;
 import java.util.TreeSet;
 
 import io.reactivex.Completable;
+import io.reactivex.Maybe;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
@@ -108,10 +108,9 @@ public class MusicRepositoryImpl implements MusicRepository {
     }
 
     @Override
-    public Single<MusicState> getMusicStateOrDefault() {
+    public Maybe<MusicState> getMusicStateOrDefault() {
         // TODO: 5/31/18 Make sure to save music state in database and query it. If not return default
-        return Single.just(new MusicStateReducer().emptyState())
-                .subscribeOn(Schedulers.io());
+        return Maybe.empty();
     }
 
     /*

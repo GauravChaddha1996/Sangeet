@@ -8,8 +8,9 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 
-import com.gaurav.domain.interfaces.MusicInteractor;
+import com.gaurav.domain.interfaces.MusicStateManager;
 import com.gaurav.domain.interfaces.MusicService;
+import com.gaurav.domain.usecases.CommandUseCases;
 
 import java.io.IOException;
 
@@ -35,8 +36,8 @@ import io.reactivex.Completable;
  * [Done] show albums and artists and playlists
  * [Done] handle their clicking and stuff and playing
 
- * [] better state reducer code
- * [] clean music interactor impl
+ * [DONE] better state reducer code
+ * [DONE] clean music interactor impl
  *
  * [] make presentation show MusicState data - observe music state
  * [] implement music state save
@@ -49,10 +50,10 @@ import io.reactivex.Completable;
  * */
 public class MusicServiceImpl extends Service implements MusicService {
 
-    MusicInteractor musicInteractor;
     MediaPlayer mediaPlayer;
 
     MusicServiceBinder binder;
+    CommandUseCases commandUseCases;
 
     @Override
     public void onCreate() {
@@ -78,8 +79,8 @@ public class MusicServiceImpl extends Service implements MusicService {
     }
 
     @Override
-    public void attachMusicInteractor(MusicInteractor musicInteractor) {
-        this.musicInteractor = musicInteractor;
+    public void attachCommandUseCases(CommandUseCases commandUseCases) {
+        this.commandUseCases =commandUseCases;
     }
 
     @Override

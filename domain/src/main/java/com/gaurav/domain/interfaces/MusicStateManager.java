@@ -1,30 +1,22 @@
 package com.gaurav.domain.interfaces;
 
 import com.gaurav.domain.MusicState;
-import com.gaurav.domain.models.Album;
-import com.gaurav.domain.models.Artist;
-import com.gaurav.domain.models.Playlist;
-import com.gaurav.domain.models.Song;
+import com.gaurav.domain.PartialChanges;
 
 import io.reactivex.Completable;
-import io.reactivex.Observable;
+import io.reactivex.subjects.BehaviorSubject;
 
-public interface MusicInteractor {
+public interface MusicStateManager {
 
     Completable init();
 
-    void attachMusicService(MusicService musicService);
+    MusicState getInitialState();
 
-    Observable<MusicState> observeMusicState();
+    BehaviorSubject<MusicState> observeMusicState();
 
-    Completable play(Song song);
+    void transform(PartialChanges changes);
 
-    Completable play(Album album, long id);
-
-    Completable play(Artist artist, long id);
-
-    Completable play(Playlist playlist, long id);
-
+    void transformationsComplete();
 
     /*
        Completable makeQueue(Artist artist);

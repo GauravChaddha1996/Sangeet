@@ -10,6 +10,6 @@ public class ModelMapper {
     }
 
     public PlaylistEntity convertPlaylistToPlaylistEntity(Playlist playlist) {
-        return new PlaylistEntity(playlist.id, playlist.name, playlist.songs);
+        return new PlaylistEntity(playlist.id, playlist.name, playlist.songSet);
     }
 }

@@ -6,12 +6,12 @@ import java.util.TreeSet;
 public class Playlist implements Comparable {
     public long id;
     public String name;
-    public TreeSet<Song> songs;
+    public TreeSet<Song> songSet;
 
-    public Playlist(long id, String name, TreeSet<Song> songs) {
+    public Playlist(long id, String name, TreeSet<Song> songSet) {
         this.id = id;
         this.name = name;
-        this.songs = songs;
+        this.songSet = songSet;
     }
 
     @Override

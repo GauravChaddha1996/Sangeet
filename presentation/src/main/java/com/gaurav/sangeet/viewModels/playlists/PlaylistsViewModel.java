@@ -34,7 +34,7 @@ public class PlaylistsViewModel extends BaseViewModel {
 
     @Override
     public void bindIntents() {
-        compositeDisposable.add(playlistsView.playIntent().subscribe(commandUseCases::play));
+        compositeDisposable.add(playlistsView.playIntent().subscribe(playlist -> commandUseCases.play(playlist,-1)));
     }
 
     public MutableLiveData<PlaylistsViewState> getState() {

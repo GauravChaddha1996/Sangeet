@@ -9,10 +9,10 @@ import android.os.IBinder;
 
 import com.gaurav.data.MusicDatabase;
 import com.gaurav.data.MusicRepositoryImpl;
-import com.gaurav.domain.MusicInteractorImpl;
-import com.gaurav.domain.interfaces.MusicInteractor;
+import com.gaurav.domain.MusicStateManagerImpl;
 import com.gaurav.domain.interfaces.MusicRepository;
 import com.gaurav.domain.interfaces.MusicService;
+import com.gaurav.domain.interfaces.MusicStateManager;
 import com.gaurav.domain.usecases.CommandUseCases;
 import com.gaurav.domain.usecases.FetchUseCases;
 import com.gaurav.domain.usecases.impls.CommandUseCasesImpl;
@@ -27,7 +27,7 @@ public class MusicApplication extends Application {
     MusicDatabase musicDatabase;
     MusicRepository musicRepository;
     MusicService musicService;
-    MusicInteractor musicInteractor;
+    MusicStateManager musicStateManager;
     FetchUseCases fetchUseCases;
     CommandUseCases commandUseCases;
 
@@ -40,14 +40,14 @@ public class MusicApplication extends Application {
         musicRepository = new MusicRepositoryImpl(getContentResolver(),
                 getSharedPreferences("sangeet", MODE_PRIVATE),
                 musicDatabase);
-        musicInteractor = new MusicInteractorImpl(musicRepository);
+        musicStateManager = new MusicStateManagerImpl(musicRepository);
         fetchUseCases = new FetchUseCasesImpl(musicRepository);
-        commandUseCases = new CommandUseCasesImpl(musicInteractor);
+        commandUseCases = new CommandUseCasesImpl(musicRepository, musicStateManager);
     }
 
     public Completable init() {
         return Completable.concatArray(getServiceBindingCompletable(), musicRepository.init()
-                .andThen(musicInteractor.init())).subscribeOn(Schedulers.computation());
+                .andThen(musicStateManager.init())).subscribeOn(Schedulers.computation());
     }
 
     public Completable getServiceBindingCompletable() {
@@ -56,8 +56,8 @@ public class MusicApplication extends Application {
                     @Override
                     public void onServiceConnected(ComponentName name, IBinder service) {
                         musicService = ((MusicServiceImpl.MusicServiceBinder) service).getService();
-                        musicInteractor.attachMusicService(musicService);
-                        musicService.attachMusicInteractor(musicInteractor);
+                        commandUseCases.attachMusicService(musicService);
+                        musicService.attachCommandUseCases(commandUseCases);
                         emitter.onComplete();
                     }
 
