@@ -32,8 +32,8 @@ import io.reactivex.Completable;
  * [DONE] To give events to viewmodel instead of commands and actions flowing out from view models
  * [DONE] remove the useless data model transformations
 
- * [] show albums and artists and playlists
- * [] handle their clicking and stuff and playing
+ * [Done] show albums and artists and playlists
+ * [Done] handle their clicking and stuff and playing
 
  * [] better state reducer code
  * [] clean music interactor impl

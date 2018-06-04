@@ -3,8 +3,8 @@ package com.gaurav.domain;
 import com.gaurav.domain.models.Song;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 
 public class MusicStateReducer {
 
@@ -20,14 +20,14 @@ public class MusicStateReducer {
                 false);
     }
 
-    public MusicState allSongState(MusicState musicState, List<Song> songList) {
+    public MusicState initialPartialState(MusicState musicState, Collection<Song> songs) {
         return new MusicState(
                 false,
                 -1,
                 -1,
                 musicState.shuffle,
                 musicState.repeat,
-                songList,
+                new ArrayList<>(songs),
                 false,
                 false);
     }

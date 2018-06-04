@@ -37,6 +37,9 @@ dependencies {
     annotationProcessor libraries.roomCompiler
     implementation libraries.roomrxjava
 
+    // GSON
+    implementation libraries.gson
+
     // Module dependencies
     implementation project(':domain')
 

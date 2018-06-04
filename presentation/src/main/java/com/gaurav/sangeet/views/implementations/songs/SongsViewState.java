@@ -4,14 +4,14 @@ import com.gaurav.domain.models.Song;
 
 import java.util.List;
 
-public interface SongViewState {
-    public class Loading implements SongViewState {
+public interface SongsViewState {
+    public class Loading implements SongsViewState {
     }
 
-    public class Error implements SongViewState {
+    public class Error implements SongsViewState {
     }
 
-    public class Result implements SongViewState {
+    public class Result implements SongsViewState {
         private List<Song> songList;
 
         public Result(List<Song> songList) {

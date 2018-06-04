@@ -1,4 +1,4 @@
-package com.gaurav.sangeet.viewModels.song;
+package com.gaurav.sangeet.viewModels.albums;
 
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
@@ -6,27 +6,27 @@ import android.support.annotation.NonNull;
 
 import com.gaurav.domain.usecases.CommandUseCases;
 import com.gaurav.domain.usecases.FetchUseCases;
-import com.gaurav.sangeet.views.interfaces.SongView;
+import com.gaurav.sangeet.views.interfaces.AlbumsView;
 
-public class SongViewModelFactory extends ViewModelProvider.NewInstanceFactory {
+public class AlbumsViewModelFactory extends ViewModelProvider.NewInstanceFactory {
 
     FetchUseCases fetchUseCases;
     CommandUseCases commandUseCases;
-    SongView songView;
+    AlbumsView albumsView;
 
-    public SongViewModelFactory(FetchUseCases fetchUseCases, CommandUseCases commandUseCases,
-                                SongView songView) {
+    public AlbumsViewModelFactory(FetchUseCases fetchUseCases, CommandUseCases commandUseCases,
+                                  AlbumsView albumsView) {
         this.fetchUseCases = fetchUseCases;
         this.commandUseCases = commandUseCases;
-        this.songView = songView;
+        this.albumsView = albumsView;
     }
 
     @SuppressWarnings("unchecked")
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        if (modelClass == SongViewModel.class) {
-            return (T) new SongViewModel(fetchUseCases, commandUseCases, songView);
+        if (modelClass == AlbumsViewModel.class) {
+            return (T) new AlbumsViewModel(fetchUseCases, commandUseCases, albumsView);
         }
         return super.create(modelClass);
     }

@@ -50,13 +50,6 @@
                 android:padding="16dp"
                 android:src="@android:drawable/btn_radio" />
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:padding="16dp"
-                android:src="@android:drawable/btn_plus" />
-
         </com.github.florent37.bubbletab.BubbleTab>
 
     </android.support.design.widget.AppBarLayout>

@@ -6,11 +6,8 @@ import com.gaurav.domain.models.Artist;
 import com.gaurav.domain.models.Playlist;
 import com.gaurav.domain.models.Song;
 
-import java.util.List;
-
 import io.reactivex.Completable;
 import io.reactivex.Observable;
-import io.reactivex.Single;
 
 public interface MusicInteractor {
 
@@ -20,23 +17,16 @@ public interface MusicInteractor {
 
     Observable<MusicState> observeMusicState();
 
-    Single<List<Album>> getAllAlbums();
-
-    Single<List<Artist>> getAllArtists();
-
-    Single<List<Playlist>> getAllPlaylists();
-
-    Completable insertPlaylist(Playlist playlist);
-
-    Completable updatePlaylist(Playlist playlist);
-
-    Completable deletePlaylist(long id);
-
     Completable play(Song song);
+
+    Completable play(Album album, long id);
+
+    Completable play(Artist artist, long id);
+
+    Completable play(Playlist playlist, long id);
 
 
     /*
-       Completable makeQueue(Album album);
        Completable makeQueue(Artist artist);
        Completable makeQueue(Playlist playlist);
 
@@ -50,7 +40,6 @@ public interface MusicInteractor {
        Completable playNext(Artist artist);
        Completable playNext(Playlist playlist);
 
-       Completable play(Album album,long id);
        Completable play(Artist artist,long id);
        Completable play(Playlist playlist,long id);
 

@@ -66,26 +66,24 @@ public class MusicRepositoryImpl implements MusicRepository {
     }
 
     @Override
-    public Single<List<Album>> getAllAlbums() {
-        return Observable.fromIterable(albumList)
-                .subscribeOn(Schedulers.io())
-                .toList();
+    public Observable<List<Album>> getAllAlbums() {
+        return Observable.just(albumList).cache();
     }
 
     @Override
-    public Single<List<Artist>> getAllArtists() {
-        return Observable.fromIterable(artistList)
-                .subscribeOn(Schedulers.io())
-                .toList();
+    public Observable<List<Artist>> getAllArtists() {
+        return Observable.just(artistList).cache();
     }
 
     @Override
-    public Single<List<Playlist>> getAllPlaylists() {
+    public Observable<List<Playlist>> getAllPlaylists() {
         return Observable.fromCallable(() -> musicDatabase.playlistDao().getAllPlaylists())
                 .subscribeOn(Schedulers.io())
                 .flatMapIterable(playlistEntities -> playlistEntities)
                 .map(modelMapper::convertPlaylistEntityToPlaylist)
-                .toList();
+                .toList()
+                .toObservable();
+
     }
 
     @Override

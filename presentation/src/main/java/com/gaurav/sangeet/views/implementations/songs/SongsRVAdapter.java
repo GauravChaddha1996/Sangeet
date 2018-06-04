@@ -12,11 +12,11 @@ import com.gaurav.sangeet.R;
 
 import java.util.List;
 
-public class SongRVAdapter extends RecyclerView.Adapter<SongRVAdapter.SongItemViewHolder> {
+public class SongsRVAdapter extends RecyclerView.Adapter<SongsRVAdapter.SongItemViewHolder> {
 
     List<Song> data;
 
-    public SongRVAdapter(List<Song> data) {
+    public SongsRVAdapter(List<Song> data) {
         this.data = data;
     }
 

@@ -6,12 +6,15 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.gaurav.domain.usecases.CommandUseCases;
 import com.gaurav.domain.usecases.FetchUseCases;
-import com.gaurav.sangeet.views.implementations.songs.SongViewImpl;
+import com.gaurav.sangeet.views.implementations.albums.AlbumsViewImpl;
+import com.gaurav.sangeet.views.implementations.artists.ArtistsViewImpl;
+import com.gaurav.sangeet.views.implementations.playlists.PlaylistsViewImpl;
+import com.gaurav.sangeet.views.implementations.songs.SongsViewImpl;
 
 public class PageAdapter extends FragmentStatePagerAdapter {
 
-    FetchUseCases fetchUseCases;
-    CommandUseCases commandUseCases;
+    private FetchUseCases fetchUseCases;
+    private CommandUseCases commandUseCases;
 
     public PageAdapter(FragmentManager fm, FetchUseCases fetchUseCases, CommandUseCases commandUseCases) {
         super(fm);
@@ -23,23 +26,21 @@ public class PageAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return new SongViewImpl(fetchUseCases, commandUseCases);
+                return new SongsViewImpl(fetchUseCases, commandUseCases);
             case 1:
-                return new SongViewImpl(fetchUseCases, commandUseCases);
+                return new AlbumsViewImpl(fetchUseCases, commandUseCases);
             case 2:
-                return new SongViewImpl(fetchUseCases, commandUseCases);
+                return new ArtistsViewImpl(fetchUseCases, commandUseCases);
             case 3:
-                return new SongViewImpl(fetchUseCases, commandUseCases);
-            case 4:
-                return new SongViewImpl(fetchUseCases, commandUseCases);
+                return new PlaylistsViewImpl(fetchUseCases, commandUseCases);
             default:
-                return new SongViewImpl(fetchUseCases, commandUseCases);
+                return new SongsViewImpl(fetchUseCases, commandUseCases);
         }
 
     }
 
     @Override
     public int getCount() {
-        return 5;
+        return 4;
     }
 }

@@ -8,13 +8,9 @@ import com.gaurav.domain.models.Artist;
 import com.gaurav.domain.models.Playlist;
 import com.gaurav.domain.models.Song;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
-import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
 
 public class MusicInteractorImpl implements MusicInteractor {
@@ -50,40 +46,43 @@ public class MusicInteractorImpl implements MusicInteractor {
     }
 
     @Override
-    public Single<List<Album>> getAllAlbums() {
-        return musicRepository.getAllAlbums();
-    }
-
-    @Override
-    public Single<List<Artist>> getAllArtists() {
-        return musicRepository.getAllArtists();
-    }
-
-    @Override
-    public Single<List<Playlist>> getAllPlaylists() {
-        return musicRepository.getAllPlaylists();
-    }
-
-    @Override
-    public Completable insertPlaylist(Playlist playlist) {
-        return musicRepository.insertPlaylist(playlist);
-    }
-
-    @Override
-    public Completable updatePlaylist(Playlist playlist) {
-        return musicRepository.updatePlaylist(playlist);
-    }
-
-    @Override
-    public Completable deletePlaylist(long id) {
-        return musicRepository.deletePlaylist(id);
-    }
-
-    @Override
     public Completable play(Song song) {
         return makeQueue()
                 .map(this::shuffleQueueIfNeeded)
                 .map(musicState1 -> markCurrentSongIndex(musicState1, song))
+                .map(this::playCurrentSongIndex)
+                .map(this::updateMusicState)
+                .ignoreElements();
+    }
+
+    @Override
+    public Completable play(Album album, long id) {
+        return makeQueue(album)
+                .map(this::shuffleQueueIfNeeded)
+                .map(musicState1 -> markCurrentSongIndex(musicState1, album.songSet.stream()
+                        .filter(song1 -> song1.songId == id).findFirst().orElse(null)))
+                .map(this::playCurrentSongIndex)
+                .map(this::updateMusicState)
+                .ignoreElements();
+    }
+
+    @Override
+    public Completable play(Artist artist, long id) {
+        return makeQueue(artist)
+                .map(this::shuffleQueueIfNeeded)
+                .map(musicState1 -> markCurrentSongIndex(musicState1, artist.songSet.stream()
+                        .filter(song1 -> song1.songId == id).findFirst().orElse(null)))
+                .map(this::playCurrentSongIndex)
+                .map(this::updateMusicState)
+                .ignoreElements();
+    }
+
+    @Override
+    public Completable play(Playlist playlist, long id) {
+        return makeQueue(playlist)
+                .map(this::shuffleQueueIfNeeded)
+                .map(musicState1 -> markCurrentSongIndex(musicState1, playlist.songs.stream()
+                        .filter(song1 -> song1.songId == id).findFirst().orElse(null)))
                 .map(this::playCurrentSongIndex)
                 .map(this::updateMusicState)
                 .ignoreElements();
@@ -97,7 +96,19 @@ public class MusicInteractorImpl implements MusicInteractor {
 
     private Observable<MusicState> makeQueue() {
         return musicRepository.getAllSongs()
-                .map(songs -> musicStateReducer.allSongState(musicState, new ArrayList<>(songs)));
+                .map(songs -> musicStateReducer.initialPartialState(musicState, songs));
+    }
+
+    private Observable<MusicState> makeQueue(Album album) {
+        return Observable.just(musicStateReducer.initialPartialState(musicState, album.songSet));
+    }
+
+    private Observable<MusicState> makeQueue(Artist artist) {
+        return Observable.just(musicStateReducer.initialPartialState(musicState, artist.songSet));
+    }
+
+    private Observable<MusicState> makeQueue(Playlist playlist) {
+        return Observable.just(musicStateReducer.initialPartialState(musicState, playlist.songs));
     }
 
     private MusicState shuffleQueueIfNeeded(MusicState musicState) {
@@ -108,7 +119,7 @@ public class MusicInteractorImpl implements MusicInteractor {
     }
 
     private MusicState markCurrentSongIndex(MusicState musicState, Song song) {
-        return musicStateReducer.markCurrentSongIndex(musicState, musicState.songQueue.indexOf(song));
+        return musicStateReducer.markCurrentSongIndex(musicState, song != null ? musicState.songQueue.indexOf(song) : 0);
     }
 
     private MusicState playCurrentSongIndex(MusicState musicState) {

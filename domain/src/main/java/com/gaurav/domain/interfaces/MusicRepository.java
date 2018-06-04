@@ -18,11 +18,11 @@ public interface MusicRepository {
 
     Observable<List<Song>> getAllSongs();
 
-    Single<List<Album>> getAllAlbums();
+    Observable<List<Album>> getAllAlbums();
 
-    Single<List<Artist>> getAllArtists();
+    Observable<List<Artist>> getAllArtists();
 
-    Single<List<Playlist>> getAllPlaylists();
+    Observable<List<Playlist>> getAllPlaylists();
 
     Completable insertPlaylist(Playlist playlist);
 

@@ -1,4 +1,4 @@
-package com.gaurav.sangeet.views.implementations.songs;
+package com.gaurav.sangeet.views.implementations.playlists;
 
 import android.annotation.SuppressLint;
 import android.arch.lifecycle.ViewModelProviders;
@@ -12,14 +12,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.gaurav.domain.models.Song;
+import com.gaurav.domain.models.Playlist;
 import com.gaurav.domain.usecases.CommandUseCases;
 import com.gaurav.domain.usecases.FetchUseCases;
 import com.gaurav.sangeet.R;
 import com.gaurav.sangeet.utils.ItemClickSupport;
-import com.gaurav.sangeet.viewModels.song.SongViewModel;
-import com.gaurav.sangeet.viewModels.song.SongViewModelFactory;
-import com.gaurav.sangeet.views.interfaces.SongView;
+import com.gaurav.sangeet.viewModels.playlists.PlaylistsViewModel;
+import com.gaurav.sangeet.viewModels.playlists.PlaylistsViewModelFactory;
+import com.gaurav.sangeet.views.interfaces.PlaylistsView;
 
 import java.util.ArrayList;
 
@@ -27,16 +27,17 @@ import io.reactivex.Emitter;
 import io.reactivex.Observable;
 
 @SuppressLint("ValidFragment")
-public class SongViewImpl extends Fragment implements SongView {
+public class PlaylistsViewImpl extends Fragment implements PlaylistsView {
+
     FetchUseCases fetchUseCases;
     CommandUseCases commandUseCases;
 
-    SongViewModel viewModel;
+    PlaylistsViewModel viewModel;
     RecyclerView recyclerView;
-    SongRVAdapter songRVAdapter;
-    private Emitter<Song> playSongEmitter;
+    PlaylistsRVAdapter playlistRVAdapter;
+    Emitter<Playlist> playPlaylistEmitter;
 
-    public SongViewImpl(FetchUseCases fetchUseCases, CommandUseCases commandUseCases) {
+    public PlaylistsViewImpl(FetchUseCases fetchUseCases, CommandUseCases commandUseCases) {
         this.fetchUseCases = fetchUseCases;
         this.commandUseCases = commandUseCases;
     }
@@ -44,14 +45,14 @@ public class SongViewImpl extends Fragment implements SongView {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.songs_view, container, false);
-        songRVAdapter = new SongRVAdapter(new ArrayList<>());
+        View view = inflater.inflate(R.layout.playlists_view, container, false);
+        playlistRVAdapter = new PlaylistsRVAdapter(new ArrayList<>());
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(songRVAdapter);
+        recyclerView.setAdapter(playlistRVAdapter);
         ItemClickSupport.addTo(recyclerView).setOnItemClickListener((recyclerView, position, v) -> {
-            playSongEmitter.onNext(songRVAdapter.getSong(position));
+            playPlaylistEmitter.onNext(playlistRVAdapter.getPlaylist(position));
         });
         return view;
     }
@@ -59,25 +60,24 @@ public class SongViewImpl extends Fragment implements SongView {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         viewModel = ViewModelProviders.of(this,
-                new SongViewModelFactory(fetchUseCases, commandUseCases, this))
-                .get(SongViewModel.class);
-        viewModel.getSongViewState().observe(this, this::render);
+                new PlaylistsViewModelFactory(fetchUseCases, commandUseCases, this))
+                .get(PlaylistsViewModel.class);
+        viewModel.getState().observe(this, this::render);
     }
 
     @Override
-    public void render(SongViewState songViewState) {
-        if (songViewState instanceof SongViewState.Loading) {
+    public void render(PlaylistsViewState state) {
+        if (state instanceof PlaylistsViewState.Loading) {
             // show loading
-        } else if (songViewState instanceof SongViewState.Error) {
+        } else if (state instanceof PlaylistsViewState.Error) {
             // show error
         } else {
-            songRVAdapter.updateData(((SongViewState.Result) songViewState).getSongList());
+            playlistRVAdapter.updateData(((PlaylistsViewState.Result) state).getPlaylistList());
         }
     }
 
     @Override
-    public Observable<Song> playIntent() {
-        return Observable.create(emitter -> this.playSongEmitter = emitter);
+    public Observable<Playlist> playIntent() {
+        return Observable.create(emitter -> playPlaylistEmitter = emitter);
     }
 }
-
