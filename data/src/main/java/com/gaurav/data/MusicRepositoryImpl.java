@@ -4,13 +4,17 @@ import android.content.ContentResolver;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.provider.MediaStore;
+import android.util.Log;
 
 import com.gaurav.domain.MusicState;
+import com.gaurav.domain.MusicStateBuilder;
 import com.gaurav.domain.interfaces.MusicRepository;
 import com.gaurav.domain.models.Album;
 import com.gaurav.domain.models.Artist;
 import com.gaurav.domain.models.Playlist;
 import com.gaurav.domain.models.Song;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -108,9 +112,29 @@ public class MusicRepositoryImpl implements MusicRepository {
     }
 
     @Override
-    public Maybe<MusicState> getMusicStateOrDefault() {
-        // TODO: 5/31/18 Make sure to save music state in database and query it. If not return default
-        return Maybe.empty();
+    public Maybe<MusicState> getMusicStateOrError() {
+        return Maybe.create(e -> {
+            String storedMusicState = sharedPreferences.getString("music_state", "null");
+            if (!storedMusicState.equals("null")) {
+                e.onSuccess(new GsonBuilder().create()
+                        .fromJson(storedMusicState, new TypeToken<MusicState>() {
+                        }.getType()));
+            } else {
+                e.onError(new NullPointerException());
+            }
+            e.onComplete();
+        });
+    }
+
+    @Override
+    public Completable saveMusicState(MusicState musicState) {
+        return Completable.create(e -> {
+            String serializedMusicState = new GsonBuilder().create().toJson(musicState);
+            sharedPreferences.edit()
+                    .putString("music_state", serializedMusicState)
+                    .apply();
+            e.onComplete();
+        });
     }
 
     /*

@@ -1,14 +1,14 @@
 package com.gaurav.domain.usecases;
 
-import com.gaurav.domain.interfaces.MusicService;
+import com.gaurav.domain.PartialChanges;
 import com.gaurav.domain.models.Album;
 import com.gaurav.domain.models.Artist;
 import com.gaurav.domain.models.Playlist;
 import com.gaurav.domain.models.Song;
 
-public interface CommandUseCases {
+import io.reactivex.Observable;
 
-    void attachMusicService(MusicService musicService);
+public interface CommandUseCases {
 
     void play(Song song);
 
@@ -17,5 +17,9 @@ public interface CommandUseCases {
     void play(Artist artist, long id);
 
     void play(Playlist playlist, long id);
+
+    Observable<PartialChanges> observePartialChanges();
+
+    Observable<Song> observeSongToPlay();
 
 }

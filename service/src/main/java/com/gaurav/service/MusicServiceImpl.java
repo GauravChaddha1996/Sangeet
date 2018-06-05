@@ -8,13 +8,15 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 
-import com.gaurav.domain.interfaces.MusicStateManager;
 import com.gaurav.domain.interfaces.MusicService;
 import com.gaurav.domain.usecases.CommandUseCases;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
-import io.reactivex.Completable;
+import io.reactivex.Emitter;
+import io.reactivex.Observable;
+import io.reactivex.disposables.Disposable;
 
 /*
  * Todos for tomorrow:
@@ -39,26 +41,38 @@ import io.reactivex.Completable;
  * [DONE] better state reducer code
  * [DONE] clean music interactor impl
  *
- * [] make presentation show MusicState data - observe music state
- * [] implement music state save
- * [] add callback listeners for updating duration
+ * [DONE] make presentation show MusicState data - observe music state
+ * [DONE] implement music state save
+ * [DONE] add callback listeners for updating duration
+ * [DONE] clean off all disposables
  *
  *
  * [] add other functionality like play pause next  - play next - and queue actions
  *
  * [] Presentation layer + notification
+ * [] handle to-dos
+ * [] handle corner cases from trello
  * */
 public class MusicServiceImpl extends Service implements MusicService {
 
-    MediaPlayer mediaPlayer;
+    private CommandUseCases commandUseCases;
+    private MediaPlayer mediaPlayer;
+    private MusicServiceBinder binder;
+    private Disposable progressDisposable;
+    private Disposable songToPlayDisposable;
 
-    MusicServiceBinder binder;
-    CommandUseCases commandUseCases;
+    private Emitter<Integer> progressEmitter;
+    private Observable<Integer> progressObservable;
+
+    private Emitter<Boolean> songCompleteEmitter;
+    private Observable<Boolean> songCompleteObservable;
+
 
     @Override
     public void onCreate() {
         super.onCreate();
         mediaPlayer = new MediaPlayer();
+        prepareObservablesAndEmitters();
         startForeground(101, getNotification());
     }
 
@@ -80,23 +94,64 @@ public class MusicServiceImpl extends Service implements MusicService {
 
     @Override
     public void attachCommandUseCases(CommandUseCases commandUseCases) {
-        this.commandUseCases =commandUseCases;
+        this.commandUseCases = commandUseCases;
+        songToPlayDisposable = commandUseCases.observeSongToPlay()
+                .subscribe(song -> this.play(song.data));
     }
 
     @Override
-    public Completable play(String path) {
-        return Completable.create(emitter -> {
-            mediaPlayer.reset();
-            try {
-                mediaPlayer.setDataSource(path);
-                mediaPlayer.prepare();
-                mediaPlayer.start();
-                emitter.onComplete();
-            } catch (IOException e) {
-                emitter.onError(e);
-            }
-        });
+    public void detachCommandUseCases() {
+        if (songToPlayDisposable != null && !songToPlayDisposable.isDisposed()) {
+            songToPlayDisposable.dispose();
+        }
+        this.commandUseCases = null;
+    }
 
+    @Override
+    public Observable<Integer> observeProgress() {
+        return progressObservable;
+    }
+
+    @Override
+    public Observable<Boolean> observeSongCompletion() {
+        return songCompleteObservable;
+    }
+
+    @Override
+    public void play(String path) {
+        mediaPlayer.reset();
+        if (progressDisposable != null && !progressDisposable.isDisposed()) {
+            progressDisposable.dispose();
+        }
+        try {
+            mediaPlayer.setDataSource(path);
+            mediaPlayer.prepare();
+            mediaPlayer.start();
+            mediaPlayer.setOnCompletionListener(__ -> songCompleteEmitter.onNext(true));
+            progressDisposable = Observable.interval(1, TimeUnit.SECONDS)
+                    .doOnNext(aLong -> progressEmitter.onNext(mediaPlayer.getCurrentPosition()))
+                    .subscribe();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
+    public void onDestroy() {
+        if (progressDisposable != null && !progressDisposable.isDisposed()) {
+            progressDisposable.dispose();
+        }
+        super.onDestroy();
+    }
+
+    /*
+     * Helper functions and classes
+     * */
+
+    private void prepareObservablesAndEmitters() {
+        progressObservable = Observable.create(emitter -> this.progressEmitter = emitter);
+        songCompleteObservable = Observable.create(emitter -> this.songCompleteEmitter = emitter);
     }
 
     private Notification getNotification() {

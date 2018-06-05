@@ -30,5 +30,7 @@ public interface MusicRepository {
 
     Completable deletePlaylist(long id);
 
-    Maybe<MusicState> getMusicStateOrDefault();
+    Maybe<MusicState> getMusicStateOrError();
+
+    Completable saveMusicState(MusicState musicState);
 }

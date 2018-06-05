@@ -2,7 +2,6 @@ package com.gaurav.domain.usecases.impls;
 
 import com.gaurav.domain.PartialChanges;
 import com.gaurav.domain.interfaces.MusicRepository;
-import com.gaurav.domain.interfaces.MusicService;
 import com.gaurav.domain.interfaces.MusicStateManager;
 import com.gaurav.domain.models.Album;
 import com.gaurav.domain.models.Artist;
@@ -14,22 +13,26 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import io.reactivex.Emitter;
 import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.Single;
 
 public class CommandUseCasesImpl implements CommandUseCases {
 
-    MusicRepository musicRepository;
-    MusicStateManager musicStateManager;
-    MusicService musicService;
+    private MusicRepository musicRepository;
+    private MusicStateManager musicStateManager;
+
+    private Emitter<PartialChanges> partialChangesEmitter;
+    private Observable<PartialChanges> partialChangesObservable;
+
+    private Emitter<Song> songToPlayEmitter;
+    private Observable<Song> songToPlayObservable;
 
     public CommandUseCasesImpl(MusicRepository musicRepository, MusicStateManager musicStateManager) {
         this.musicRepository = musicRepository;
         this.musicStateManager = musicStateManager;
-    }
-
-    @Override
-    public void attachMusicService(MusicService musicService) {
-        this.musicService = musicService;
+        prepareObservablesAndEmitters();
     }
 
     @Override
@@ -58,31 +61,53 @@ public class CommandUseCasesImpl implements CommandUseCases {
                 .findFirst().orElse(playlist.songSet.first()));
     }
 
+    @Override
+    public Observable<PartialChanges> observePartialChanges() {
+        return partialChangesObservable;
+    }
+
+    @Override
+    public Observable<Song> observeSongToPlay() {
+        return songToPlayObservable;
+    }
 
     /*
      * Private helper functions
      * */
 
+    private void prepareObservablesAndEmitters() {
+        partialChangesObservable = Observable.create((ObservableEmitter<PartialChanges> emitter) ->
+                this.partialChangesEmitter = emitter);
+        partialChangesObservable.publish().connect();
+
+        songToPlayObservable = Observable.create((ObservableEmitter<Song> emitter) ->
+                this.songToPlayEmitter = emitter);
+        songToPlayObservable.publish().connect();
+    }
+
     private void playCommandHelper(Object object, Song song) {
         makeQueue(object)
                 .map(this::shuffleQueueIfNeeded)
-                .doOnNext(songs -> musicStateManager.transform(new PartialChanges.QueueUpdated(songs)))
+                .doOnSuccess(songs -> partialChangesEmitter.onNext(new PartialChanges.QueueUpdated(songs)))
                 .map(songs -> songs.indexOf(song))
-                .doOnNext(currentSongIndex -> musicStateManager.transform(new PartialChanges.CurrentSongIndexChanged(currentSongIndex)))
-                .doOnNext(__ -> playCurrentSongIndex(song))
-                .doOnNext(__ -> musicStateManager.transformationsComplete())
-                .subscribe();
+                .doOnSuccess(currentSongIndex -> partialChangesEmitter.onNext(new PartialChanges.CurrentSongIndexChanged(currentSongIndex)))
+                .doOnSuccess(__ -> playCurrentSongIndex(song))
+                .doOnSuccess(__ -> partialChangesEmitter.onNext(new PartialChanges.PlayingStatusChanged(true)))
+                .doOnSuccess(__ -> partialChangesEmitter.onNext(new PartialChanges.Complete()))
+                .subscribe().dispose();
     }
 
-    private Observable<List<Song>> makeQueue(Object object) {
+    private Single<List<Song>> makeQueue(Object object) {
         if (object instanceof Song) {
-            return musicRepository.getAllSongs();
+            return musicRepository.getAllSongs()
+                    .single(new ArrayList<>())
+                    .map(ArrayList::new);
         } else if (object instanceof Album) {
-            return Observable.just(new ArrayList<>(((Album) object).songSet));
+            return Single.just(new ArrayList<>(((Album) object).songSet));
         } else if (object instanceof Artist) {
-            return Observable.just(new ArrayList<>(((Artist) object).songSet));
+            return Single.just(new ArrayList<>(((Artist) object).songSet));
         } else if (object instanceof Playlist) {
-            return Observable.just(new ArrayList<>(((Playlist) object).songSet));
+            return Single.just(new ArrayList<>(((Playlist) object).songSet));
         } else {
             return null;
         }
@@ -96,7 +121,7 @@ public class CommandUseCasesImpl implements CommandUseCases {
     }
 
     private void playCurrentSongIndex(Song song) {
-        musicService.play(song.data).subscribe();
+        songToPlayEmitter.onNext(song);
     }
 
 }

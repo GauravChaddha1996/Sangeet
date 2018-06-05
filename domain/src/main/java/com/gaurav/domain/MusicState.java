@@ -63,4 +63,16 @@ public class MusicState {
                 songQueue, disablePrev, isPlaying);
     }
 
+    @Override
+    public String toString() {
+        return "MusicState{" +
+                "showStatus=" + showStatus +
+                ", progress=" + progress +
+                ", currentSongIndex=" + currentSongIndex +
+                ", shuffle=" + shuffle +
+                ", repeat=" + repeat +
+                ", disablePrev=" + disablePrev +
+                ", isPlaying=" + isPlaying +
+                '}';
+    }
 }

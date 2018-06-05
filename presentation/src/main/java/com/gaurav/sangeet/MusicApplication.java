@@ -56,14 +56,17 @@ public class MusicApplication extends Application {
                     @Override
                     public void onServiceConnected(ComponentName name, IBinder service) {
                         musicService = ((MusicServiceImpl.MusicServiceBinder) service).getService();
-                        commandUseCases.attachMusicService(musicService);
                         musicService.attachCommandUseCases(commandUseCases);
+                        musicStateManager.attachCommandUseCases(commandUseCases);
+                        musicStateManager.attachMusicService(musicService);
                         emitter.onComplete();
                     }
 
                     @Override
                     public void onServiceDisconnected(ComponentName name) {
-
+                        musicService.detachCommandUseCases();
+                        musicStateManager.detachCommandUseCases();
+                        musicStateManager.detachMusicService();
                     }
                 }, BIND_AUTO_CREATE)
         ).subscribeOn(Schedulers.computation());

@@ -30,4 +30,36 @@ public interface PartialChanges {
         }
     }
 
+    public class PlayingStatusChanged implements PartialChanges {
+        private boolean isPlaying;
+
+        public PlayingStatusChanged(boolean isPlaying) {
+            this.isPlaying = isPlaying;
+        }
+
+        public boolean isPlaying() {
+            return isPlaying;
+        }
+    }
+
+    public class ProgressUpdated implements PartialChanges {
+        private int newProgress;
+
+        public ProgressUpdated(int newProgress) {
+            this.newProgress = newProgress;
+        }
+
+        public int getNewProgress() {
+            return newProgress;
+        }
+    }
+
+    public class SongCompleted implements PartialChanges {
+
+    }
+
+    public class Complete implements PartialChanges {
+
+    }
+
 }
