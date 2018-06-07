@@ -29,6 +29,7 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
     // Testing related
+    implementation 'com.android.support.constraint:constraint-layout:1.1.1'
     testImplementation libraries.junit
     androidTestImplementation libraries.testRunner
     androidTestImplementation libraries.espressoCore
@@ -41,6 +42,8 @@ dependencies {
     implementation libraries.lifecycle
     annotationProcessor libraries.lifecycleCompiler
     implementation libraries.bubbleTab
+    implementation libraries.awesomeBar
+    implementation libraries.arcNavigationView
 
     // Room
     implementation libraries.roomRuntime

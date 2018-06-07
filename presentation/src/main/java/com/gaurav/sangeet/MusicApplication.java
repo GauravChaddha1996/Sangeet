@@ -20,6 +20,7 @@ import com.gaurav.domain.usecases.impls.FetchUseCasesImpl;
 import com.gaurav.service.MusicServiceImpl;
 
 import io.reactivex.Completable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 public class MusicApplication extends Application {
@@ -46,8 +47,10 @@ public class MusicApplication extends Application {
     }
 
     public Completable init() {
-        return Completable.concatArray(getServiceBindingCompletable(), musicRepository.init()
-                .andThen(musicStateManager.init())).subscribeOn(Schedulers.computation());
+        return Completable.concatArray(getServiceBindingCompletable(),
+                musicRepository.init().andThen(musicStateManager.init()))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     public Completable getServiceBindingCompletable() {
@@ -69,6 +72,6 @@ public class MusicApplication extends Application {
                         musicStateManager.detachMusicService();
                     }
                 }, BIND_AUTO_CREATE)
-        ).subscribeOn(Schedulers.computation());
+        ).subscribeOn(Schedulers.io());
     }
 }

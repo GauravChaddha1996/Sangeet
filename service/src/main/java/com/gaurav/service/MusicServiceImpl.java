@@ -49,7 +49,24 @@ import io.reactivex.disposables.Disposable;
  *
  * [] add other functionality like play pause next  - play next - and queue actions
  *
- * [] Presentation layer + notification
+ * Inspirations: https://www.uplabs.com/posts/daily-ui-music-player,
+ *               https://www.uplabs.com/posts/dark-material-music-app-ui
+ * [] Presentation layer
+ * \-[DONE] Color Scheme
+ *  \-[] Logo
+ *   \-[] Splash full screen animation no toolbar
+ *    \-[] HomeActivity toolbar and accurate view pager movements
+ *          \- NavigationView= Better text appearence, icons and background
+ *     \-[] Handle search activity
+ *      \-[] Handle search activity transition
+ *       \-[] List + menu items on click and their logic for song
+ *        \-[] Music state minimized view
+ *         \-[] Music state full view
+ *          \-[] Transition between the Music state view's state
+ *           \-[] Extend logic to album and artist and playlist
+ *            \-[] Handle detail screen for album, artist and playlist and their clicks and stuff
+ *             \-[] Make transition smooth between them
+ *              \-[] Make settings screen and about screen
  * [] handle to-dos
  * [] handle corner cases from trello
  * */

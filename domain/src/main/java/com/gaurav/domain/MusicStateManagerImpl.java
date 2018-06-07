@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import io.reactivex.Completable;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.BehaviorSubject;
 
 import static com.gaurav.domain.PartialChanges.CurrentSongIndexChanged;
@@ -36,10 +37,13 @@ public class MusicStateManagerImpl implements MusicStateManager {
 
     @Override
     public Completable init() {
-        return Completable.create(emitter -> musicRepository.getMusicStateOrError()
-                .subscribe(musicState -> this.musicState = musicState,
-                        throwable -> this.musicState = getInitialState(),
-                        emitter::onComplete));
+        return Completable.create(emitter -> {
+            this.musicState = musicRepository.getMusicStateOrError();
+            if (musicState == null) {
+                musicState = getInitialState();
+            }
+            emitter.onComplete();
+        }).subscribeOn(Schedulers.io());
     }
 
     @Override

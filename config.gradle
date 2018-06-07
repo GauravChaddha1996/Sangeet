@@ -1,27 +1,36 @@
 ext {
     versions = [
             // Android related
-            compileSDK      : 27,
-            minSDK          : 24,
-            targetSDK       : 27,
-            code            : 1,
-            name            : '1.0',
+            compileSDK       : 27,
+            minSDK           : 24,
+            targetSDK        : 27,
+            code             : 1,
+            name             : '1.0',
 
             // Test related dependencies versions
-            junit           : '4.12',
-            espressoCore    : '3.0.2',
-            testRunner      : '1.0.2',
+            junit            : '4.12',
+            espressoCore     : '3.0.2',
+            testRunner       : '1.0.2',
 
             // Libraries dependencies versions
-            supportLib      : '27.1.0',
-            lifecycle       : '1.1.0',
-            constraintLayout: '1.1.0',
-            gson            : '2.8.4',
-            room            : '1.1.0',
-            rxjava          : '2.1.14-RC1',
-            rxandroid       : '2.0.2',
-            bubbleTab       : '1.0.2'
+            supportLib       : '27.1.0',
+            lifecycle        : '1.1.0',
+            constraintLayout : '1.1.0',
+            gson             : '2.8.4',
+            room             : '1.1.0',
+            rxjava           : '2.1.14-RC1',
+            rxandroid        : '2.0.2',
+            bubbleTab        : '1.0.2',
+            awesomeBar       : '1.0.3',
+            arcNavigationView: '1.0.3'
     ]
+
+    /*
+    * https://github.com/florent37/AwesomeBar
+    * https://github.com/florent37/ArcLayout
+    * https://github.com/florent37/DiagonalLayout
+    * https://github.com/rom4ek/ArcNavigationView
+    * */
 
     libraries = [
             junit            : "junit:junit:$versions.junit",
@@ -41,6 +50,8 @@ ext {
             roomCore         : "android.arch.core:runtime:$versions.room",
             rxjava           : "io.reactivex.rxjava2:rxjava:$versions.rxjava",
             rxandroid        : "io.reactivex.rxjava2:rxandroid:$versions.rxandroid",
-            bubbleTab        : "com.github.florent37:bubbletab:$versions.bubbleTab"
+            bubbleTab        : "com.github.florent37:bubbletab:$versions.bubbleTab",
+            awesomeBar       : "com.github.florent37:awesomebar:$versions.awesomeBar",
+            arcNavigationView: "com.rom4ek:arcnavigationview:$versions.arcNavigationView"
     ]
 }

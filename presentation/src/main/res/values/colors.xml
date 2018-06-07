@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">#2B2D42</color>
+    <color name="colorPrimaryDark">#202131</color>
+    <color name="colorAccent">#EF233C</color>
+
+    <color name="white">#EDF2F4</color>
+    <color name="darkerWhite">#B6BECB</color>
+
+
+    <color name="backgroundColor">@color/colorPrimary</color>
+    <color name="backgroundDarkColor">@color/colorPrimaryDark</color>
+    <color name="textColor">@color/white</color>
+    <color name="darkerTextColor">@color/darkerWhite</color>
+    <color name="buttonsColor">@color/colorAccent</color>
+
+    <color name="backgroundGradientStart">#240b36</color>
+    <color name="backgroundGradientEnd">#c31432</color>
+
+    <color name="backgroundGradientStart2">#360033</color>
+    <color name="backgroundGradientEnd2">#0b8793</color>
 </resources>

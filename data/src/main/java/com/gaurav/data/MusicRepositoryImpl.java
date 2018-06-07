@@ -4,10 +4,8 @@ import android.content.ContentResolver;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.provider.MediaStore;
-import android.util.Log;
 
 import com.gaurav.domain.MusicState;
-import com.gaurav.domain.MusicStateBuilder;
 import com.gaurav.domain.interfaces.MusicRepository;
 import com.gaurav.domain.models.Album;
 import com.gaurav.domain.models.Artist;
@@ -23,7 +21,6 @@ import java.util.Map;
 import java.util.TreeSet;
 
 import io.reactivex.Completable;
-import io.reactivex.Maybe;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
@@ -112,18 +109,15 @@ public class MusicRepositoryImpl implements MusicRepository {
     }
 
     @Override
-    public Maybe<MusicState> getMusicStateOrError() {
-        return Maybe.create(e -> {
-            String storedMusicState = sharedPreferences.getString("music_state", "null");
-            if (!storedMusicState.equals("null")) {
-                e.onSuccess(new GsonBuilder().create()
-                        .fromJson(storedMusicState, new TypeToken<MusicState>() {
-                        }.getType()));
-            } else {
-                e.onError(new NullPointerException());
-            }
-            e.onComplete();
-        });
+    public MusicState getMusicStateOrError() {
+        String storedMusicState = sharedPreferences.getString("music_state", "null");
+        if (!storedMusicState.equals("null")) {
+            return new GsonBuilder().create()
+                    .fromJson(storedMusicState, new TypeToken<MusicState>() {
+                    }.getType());
+        } else {
+            return null;
+        }
     }
 
     @Override
