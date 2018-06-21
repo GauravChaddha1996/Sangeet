@@ -1,5 +1,6 @@
 package com.gaurav.sangeet;
 
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -42,5 +43,22 @@ public class PageAdapter extends FragmentStatePagerAdapter {
     @Override
     public int getCount() {
         return 4;
+    }
+
+    @Nullable
+    @Override
+    public CharSequence getPageTitle(int position) {
+        switch (position) {
+            case 0:
+                return "Songs";
+            case 1:
+                return "Albums";
+            case 2:
+                return "Artists";
+            case 3:
+                return "Playlists";
+            default:
+                return "Default";
+        }
     }
 }

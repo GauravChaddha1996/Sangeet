@@ -2,7 +2,7 @@ ext {
     versions = [
             // Android related
             compileSDK       : 27,
-            minSDK           : 24,
+            minSDK           : 21,
             targetSDK        : 27,
             code             : 1,
             name             : '1.0',
@@ -20,16 +20,13 @@ ext {
             room             : '1.1.0',
             rxjava           : '2.1.14-RC1',
             rxandroid        : '2.0.2',
-            bubbleTab        : '1.0.2',
-            awesomeBar       : '1.0.3',
+            dachshungTab     : 'v0.3.3',
             arcNavigationView: '1.0.3'
     ]
 
     /*
-    * https://github.com/florent37/AwesomeBar
     * https://github.com/florent37/ArcLayout
     * https://github.com/florent37/DiagonalLayout
-    * https://github.com/rom4ek/ArcNavigationView
     * */
 
     libraries = [
@@ -50,8 +47,7 @@ ext {
             roomCore         : "android.arch.core:runtime:$versions.room",
             rxjava           : "io.reactivex.rxjava2:rxjava:$versions.rxjava",
             rxandroid        : "io.reactivex.rxjava2:rxandroid:$versions.rxandroid",
-            bubbleTab        : "com.github.florent37:bubbletab:$versions.bubbleTab",
-            awesomeBar       : "com.github.florent37:awesomebar:$versions.awesomeBar",
+            dachshungTab     : "com.github.Andy671:Dachshund-Tab-Layout:$versions.dachshungTab",
             arcNavigationView: "com.rom4ek:arcnavigationview:$versions.arcNavigationView"
     ]
 }

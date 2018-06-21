@@ -2,6 +2,10 @@
     package="com.gaurav.service">
 
     <application>
-        <service android:name=".MusicServiceImpl" />
+        <service android:name=".MusicServiceImpl">
+            <intent-filter>
+                <action android:name="PLAY_PAUSE" />
+            </intent-filter>
+        </service>
     </application>
 </manifest>

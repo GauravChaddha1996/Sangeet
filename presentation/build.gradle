@@ -41,8 +41,7 @@ dependencies {
     implementation libraries.constraintLayout
     implementation libraries.lifecycle
     annotationProcessor libraries.lifecycleCompiler
-    implementation libraries.bubbleTab
-    implementation libraries.awesomeBar
+    implementation libraries.dachshungTab
     implementation libraries.arcNavigationView
 
     // Room

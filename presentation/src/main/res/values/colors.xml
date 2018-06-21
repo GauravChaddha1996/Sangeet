@@ -1,17 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!-- Primary colors -->
+    <color name="white">#EDF2F4</color>
+    <color name="darkerWhite">#9ba0a7</color>
+    <color name="darkerWhite2">#858B94</color>
+
+    <!-- Base colors -->
     <color name="colorPrimary">#2B2D42</color>
     <color name="colorPrimaryDark">#202131</color>
     <color name="colorAccent">#EF233C</color>
 
-    <color name="white">#EDF2F4</color>
-    <color name="darkerWhite">#B6BECB</color>
-
-
+    <!-- Extended -->
     <color name="backgroundColor">@color/colorPrimary</color>
     <color name="backgroundDarkColor">@color/colorPrimaryDark</color>
     <color name="textColor">@color/white</color>
     <color name="darkerTextColor">@color/darkerWhite</color>
+    <color name="darkerTextColor2">@color/darkerWhite2</color>
     <color name="buttonsColor">@color/colorAccent</color>
 
     <color name="backgroundGradientStart">#240b36</color>
@@ -19,4 +24,7 @@
 
     <color name="backgroundGradientStart2">#360033</color>
     <color name="backgroundGradientEnd2">#0b8793</color>
+
+    <color name="search_bar_color">@color/colorAccent</color>
+    <color name="search_hint_color">@color/colorPrimaryDark</color>
 </resources>

@@ -3,6 +3,7 @@ package com.gaurav.data;
 import android.content.ContentResolver;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.os.Build;
 import android.provider.MediaStore;
 
 import com.gaurav.domain.MusicState;
@@ -15,6 +16,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -177,23 +179,37 @@ public class MusicRepositoryImpl implements MusicRepository {
     }
 
     private List<Song> processForSongs(List<Song> songList) {
-        songList.sort((song1, song2) -> song1.title.compareToIgnoreCase(song2.title));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            songList.sort((song1, song2) -> song1.title.compareToIgnoreCase(song2.title));
+        } else {
+            Collections.sort(songList, (song1, song2) -> song1.title.compareToIgnoreCase(song2.title));
+        }
         return songList;
     }
 
     private List<Album> processForAlbums(List<Song> songList) {
         Map<String, Album> albumMap = new HashMap<>();
         for (Song song : songList) {
-            Album album = albumMap
-                    .getOrDefault(song.album.toLowerCase().trim(),
-                            new Album(song.albumId, song.album,
-                                    song.artistId, song.artist,
-                                    new TreeSet<>((song1, song2) -> song1.track < song2.track ? -1 : 1)));
+            Album album = null;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                album = albumMap
+                        .getOrDefault(song.album.toLowerCase().trim(),
+                                new Album(song.albumId, song.album,
+                                        song.artistId, song.artist,
+                                        new TreeSet<>((song1, song2) -> song1.track < song2.track ? -1 : 1)));
+            } else {
+                album = albumMap.get(song.album.toLowerCase().trim());
+                if (album == null) {
+                    album = new Album(song.albumId, song.album,
+                            song.artistId, song.artist,
+                            new TreeSet<>((song1, song2) -> song1.track < song2.track ? -1 : 1));
+                }
+            }
             album.songSet.add(song);
             albumMap.put(album.name.toLowerCase().trim(), album);
         }
         List<Album> albumList = new ArrayList<>(albumMap.values());
-        albumList.sort((album1, album2) -> album1.name.compareToIgnoreCase(album2.name));
+        Collections.sort(albumList, (album1, album2) -> album1.name.compareToIgnoreCase(album2.name));
         return albumList;
     }
 
@@ -201,25 +217,45 @@ public class MusicRepositoryImpl implements MusicRepository {
                                            List<Album> albumList) {
         Map<String, Artist> artistMap = new HashMap<>();
         for (Song song : songList) {
-            Artist artist = artistMap
-                    .getOrDefault(song.artist.toLowerCase().trim(),
-                            new Artist(song.artistId, song.artist,
-                                    new TreeSet<>((album1, album2) -> album1.name.compareToIgnoreCase(album2.name)),
-                                    new TreeSet<>((song1, song2) -> song1.title.compareToIgnoreCase(song2.title))));
+            Artist artist = null;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                artist = artistMap
+                        .getOrDefault(song.artist.toLowerCase().trim(),
+                                new Artist(song.artistId, song.artist,
+                                        new TreeSet<>((album1, album2) -> album1.name.compareToIgnoreCase(album2.name)),
+                                        new TreeSet<>((song1, song2) -> song1.title.compareToIgnoreCase(song2.title))));
+            } else {
+                artist = artistMap.get(song.artist.toLowerCase().trim());
+                if (artist == null) {
+                    artist = new Artist(song.artistId, song.artist,
+                            new TreeSet<>((album1, album2) -> album1.name.compareToIgnoreCase(album2.name)),
+                            new TreeSet<>((song1, song2) -> song1.title.compareToIgnoreCase(song2.title)));
+                }
+            }
             artist.songSet.add(song);
             artistMap.put(artist.name.toLowerCase().trim(), artist);
         }
         for (Album album : albumList) {
-            Artist artist = artistMap
-                    .getOrDefault(album.artistName.toLowerCase().trim(),
-                            new Artist(album.artistId, album.artistName,
-                                    new TreeSet<>((album1, album2) -> album1.name.compareToIgnoreCase(album2.name)),
-                                    new TreeSet<>((song1, song2) -> song1.title.compareToIgnoreCase(song2.title))));
+            Artist artist = null;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                artist = artistMap
+                        .getOrDefault(album.artistName.toLowerCase().trim(),
+                                new Artist(album.artistId, album.artistName,
+                                        new TreeSet<>((album1, album2) -> album1.name.compareToIgnoreCase(album2.name)),
+                                        new TreeSet<>((song1, song2) -> song1.title.compareToIgnoreCase(song2.title))));
+            } else {
+                artist = artistMap.get(album.artistName.toLowerCase().trim());
+                if (artist == null) {
+                    artist = new Artist(album.artistId, album.artistName,
+                            new TreeSet<>((album1, album2) -> album1.name.compareToIgnoreCase(album2.name)),
+                            new TreeSet<>((song1, song2) -> song1.title.compareToIgnoreCase(song2.title)));
+                }
+            }
             artist.albumSet.add(album);
             artistMap.put(artist.name.toLowerCase().trim(), artist);
         }
         List<Artist> artistList = new ArrayList<>(artistMap.values());
-        artistList.sort((artist1, artist2) -> artist1.name.compareToIgnoreCase(artist2.name));
+        Collections.sort(artistList, (artist1, artist2) -> artist1.name.compareToIgnoreCase(artist2.name));
         return artistList;
     }
 }

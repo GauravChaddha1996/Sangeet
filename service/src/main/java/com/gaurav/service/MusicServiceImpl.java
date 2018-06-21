@@ -1,6 +1,7 @@
 package com.gaurav.service;
 
 import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.media.MediaPlayer;
@@ -51,22 +52,48 @@ import io.reactivex.disposables.Disposable;
  *
  * Inspirations: https://www.uplabs.com/posts/daily-ui-music-player,
  *               https://www.uplabs.com/posts/dark-material-music-app-ui
- * [] Presentation layer
- * \-[DONE] Color Scheme
- *  \-[] Logo
- *   \-[] Splash full screen animation no toolbar
- *    \-[] HomeActivity toolbar and accurate view pager movements
- *          \- NavigationView= Better text appearence, icons and background
- *     \-[] Handle search activity
- *      \-[] Handle search activity transition
- *       \-[] List + menu items on click and their logic for song
- *        \-[] Music state minimized view
- *         \-[] Music state full view
- *          \-[] Transition between the Music state view's state
- *           \-[] Extend logic to album and artist and playlist
- *            \-[] Handle detail screen for album, artist and playlist and their clicks and stuff
- *             \-[] Make transition smooth between them
- *              \-[] Make settings screen and about screen
+ * 
+ * (Implement logic as required)
+ * [Done] Think of all colors from different screens required - 
+ 	  Color primary dark - status bar
+ 	  Color primary - toolbar
+ 	  Color accent - tab layout dot = bottom sheet button color
+ 	  Color primary two - bottom sheet color collapsed 
+ 	  Color accent two - use anywhere
+ * [Done] 8 color schemes - I love coolors.co
+ 	  (Two accents, two primary, two dark shade - two shades down of primary)
+ 	  Light themes:
+ 	  https://coolors.co/237eaf-243687-fdfffc-ff9f1c-ce3030
+ 	  https://coolors.co/f87060-003971-4171af-42ad51-ffc857
+ 	  https://coolors.co/009ea0-ffba49-ef5b5b-4b2e46-b4b8bb
+ 	  https://coolors.co/dbb13b-478060-3b597b-0a0e29-efac73
+ 	  Dark themes:
+ 	  https://coolors.co/95dce6-6564db-232ed1-101d42-0d1317
+ 	  https://coolors.co/494949-4a314d-ff5d73-1b5299-4381c1 
+ 	  https://coolors.co/040f0f-248232-2ba84a-2d3a3a-fcfffc 
+ 	  https://coolors.co/3c1518-69140e-a44200-d58936-f2f3ae
+ * [Done] Find logo Design apps 
+ 		Gravit
+ 		Figma - design and maintain  - prototype, wireframe. 
+		Zeplin - design and maintain - prototype, wireframe.
+ 		avocode - design to measurements
+ 		Krita - digital paint art
+ * [] Design logo - in different colors - Soundwaves - they can animate and write some name.
+ * [] Lottie - animate your logo. Show it now.
+ * [] Find good design apps
+ * [] Home screen UI - Toolbar, TabLayout, Bottom sheet collapsed
+ * [] Song item UI and animation
+ * [] Home screen overall UI and animation
+ * [] Bottom sheet full UI
+ * [] Bottom sheet animation and menu change in toolbar
+ * [] Album, artists, playlist screen UI
+ * [] Album, artists, playlist screen animation
+ * [] Individual album, artist, playlist screen UI
+ * [] Individual album, artist, playlist screen animation
+ * [] Search screen UI
+ * [] Search screen Animation
+ * [] Settings screen UI
+ * [] Settings screen Animation
  * [] handle to-dos
  * [] handle corner cases from trello
  * */
