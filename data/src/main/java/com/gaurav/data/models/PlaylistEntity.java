@@ -4,7 +4,7 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.TypeConverters;
 
-import com.gaurav.data.TreeSetSongTypeConverter;
+import com.gaurav.data.converter.TreeSetSongTypeConverter;
 import com.gaurav.domain.models.Song;
 
 import java.util.TreeSet;

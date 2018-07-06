@@ -1,4 +1,4 @@
-package com.gaurav.data;
+package com.gaurav.data.converter;
 
 import android.arch.persistence.room.TypeConverter;
 

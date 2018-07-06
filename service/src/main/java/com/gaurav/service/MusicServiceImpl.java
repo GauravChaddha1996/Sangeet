@@ -1,7 +1,6 @@
 package com.gaurav.service;
 
 import android.app.Notification;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.media.MediaPlayer;
@@ -20,36 +19,24 @@ import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
 
 /*
+ * Total:
+ * Application start - make database,repo,statemanager etc. Init them all -> move to home activity
+ * Home activity View implements ViewInterface. HomeViewModel listens to it's playIntent.
+ * HomeViewModel transforms UIEvent to Action and send it to the useCase.
+ * UseCase executes the action. Updates the state to state manager. State manager broadcasts the
+ * new state.
+ *
+ * HomeViewModel is asked for data which it asks to the FetchUseCase and put it into it's live data
+ * which the HomeView has subscribed to.
+ *
  * Todos for tomorrow:
  *
- * [DONE] Make this service actually a service and let it start with appropriate place and handle itself well
- * [DONE] make communication to this service clear. - bind in application init
- * [DONE] Handle illegal states in media player
+ * Read git commit msgs to gather what has happened until now and check it thoroughly
+ * Complete todos written here and there
+ * Start with Logic tasks
  *
- * [DONE] Clean splash activity animation and activity code itself
- * [DONE] clean musicpplication class
- * [DONE] clean home activity
- * [DONE] clean viewmodel and rvadapter
- * [DONE] clean fakefragment
- *
- * [DONE] Give each view it's own model.
- * [DONE] To give events to viewmodel instead of commands and actions flowing out from view models
- * [DONE] remove the useless data model transformations
-
- * [Done] show albums and artists and playlists
- * [Done] handle their clicking and stuff and playing
-
- * [DONE] better state reducer code
- * [DONE] clean music interactor impl
- *
- * [DONE] make presentation show MusicState data - observe music state
- * [DONE] implement music state save
- * [DONE] add callback listeners for updating duration
- * [DONE] clean off all disposables
- *
- *
- * [] add other functionality like play pause next  - play next - and queue actions
- *
+ * ### UI tasks
+ * ===================================================================
  * Inspirations: https://www.uplabs.com/posts/daily-ui-music-player,
  *               https://www.uplabs.com/posts/dark-material-music-app-ui
  * 
@@ -81,6 +68,28 @@ import io.reactivex.disposables.Disposable;
  * [] Design logo - in different colors - Soundwaves - they can animate and write some name.
  * [] Lottie - animate your logo. Show it now.
  * [] Find good design apps
+ *
+ *
+ * ### Logic tasks
+ *
+ * 1. Data: verify this happened in early commits
+ * Stored song, album, aretist, playlist and state as model.
+ *
+ * 2. Presentation: verify this happens as expected.
+ * (View sends UIEvent to ViewModel or rather ViewModel subscribes to it.
+ * View subscribes to a livedata<ViewKaApnaModel> and shows the view according to it.
+ * ViewModel transforms UIEvent to action and action is sent to domain use cases.
+ *
+ * 3. Domain: vertifyb this happens as expectyed
+ * use cases will recieve actions - they will ask service stuff to do according to it and
+ * update the state being saved as model
+ * ViewModels subscribe to these state as model.
+ *
+ * 4. service
+ * given a song make the service play it. Bind service ot application.
+ *
+ *
+ * ===================================================================
  * [] Home screen UI - Toolbar, TabLayout, Bottom sheet collapsed
  * [] Song item UI and animation
  * [] Home screen overall UI and animation
@@ -117,7 +126,7 @@ public class MusicServiceImpl extends Service implements MusicService {
         super.onCreate();
         mediaPlayer = new MediaPlayer();
         prepareObservablesAndEmitters();
-        startForeground(101, getNotification());
+        //startForeground(101, getNotification());
     }
 
     @Override

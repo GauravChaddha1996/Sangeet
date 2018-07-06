@@ -38,7 +38,7 @@ public class MusicStateManagerImpl implements MusicStateManager {
     @Override
     public Completable init() {
         return Completable.create(emitter -> {
-            this.musicState = musicRepository.getMusicStateOrError();
+            this.musicState = musicRepository.getMusicState();
             if (musicState == null) {
                 musicState = getInitialState();
             }
@@ -154,7 +154,7 @@ public class MusicStateManagerImpl implements MusicStateManager {
                 || changes instanceof CurrentSongIndexChanged
                 || changes instanceof PlayingStatusChanged
                 || changes instanceof PartialChanges.SongCompleted) {
-            musicRepository.saveMusicState(musicState);
+            musicRepository.saveMusicState(musicState).subscribe();
         }
     }
 }

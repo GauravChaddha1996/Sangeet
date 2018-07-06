@@ -4,6 +4,7 @@ import android.arch.persistence.room.Database;
 import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.TypeConverters;
 
+import com.gaurav.data.converter.TreeSetSongTypeConverter;
 import com.gaurav.data.daos.PlaylistDao;
 import com.gaurav.data.models.PlaylistEntity;
 

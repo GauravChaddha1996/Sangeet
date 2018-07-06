@@ -2,7 +2,7 @@ ext {
     versions = [
             // Android related
             compileSDK       : 27,
-            minSDK           : 21,
+            minSDK           : 24,
             targetSDK        : 27,
             code             : 1,
             name             : '1.0',

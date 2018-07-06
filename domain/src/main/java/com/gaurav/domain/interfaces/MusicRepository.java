@@ -9,12 +9,11 @@ import com.gaurav.domain.models.Song;
 import java.util.List;
 
 import io.reactivex.Completable;
-import io.reactivex.Maybe;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 
 public interface MusicRepository {
-
+    // TODO: 7/5/18 Add all calls for getting single song, album, artists even if you dont call them
     Completable init();
 
     Observable<List<Song>> getAllSongs();
@@ -31,7 +30,7 @@ public interface MusicRepository {
 
     Completable deletePlaylist(long id);
 
-    MusicState getMusicStateOrError();
+    MusicState getMusicState();
 
     Completable saveMusicState(MusicState musicState);
 }
