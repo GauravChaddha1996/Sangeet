@@ -1,4 +1,4 @@
-package com.gaurav.sangeet;
+package com.gaurav.sangeet.activity;
 
 import android.content.Intent;
 import android.graphics.drawable.Animatable;
@@ -7,8 +7,10 @@ import android.os.Bundle;
 import android.support.graphics.drawable.Animatable2Compat;
 import android.support.graphics.drawable.AnimatedVectorDrawableCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.view.animation.Animation;
 import android.widget.ImageView;
+
+import com.gaurav.sangeet.MusicApplication;
+import com.gaurav.sangeet.R;
 
 import io.reactivex.disposables.Disposable;
 

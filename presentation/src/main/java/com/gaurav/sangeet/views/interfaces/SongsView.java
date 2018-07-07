@@ -1,12 +1,13 @@
 package com.gaurav.sangeet.views.interfaces;
 
-import com.gaurav.domain.models.Song;
-import com.gaurav.sangeet.views.implementations.songs.SongsViewState;
+import com.gaurav.sangeet.views.uiEvents.songs.SongViewUIEvent;
+import com.gaurav.sangeet.views.viewStates.SongsViewState;
 
-import io.reactivex.Observable;
+import io.reactivex.subjects.PublishSubject;
 
 public interface SongsView {
+
     void render(SongsViewState songsViewState);
 
-    Observable<Song> playIntent();
+    PublishSubject<SongViewUIEvent> getUIEvents();
 }

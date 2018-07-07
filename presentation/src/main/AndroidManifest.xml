@@ -15,7 +15,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".SplashActivity"
+            android:name=".activity.SplashActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:noHistory="true">
             <intent-filter>
@@ -26,20 +26,20 @@
         </activity>
 
         <activity
-            android:name=".HomeActivity"
+            android:name=".activity.HomeActivity"
             android:label="@string/title_activity_home"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name=".SearchActivity"
+            android:name=".activity.SearchActivity"
             android:label="@string/title_activity_search"
             android:launchMode="singleTask"
-            android:parentActivityName=".HomeActivity"
+            android:parentActivityName=".activity.HomeActivity"
             android:theme="@style/SearchStyle"
             android:windowSoftInputMode="adjustPan|adjustResize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".HomeActivity" />
+                android:value=".activity.HomeActivity" />
         </activity>
 
     </application>

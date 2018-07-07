@@ -1,4 +1,4 @@
-package com.gaurav.sangeet.views.implementations.songs;
+package com.gaurav.sangeet.views.viewStates;
 
 import com.gaurav.domain.models.Song;
 

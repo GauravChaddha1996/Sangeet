@@ -8,31 +8,34 @@ import com.gaurav.domain.models.Artist;
 import com.gaurav.domain.models.Playlist;
 import com.gaurav.domain.models.Song;
 import com.gaurav.domain.usecases.CommandUseCases;
+import com.gaurav.domain.usecases.actions.Action;
+import com.gaurav.domain.usecases.actions.PlaySongAction;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import io.reactivex.Emitter;
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
 import io.reactivex.Single;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.subjects.PublishSubject;
 
 public class CommandUseCasesImpl implements CommandUseCases {
 
     private MusicRepository musicRepository;
     private MusicStateManager musicStateManager;
-
-    private Emitter<PartialChanges> partialChangesEmitter;
-    private Observable<PartialChanges> partialChangesObservable;
-
-    private Emitter<Song> songToPlayEmitter;
-    private Observable<Song> songToPlayObservable;
+    private PublishSubject<Action> actionPublishSubject;
+    private PublishSubject<PartialChanges> partialChangesSubject;
+    private PublishSubject<Song> songToPlaySubject;
 
     public CommandUseCasesImpl(MusicRepository musicRepository, MusicStateManager musicStateManager) {
         this.musicRepository = musicRepository;
         this.musicStateManager = musicStateManager;
         prepareObservablesAndEmitters();
+    }
+
+    @Override
+    public PublishSubject actionSubject() {
+        return actionPublishSubject;
     }
 
     @Override
@@ -62,39 +65,41 @@ public class CommandUseCasesImpl implements CommandUseCases {
     }
 
     @Override
-    public Observable<PartialChanges> observePartialChanges() {
-        return partialChangesObservable;
+    public PublishSubject<PartialChanges> observePartialChanges() {
+        return partialChangesSubject;
     }
 
     @Override
-    public Observable<Song> observeSongToPlay() {
-        return songToPlayObservable;
+    public PublishSubject<Song> observeSongToPlay() {
+        return songToPlaySubject;
     }
-
     /*
      * Private helper functions
      * */
 
     private void prepareObservablesAndEmitters() {
-        partialChangesObservable = Observable.create((ObservableEmitter<PartialChanges> emitter) ->
-                this.partialChangesEmitter = emitter);
-        partialChangesObservable.publish().connect();
-
-        songToPlayObservable = Observable.create((ObservableEmitter<Song> emitter) ->
-                this.songToPlayEmitter = emitter);
-        songToPlayObservable.publish().connect();
+        actionPublishSubject = PublishSubject.create();
+        Disposable disposable = actionPublishSubject.subscribe(action -> {
+            // TODO: 7/7/18 think of a better way to do this if-else case
+            if (action instanceof PlaySongAction) {
+                playCommandHelper(((PlaySongAction) action).getSong(), ((PlaySongAction) action).getSong());
+            }
+        });
+        partialChangesSubject = PublishSubject.create();
+        songToPlaySubject = PublishSubject.create();
     }
 
-    private void playCommandHelper(Object object, Song song) {
+    private <T> T playCommandHelper(T object, Song song) {
         makeQueue(object)
                 .map(this::shuffleQueueIfNeeded)
-                .doOnSuccess(songs -> partialChangesEmitter.onNext(new PartialChanges.QueueUpdated(songs)))
+                .doOnSuccess(songs -> partialChangesSubject.onNext(new PartialChanges.QueueUpdated(songs)))
                 .map(songs -> songs.indexOf(song))
-                .doOnSuccess(currentSongIndex -> partialChangesEmitter.onNext(new PartialChanges.CurrentSongIndexChanged(currentSongIndex)))
+                .doOnSuccess(currentSongIndex -> partialChangesSubject.onNext(new PartialChanges.CurrentSongIndexChanged(currentSongIndex)))
                 .doOnSuccess(__ -> playCurrentSongIndex(song))
-                .doOnSuccess(__ -> partialChangesEmitter.onNext(new PartialChanges.PlayingStatusChanged(true)))
-                .doOnSuccess(__ -> partialChangesEmitter.onNext(new PartialChanges.Complete()))
+                .doOnSuccess(__ -> partialChangesSubject.onNext(new PartialChanges.PlayingStatusChanged(true)))
+                .doOnSuccess(__ -> partialChangesSubject.onNext(new PartialChanges.Complete()))
                 .subscribe().dispose();
+        return object;
     }
 
     private Single<List<Song>> makeQueue(Object object) {
@@ -121,7 +126,7 @@ public class CommandUseCasesImpl implements CommandUseCases {
     }
 
     private void playCurrentSongIndex(Song song) {
-        songToPlayEmitter.onNext(song);
+        songToPlaySubject.onNext(song);
     }
 
 }

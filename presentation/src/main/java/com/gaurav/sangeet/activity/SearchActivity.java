@@ -1,4 +1,4 @@
-package com.gaurav.sangeet;
+package com.gaurav.sangeet.activity;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -14,6 +14,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.gaurav.sangeet.R;
 import com.gaurav.sangeet.utils.TransitionListenerAdapter;
 
 import static android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE;

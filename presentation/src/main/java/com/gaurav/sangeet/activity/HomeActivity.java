@@ -1,4 +1,4 @@
-package com.gaurav.sangeet;
+package com.gaurav.sangeet.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,6 +17,8 @@ import android.view.View;
 
 import com.gaurav.domain.usecases.CommandUseCases;
 import com.gaurav.domain.usecases.FetchUseCases;
+import com.gaurav.sangeet.MusicApplication;
+import com.gaurav.sangeet.R;
 import com.rom4ek.arcnavigationview.ArcNavigationView;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;

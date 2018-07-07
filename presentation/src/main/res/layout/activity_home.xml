@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:background="@color/backgroundColor"
     android:layout_height="match_parent"
-    tools:context=".HomeActivity">
+    tools:context=".activity.HomeActivity">
 
     <com.rom4ek.arcnavigationview.ArcNavigationView
         android:id="@+id/nav_view"

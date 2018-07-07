@@ -14,9 +14,9 @@ import com.gaurav.domain.usecases.CommandUseCases;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-import io.reactivex.Emitter;
 import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.subjects.PublishSubject;
 
 /*
  * Total:
@@ -39,13 +39,12 @@ import io.reactivex.disposables.Disposable;
  * ===================================================================
  * Inspirations: https://www.uplabs.com/posts/daily-ui-music-player,
  *               https://www.uplabs.com/posts/dark-material-music-app-ui
- * 
- * (Implement logic as required)
- * [Done] Think of all colors from different screens required - 
+ *
+ * [Done] Think of all colors from different screens required -
  	  Color primary dark - status bar
  	  Color primary - toolbar
  	  Color accent - tab layout dot = bottom sheet button color
- 	  Color primary two - bottom sheet color collapsed 
+ 	  Color primary two - bottom sheet color collapsed
  	  Color accent two - use anywhere
  * [Done] 8 color schemes - I love coolors.co
  	  (Two accents, two primary, two dark shade - two shades down of primary)
@@ -56,12 +55,12 @@ import io.reactivex.disposables.Disposable;
  	  https://coolors.co/dbb13b-478060-3b597b-0a0e29-efac73
  	  Dark themes:
  	  https://coolors.co/95dce6-6564db-232ed1-101d42-0d1317
- 	  https://coolors.co/494949-4a314d-ff5d73-1b5299-4381c1 
- 	  https://coolors.co/040f0f-248232-2ba84a-2d3a3a-fcfffc 
+ 	  https://coolors.co/494949-4a314d-ff5d73-1b5299-4381c1
+ 	  https://coolors.co/040f0f-248232-2ba84a-2d3a3a-fcfffc
  	  https://coolors.co/3c1518-69140e-a44200-d58936-f2f3ae
- * [Done] Find logo Design apps 
+ * [Done] Find logo Design apps
  		Gravit
- 		Figma - design and maintain  - prototype, wireframe. 
+ 		Figma - design and maintain  - prototype, wireframe.
 		Zeplin - design and maintain - prototype, wireframe.
  		avocode - design to measurements
  		Krita - digital paint art
@@ -108,24 +107,20 @@ import io.reactivex.disposables.Disposable;
  * */
 public class MusicServiceImpl extends Service implements MusicService {
 
-    private CommandUseCases commandUseCases;
     private MediaPlayer mediaPlayer;
     private MusicServiceBinder binder;
     private Disposable progressDisposable;
     private Disposable songToPlayDisposable;
 
-    private Emitter<Integer> progressEmitter;
-    private Observable<Integer> progressObservable;
-
-    private Emitter<Boolean> songCompleteEmitter;
-    private Observable<Boolean> songCompleteObservable;
-
+    private PublishSubject<Integer> progressSubject;
+    private PublishSubject<Boolean> songCompleteSubject;
 
     @Override
     public void onCreate() {
         super.onCreate();
         mediaPlayer = new MediaPlayer();
         prepareObservablesAndEmitters();
+        // TODO: 7/7/18 start the service in foreground
         //startForeground(101, getNotification());
     }
 
@@ -147,7 +142,6 @@ public class MusicServiceImpl extends Service implements MusicService {
 
     @Override
     public void attachCommandUseCases(CommandUseCases commandUseCases) {
-        this.commandUseCases = commandUseCases;
         songToPlayDisposable = commandUseCases.observeSongToPlay()
                 .subscribe(song -> this.play(song.data));
     }
@@ -157,17 +151,16 @@ public class MusicServiceImpl extends Service implements MusicService {
         if (songToPlayDisposable != null && !songToPlayDisposable.isDisposed()) {
             songToPlayDisposable.dispose();
         }
-        this.commandUseCases = null;
     }
 
     @Override
-    public Observable<Integer> observeProgress() {
-        return progressObservable;
+    public PublishSubject<Integer> observeProgress() {
+        return progressSubject;
     }
 
     @Override
-    public Observable<Boolean> observeSongCompletion() {
-        return songCompleteObservable;
+    public PublishSubject<Boolean> observeSongCompletion() {
+        return songCompleteSubject;
     }
 
     @Override
@@ -180,9 +173,9 @@ public class MusicServiceImpl extends Service implements MusicService {
             mediaPlayer.setDataSource(path);
             mediaPlayer.prepare();
             mediaPlayer.start();
-            mediaPlayer.setOnCompletionListener(__ -> songCompleteEmitter.onNext(true));
+            mediaPlayer.setOnCompletionListener(__ -> songCompleteSubject.onNext(true));
             progressDisposable = Observable.interval(1, TimeUnit.SECONDS)
-                    .doOnNext(aLong -> progressEmitter.onNext(mediaPlayer.getCurrentPosition()))
+                    .doOnNext(aLong -> progressSubject.onNext(mediaPlayer.getCurrentPosition()))
                     .subscribe();
         } catch (IOException e) {
             e.printStackTrace();
@@ -203,8 +196,8 @@ public class MusicServiceImpl extends Service implements MusicService {
      * */
 
     private void prepareObservablesAndEmitters() {
-        progressObservable = Observable.create(emitter -> this.progressEmitter = emitter);
-        songCompleteObservable = Observable.create(emitter -> this.songCompleteEmitter = emitter);
+        progressSubject = PublishSubject.create();
+        songCompleteSubject = PublishSubject.create();
     }
 
     private Notification getNotification() {

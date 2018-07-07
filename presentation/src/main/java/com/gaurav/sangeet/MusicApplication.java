@@ -28,16 +28,16 @@ public class MusicApplication extends Application {
     MusicDatabase musicDatabase;
     MusicRepository musicRepository;
     MusicService musicService;
-    MusicStateManager musicStateManager;
-    FetchUseCases fetchUseCases;
-    CommandUseCases commandUseCases;
+    public MusicStateManager musicStateManager;
+    public FetchUseCases fetchUseCases;
+    public CommandUseCases commandUseCases;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        musicDatabase = Room.databaseBuilder(this, MusicDatabase.class, "sangeet-db")
-                .build();
+        musicDatabase = Room.databaseBuilder(this,
+                MusicDatabase.class, "sangeet-db").build();
         musicRepository = new MusicRepositoryImpl(getContentResolver(),
                 getSharedPreferences("sangeet", MODE_PRIVATE),
                 musicDatabase);

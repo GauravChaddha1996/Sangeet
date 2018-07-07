@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.gaurav.domain.models.Song;
 import com.gaurav.domain.usecases.CommandUseCases;
 import com.gaurav.domain.usecases.FetchUseCases;
 import com.gaurav.sangeet.R;
@@ -20,11 +19,13 @@ import com.gaurav.sangeet.utils.ItemClickSupport;
 import com.gaurav.sangeet.viewModels.songs.SongsViewModel;
 import com.gaurav.sangeet.viewModels.songs.SongsViewModelFactory;
 import com.gaurav.sangeet.views.interfaces.SongsView;
+import com.gaurav.sangeet.views.uiEvents.songs.SongItemClickUIEvent;
+import com.gaurav.sangeet.views.uiEvents.songs.SongViewUIEvent;
+import com.gaurav.sangeet.views.viewStates.SongsViewState;
 
 import java.util.ArrayList;
 
-import io.reactivex.Emitter;
-import io.reactivex.Observable;
+import io.reactivex.subjects.PublishSubject;
 
 @SuppressLint("ValidFragment")
 public class SongsViewImpl extends Fragment implements SongsView {
@@ -34,11 +35,12 @@ public class SongsViewImpl extends Fragment implements SongsView {
     SongsViewModel viewModel;
     RecyclerView recyclerView;
     SongsRVAdapter songsRVAdapter;
-    private Emitter<Song> playSongEmitter;
+    private PublishSubject<SongViewUIEvent> uiEventsSubject;
 
     public SongsViewImpl(FetchUseCases fetchUseCases, CommandUseCases commandUseCases) {
         this.fetchUseCases = fetchUseCases;
         this.commandUseCases = commandUseCases;
+        this.uiEventsSubject = PublishSubject.create();
     }
 
     @Nullable
@@ -51,7 +53,7 @@ public class SongsViewImpl extends Fragment implements SongsView {
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(songsRVAdapter);
         ItemClickSupport.addTo(recyclerView).setOnItemClickListener((recyclerView, position, v) -> {
-            playSongEmitter.onNext(songsRVAdapter.getSong(position));
+            uiEventsSubject.onNext(new SongItemClickUIEvent(songsRVAdapter.getSong(position)));
         });
         return view;
     }
@@ -76,8 +78,8 @@ public class SongsViewImpl extends Fragment implements SongsView {
     }
 
     @Override
-    public Observable<Song> playIntent() {
-        return Observable.create(emitter -> this.playSongEmitter = emitter);
+    public PublishSubject<SongViewUIEvent> getUIEvents() {
+        return uiEventsSubject;
     }
 }
 
