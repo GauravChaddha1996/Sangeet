@@ -20,20 +20,18 @@ import io.reactivex.subjects.PublishSubject;
 
 /*
  * Total:
+ * ======================================================================
  * Application start - make database,repo,statemanager etc. Init them all -> move to home activity
- * Home activity View implements ViewInterface. HomeViewModel listens to it's playIntent.
- * HomeViewModel transforms UIEvent to Action and send it to the useCase.
+ * View implements ViewInterface. ViewModel listens to it's UIEvents. View listens to
+ * live data of it's ViewState in the ViewModel.
+ *
+ * ViewModel is asked for data which it asks to the FetchUseCase and put it into it's live data
+ * which the View has subscribed to. ViewModel updates the ViewState which in turn is rendered by View;
+ *
+ * ViewModel transforms UIEvent to Action and send it to the useCase.
  * UseCase executes the action. Updates the state to state manager. State manager broadcasts the
- * new state.
+ * new state. ViewModel updates the ViewState according to the new MusicState broadcasted.
  *
- * HomeViewModel is asked for data which it asks to the FetchUseCase and put it into it's live data
- * which the HomeView has subscribed to.
- *
- * Todos for tomorrow:
- *
- * Read git commit msgs to gather what has happened until now and check it thoroughly
- * Complete todos written here and there
- * Start with Logic tasks
  *
  * ### UI tasks
  * ===================================================================
@@ -70,24 +68,6 @@ import io.reactivex.subjects.PublishSubject;
  *
  *
  * ### Logic tasks
- *
- * 1. Data: verify this happened in early commits
- * Stored song, album, aretist, playlist and state as model.
- *
- * 2. Presentation: verify this happens as expected.
- * (View sends UIEvent to ViewModel or rather ViewModel subscribes to it.
- * View subscribes to a livedata<ViewKaApnaModel> and shows the view according to it.
- * ViewModel transforms UIEvent to action and action is sent to domain use cases.
- *
- * 3. Domain: vertifyb this happens as expectyed
- * use cases will recieve actions - they will ask service stuff to do according to it and
- * update the state being saved as model
- * ViewModels subscribe to these state as model.
- *
- * 4. service
- * given a song make the service play it. Bind service ot application.
- *
- *
  * ===================================================================
  * [] Home screen UI - Toolbar, TabLayout, Bottom sheet collapsed
  * [] Song item UI and animation
