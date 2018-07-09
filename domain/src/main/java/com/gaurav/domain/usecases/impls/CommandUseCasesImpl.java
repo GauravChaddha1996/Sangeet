@@ -2,6 +2,7 @@ package com.gaurav.domain.usecases.impls;
 
 import com.gaurav.domain.PartialChanges;
 import com.gaurav.domain.interfaces.MusicRepository;
+import com.gaurav.domain.interfaces.MusicService;
 import com.gaurav.domain.interfaces.MusicStateManager;
 import com.gaurav.domain.models.Album;
 import com.gaurav.domain.models.Artist;
@@ -9,7 +10,13 @@ import com.gaurav.domain.models.Playlist;
 import com.gaurav.domain.models.Song;
 import com.gaurav.domain.usecases.CommandUseCases;
 import com.gaurav.domain.usecases.actions.Action;
+import com.gaurav.domain.usecases.actions.NextSongAction;
+import com.gaurav.domain.usecases.actions.PauseSongAction;
 import com.gaurav.domain.usecases.actions.PlaySongAction;
+import com.gaurav.domain.usecases.actions.PrevSongAction;
+import com.gaurav.domain.usecases.actions.RepeatAction;
+import com.gaurav.domain.usecases.actions.ResumeSongAction;
+import com.gaurav.domain.usecases.actions.ShuffleAction;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,9 +30,10 @@ public class CommandUseCasesImpl implements CommandUseCases {
 
     private MusicRepository musicRepository;
     private MusicStateManager musicStateManager;
+    private MusicService musicService;
+
     private PublishSubject<Action> actionPublishSubject;
     private PublishSubject<PartialChanges> partialChangesSubject;
-    private PublishSubject<Song> songToPlaySubject;
 
     public CommandUseCasesImpl(MusicRepository musicRepository, MusicStateManager musicStateManager) {
         this.musicRepository = musicRepository;
@@ -36,6 +44,16 @@ public class CommandUseCasesImpl implements CommandUseCases {
     @Override
     public PublishSubject actionSubject() {
         return actionPublishSubject;
+    }
+
+    @Override
+    public void attachMusicService(MusicService musicService) {
+        this.musicService = musicService;
+    }
+
+    @Override
+    public void detachMusicService() {
+        this.musicService = null;
     }
 
     @Override
@@ -69,10 +87,6 @@ public class CommandUseCasesImpl implements CommandUseCases {
         return partialChangesSubject;
     }
 
-    @Override
-    public PublishSubject<Song> observeSongToPlay() {
-        return songToPlaySubject;
-    }
     /*
      * Private helper functions
      * */
@@ -83,10 +97,25 @@ public class CommandUseCasesImpl implements CommandUseCases {
             // TODO: 7/7/18 think of a better way to do this if-else case
             if (action instanceof PlaySongAction) {
                 playCommandHelper(((PlaySongAction) action).getSong(), ((PlaySongAction) action).getSong());
+            } else if (action instanceof PauseSongAction) {
+                musicService.pause();
+                partialChangesSubject.onNext(new PartialChanges.PlayingStatusChanged(false));
+                partialChangesSubject.onNext(new PartialChanges.Complete());
+            } else if (action instanceof ResumeSongAction) {
+                musicService.resume();
+                partialChangesSubject.onNext(new PartialChanges.PlayingStatusChanged(true));
+                partialChangesSubject.onNext(new PartialChanges.Complete());
+            } else if (action instanceof PrevSongAction) {
+                System.out.println("Action is Prev");
+            } else if (action instanceof NextSongAction) {
+                System.out.println("Action is Next");
+            } else if (action instanceof ShuffleAction) {
+                System.out.println("Action is Shuffle");
+            } else if (action instanceof RepeatAction) {
+                System.out.println("Action is Repeat");
             }
         });
         partialChangesSubject = PublishSubject.create();
-        songToPlaySubject = PublishSubject.create();
     }
 
     private <T> T playCommandHelper(T object, Song song) {
@@ -126,7 +155,7 @@ public class CommandUseCasesImpl implements CommandUseCases {
     }
 
     private void playCurrentSongIndex(Song song) {
-        songToPlaySubject.onNext(song);
+        musicService.play(song.data);
     }
 
 }

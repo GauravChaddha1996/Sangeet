@@ -8,17 +8,20 @@ public class MusicState {
     private boolean showStatus;
     private long progress;
     private int currentSongIndex;
+    private Song currentSong;
     private boolean shuffle;
     private boolean repeat;
     private List<Song> songQueue;
     private boolean disablePrev;
     private boolean isPlaying;
 
-    public MusicState(boolean showStatus, long progress, int currentSongIndex, boolean shuffle,
-                      boolean repeat, List<Song> songQueue, boolean disablePrev, boolean isPlaying) {
+    public MusicState(boolean showStatus, long progress, int currentSongIndex, Song currentSong,
+                      boolean shuffle, boolean repeat, List<Song> songQueue, boolean disablePrev,
+                      boolean isPlaying) {
         this.showStatus = showStatus;
         this.progress = progress;
         this.currentSongIndex = currentSongIndex;
+        this.currentSong = currentSong;
         this.shuffle = shuffle;
         this.repeat = repeat;
         this.songQueue = songQueue;
@@ -58,21 +61,12 @@ public class MusicState {
         return isPlaying;
     }
 
-    public MusicStateBuilder builder() {
-        return new MusicStateBuilder(showStatus, progress, currentSongIndex, shuffle, repeat,
-                songQueue, disablePrev, isPlaying);
+    public Song getCurrentSong() {
+        return currentSong;
     }
 
-    @Override
-    public String toString() {
-        return "MusicState{" +
-                "showStatus=" + showStatus +
-                ", progress=" + progress +
-                ", currentSongIndex=" + currentSongIndex +
-                ", shuffle=" + shuffle +
-                ", repeat=" + repeat +
-                ", disablePrev=" + disablePrev +
-                ", isPlaying=" + isPlaying +
-                '}';
+    public MusicStateBuilder builder() {
+        return new MusicStateBuilder(showStatus, progress, currentSongIndex, currentSong, shuffle, repeat,
+                songQueue, disablePrev, isPlaying);
     }
 }

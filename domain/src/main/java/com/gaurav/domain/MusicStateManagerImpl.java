@@ -125,9 +125,10 @@ public class MusicStateManagerImpl implements MusicStateManager {
                     .setProgress(0)
                     .build();
             if (musicService != null) {
-                musicService.play(musicState.getSongQueue().get(musicState.getCurrentSongIndex()).data);
+                musicService.play(musicState.getCurrentSong().data);
             }
         } else if (changes instanceof PartialChanges.Complete) {
+            musicState = musicState.builder().setShowStatus(true).build();
             musicStateBehaviorSubject.onNext(musicState);
         }
 
@@ -139,10 +140,10 @@ public class MusicStateManagerImpl implements MusicStateManager {
         return new MusicStateBuilder()
                 .setShowStatus(false)
                 .setProgress(0)
+                .setSongQueue(new ArrayList<>())
                 .setCurrentSongIndex(0)
                 .setShuffle(true)
                 .setRepeat(true)
-                .setSongQueue(new ArrayList<>())
                 .setDisablePrev(false)
                 .setPlaying(false)
                 .build();

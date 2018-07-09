@@ -9,7 +9,6 @@ import android.os.IBinder;
 import android.util.Log;
 
 import com.gaurav.domain.interfaces.MusicService;
-import com.gaurav.domain.usecases.CommandUseCases;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -22,11 +21,12 @@ import io.reactivex.subjects.PublishSubject;
  * Total:
  * ======================================================================
  * Application start - make database,repo,statemanager etc. Init them all -> move to home activity
- * View implements ViewInterface. ViewModel listens to it's UIEvents. View listens to
+ * View implements ViewInterface. View renders ViewState. View emits UIEvents.
+ * ViewModel listens to view's UIEvents. View listens to
  * live data of it's ViewState in the ViewModel.
  *
- * ViewModel is asked for data which it asks to the FetchUseCase and put it into it's live data
- * which the View has subscribed to. ViewModel updates the ViewState which in turn is rendered by View;
+ * ViewModel asks for data to FetchUseCase and put it into it's live data of viewState
+ * , which the View has subscribed to.
  *
  * ViewModel transforms UIEvent to Action and send it to the useCase.
  * UseCase executes the action. Updates the state to state manager. State manager broadcasts the
@@ -69,11 +69,21 @@ import io.reactivex.subjects.PublishSubject;
  *
  * ### Logic tasks
  * ===================================================================
+ * [] Bottom sheet full specification -
+ *    songQueue, and other menus - gotoAlbum, goto Artist, add to playlist
+ *    songArtwork, songName, artistName, albumName,
+ *    prevButton, playPauseButton, nextButton,
+ *    shuffleButton, repeatButton
+ *    progressSeekbar.
+ *
+ *    Setup all actions according to the click.
+ * [] Implement new actions in the commandUseCaseImpl
+ * [] Add seekbar support action
+ * [] Add actions like showQueue, gotoAlbum, gotoArtist, add to Queue, add to playlist
+ * [] Bottom sheet animation and menu change in toolbar
  * [] Home screen UI - Toolbar, TabLayout, Bottom sheet collapsed
  * [] Song item UI and animation
  * [] Home screen overall UI and animation
- * [] Bottom sheet full UI
- * [] Bottom sheet animation and menu change in toolbar
  * [] Album, artists, playlist screen UI
  * [] Album, artists, playlist screen animation
  * [] Individual album, artist, playlist screen UI
@@ -90,7 +100,6 @@ public class MusicServiceImpl extends Service implements MusicService {
     private MediaPlayer mediaPlayer;
     private MusicServiceBinder binder;
     private Disposable progressDisposable;
-    private Disposable songToPlayDisposable;
 
     private PublishSubject<Integer> progressSubject;
     private PublishSubject<Boolean> songCompleteSubject;
@@ -121,19 +130,6 @@ public class MusicServiceImpl extends Service implements MusicService {
     }
 
     @Override
-    public void attachCommandUseCases(CommandUseCases commandUseCases) {
-        songToPlayDisposable = commandUseCases.observeSongToPlay()
-                .subscribe(song -> this.play(song.data));
-    }
-
-    @Override
-    public void detachCommandUseCases() {
-        if (songToPlayDisposable != null && !songToPlayDisposable.isDisposed()) {
-            songToPlayDisposable.dispose();
-        }
-    }
-
-    @Override
     public PublishSubject<Integer> observeProgress() {
         return progressSubject;
     }
@@ -155,12 +151,27 @@ public class MusicServiceImpl extends Service implements MusicService {
             mediaPlayer.start();
             mediaPlayer.setOnCompletionListener(__ -> songCompleteSubject.onNext(true));
             progressDisposable = Observable.interval(1, TimeUnit.SECONDS)
-                    .doOnNext(aLong -> progressSubject.onNext(mediaPlayer.getCurrentPosition()))
+                    .doOnNext(aLong -> {
+                        if (mediaPlayer.isPlaying()) {
+                            progressSubject.onNext(mediaPlayer.getCurrentPosition());
+                        }
+                    })
                     .subscribe();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
+    @Override
+    public void pause() {
+        if (mediaPlayer.isPlaying()) {
+            mediaPlayer.pause();
+        }
+    }
+
+    @Override
+    public void resume() {
+        mediaPlayer.start();
     }
 
     @Override

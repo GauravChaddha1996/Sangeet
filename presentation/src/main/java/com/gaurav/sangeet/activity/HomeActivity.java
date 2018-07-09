@@ -1,7 +1,9 @@
 package com.gaurav.sangeet.activity;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -15,14 +17,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.gaurav.domain.interfaces.MusicStateManager;
 import com.gaurav.domain.usecases.CommandUseCases;
 import com.gaurav.domain.usecases.FetchUseCases;
 import com.gaurav.sangeet.MusicApplication;
 import com.gaurav.sangeet.R;
+import com.gaurav.sangeet.viewModels.bottomSheet.BottomSheetViewModel;
+import com.gaurav.sangeet.viewModels.bottomSheet.BottomSheetViewModelFactory;
+import com.gaurav.sangeet.views.implementations.bottomSheet.BottomSheetViewImpl;
 import com.rom4ek.arcnavigationview.ArcNavigationView;
-
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
 
 import static com.gaurav.sangeet.Constants.Search.EXTRA_CIRCULAR_REVEAL_X;
 import static com.gaurav.sangeet.Constants.Search.EXTRA_CIRCULAR_REVEAL_Y;
@@ -33,20 +36,20 @@ public class HomeActivity extends AppCompatActivity {
     private FetchUseCases fetchUseCases;
     private CommandUseCases commandUseCases;
 
+    private MusicStateManager musicStateManager;
+
     // Views
     private DrawerLayout drawerLayout;
     private ArcNavigationView navigationView;
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    private View bottomSheet;
+    private BottomSheetViewImpl bottomSheetViewImpl;
 
     // View related objects
     private PageAdapter pageAdapter;
     private BottomSheetBehavior bottomSheetBehavior;
 
-    // Disposables
-    private Disposable disposable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,13 +59,15 @@ public class HomeActivity extends AppCompatActivity {
         // TODO: 6/1/18 improve via DI
         fetchUseCases = ((MusicApplication) getApplication()).fetchUseCases;
         commandUseCases = ((MusicApplication) getApplication()).commandUseCases;
+        musicStateManager = ((MusicApplication) getApplication()).musicStateManager;
 
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
         tabLayout = findViewById(R.id.tab_layout);
         toolbar = findViewById(R.id.toolbar);
         viewPager = findViewById(R.id.viewPager);
-        bottomSheet = findViewById(R.id.bottom_sheet);
+
+        bottomSheetViewImpl = new BottomSheetViewImpl(findViewById(R.id.bottom_sheet));
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Sangeet");
@@ -71,23 +76,37 @@ public class HomeActivity extends AppCompatActivity {
 
         pageAdapter = new PageAdapter(getSupportFragmentManager(), fetchUseCases, commandUseCases);
         viewPager.setAdapter(pageAdapter);
-        // todo remember the tab you were at before instead of 0
         viewPager.setCurrentItem(0);
         tabLayout.setupWithViewPager(viewPager);
 
-        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetViewImpl.getBaseView());
         bottomSheetBehavior.setHideable(false);
-        bottomSheet.setOnClickListener(v -> {
-            if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
-                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+                    // TODO: 7/8/18 add menu items for actions like showQueue, gotoAlbum,gotoArtist
+                    // add to playlist here. Also hide these menus when state becomes moving or
+                    // collapsed.
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                // TODO: 7/8/18 UI task: change the position of views according to this.
             }
         });
+        BottomSheetViewModel viewModel = ViewModelProviders.of(HomeActivity.this,
+                new BottomSheetViewModelFactory(bottomSheetViewImpl, commandUseCases, musicStateManager,
+                        v -> {
+                            if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
+                                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                            }
+                        }))
+                .get(BottomSheetViewModel.class);
+        viewModel.getViewState().observe(this, bottomSheetViewImpl::render);
 
-        disposable = ((MusicApplication) getApplication()).musicStateManager.observeMusicState()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(musicState -> {
-                    // TODO: 6/12/18 Update bottom sheet view here
-                });
+
     }
 
     @Override
@@ -120,14 +139,6 @@ public class HomeActivity extends AppCompatActivity {
         } else {
             super.onBackPressed();
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        if (disposable != null && !disposable.isDisposed()) {
-            disposable.dispose();
-        }
-        super.onDestroy();
     }
 
     @SuppressWarnings("unchecked")
