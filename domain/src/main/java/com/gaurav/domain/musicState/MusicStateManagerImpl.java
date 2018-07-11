@@ -3,9 +3,16 @@ package com.gaurav.domain.musicState;
 import com.gaurav.domain.interfaces.MusicRepository;
 import com.gaurav.domain.interfaces.MusicService;
 import com.gaurav.domain.interfaces.MusicStateManager;
+import com.gaurav.domain.models.Song;
+import com.gaurav.domain.musicState.PartialChanges.NextSongRequested;
+import com.gaurav.domain.musicState.PartialChanges.PrevSongRequested;
+import com.gaurav.domain.musicState.PartialChanges.RepeatToggle;
+import com.gaurav.domain.musicState.PartialChanges.ShuffleToggle;
 import com.gaurav.domain.usecases.interfaces.CommandUseCases;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import io.reactivex.Completable;
 import io.reactivex.disposables.CompositeDisposable;
@@ -92,36 +99,91 @@ public class MusicStateManagerImpl implements MusicStateManager {
             this.musicState = musicState.builder()
                     .setSongQueue(((QueueUpdated) changes).getSongQueue())
                     .build();
+        }
+        if (changes instanceof PartialChanges.SaveOriginalQueue) {
+            this.musicState = musicState.builder()
+                    .setOriginalSongQueue(((PartialChanges.SaveOriginalQueue) changes)
+                            .getOriginalSongQueue())
+                    .build();
         } else if (changes instanceof CurrentSongIndexChanged) {
             this.musicState = musicState.builder()
-                    .setCurrentSongIndex(((CurrentSongIndexChanged) changes).getIndex())
+//                    .setCurrentSongIndex(((CurrentSongIndexChanged) changes).getIndex())
+                    .setCurrentSongIndex(musicState.getSongQueue().size() - 1)
                     .build();
         } else if (changes instanceof PlayingStatusChanged) {
             this.musicState = musicState.builder()
                     .setPlaying(((PlayingStatusChanged) changes).isPlaying())
                     .build();
+        } else if (changes instanceof PrevSongRequested) {
+            if (musicState.getCurrentSongIndex() == 0 && !musicState.isRepeat()) {
+                musicService.reset();
+                this.musicState = musicState.builder()
+                        .setCurrentSongIndex(0)
+                        .setProgress(0)
+                        .setPlaying(false).build();
+            } else {
+                int newSongIndex = (musicState.getCurrentSongIndex() - 1 + musicState.getSongQueue().size())
+                        % (musicState.getSongQueue().size());
+                this.musicState = musicState.builder()
+                        .setCurrentSongIndex(newSongIndex)
+                        .setProgress(0)
+                        .setPlaying(true)
+                        .build();
+                musicService.play(musicState.getCurrentSong().data);
+            }
+        } else if (changes instanceof NextSongRequested) {
+            if ((musicState.getCurrentSongIndex() == musicState.getSongQueue().size() - 1) &&
+                    (!musicState.isRepeat())) {
+                musicService.reset();
+                musicState = musicState.builder()
+                        .setCurrentSongIndex(0)
+                        .setProgress(0)
+                        .setPlaying(false)
+                        .build();
+            } else {
+                int newSongIndex = (musicState.getCurrentSongIndex() + 1) % (musicState.getSongQueue().size());
+                musicState = musicState.builder()
+                        .setCurrentSongIndex(newSongIndex)
+                        .setProgress(0)
+                        .setPlaying(true)
+                        .build();
+                musicService.play(musicState.getCurrentSong().data);
+            }
         } else if (changes instanceof ProgressUpdated) {
             this.musicState = musicState.builder()
                     .setProgress(((ProgressUpdated) changes).getNewProgress())
                     .build();
-        } else if (changes instanceof PartialChanges.SongCompleted) {
-            int newSongIndex = 0;
-            if (musicState.getSongQueue().size() - 1 == musicState.getCurrentSongIndex()) {
-                if (musicState.isRepeat()) {
-                    newSongIndex = 0;
-                } else {
-                    musicState = musicState.builder()
-                            .setPlaying(false)
-                            .build();
-                }
-            } else {
-                newSongIndex = musicState.getCurrentSongIndex() + 1;
-            }
-            musicState = musicState.builder()
-                    .setCurrentSongIndex(newSongIndex)
-                    .setProgress(0)
+        } else if (changes instanceof ShuffleToggle) {
+            this.musicState = musicState.builder()
+                    .setShuffle(!musicState.isShuffle())
                     .build();
-            if (musicService != null) {
+            List<Song> newQueue = new ArrayList<>(musicState.getOriginalSongQueue());
+            if (musicState.isShuffle()) {
+                Collections.shuffle(newQueue);
+            }
+            this.musicState = musicState.builder()
+                    .setCurrentSongIndex(newQueue.indexOf(musicState.getCurrentSong()))
+                    .setSongQueue(newQueue)
+                    .build();
+        } else if (changes instanceof RepeatToggle) {
+            this.musicState = musicState.builder()
+                    .setRepeat(!musicState.isRepeat())
+                    .build();
+        } else if (changes instanceof PartialChanges.SongCompleted) {
+            if ((musicState.getCurrentSongIndex() == musicState.getSongQueue().size() - 1) &&
+                    (!musicState.isRepeat())) {
+                musicService.reset();
+                musicState = musicState.builder()
+                        .setCurrentSongIndex(0)
+                        .setProgress(0)
+                        .setPlaying(false)
+                        .build();
+            } else {
+                int newSongIndex = (musicState.getCurrentSongIndex() + 1) % (musicState.getSongQueue().size());
+                musicState = musicState.builder()
+                        .setCurrentSongIndex(newSongIndex)
+                        .setProgress(0)
+                        .build();
                 musicService.play(musicState.getCurrentSong().data);
             }
         } else if (changes instanceof PartialChanges.Complete) {

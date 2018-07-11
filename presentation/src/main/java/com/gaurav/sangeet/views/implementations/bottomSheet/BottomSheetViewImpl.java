@@ -134,8 +134,8 @@ public class BottomSheetViewImpl implements BottomSheetView {
     }
 
     private void updateRepeatShuffleState(boolean repeat, boolean shuffle) {
-        repeatButton.setEnabled(repeat);
-        shuffleButton.setEnabled(shuffle);
+        repeatButton.setAlpha(repeat ? 1f : 0.5f);
+        shuffleButton.setAlpha(shuffle ? 1f : 0.5f);
     }
 
     private void show() {

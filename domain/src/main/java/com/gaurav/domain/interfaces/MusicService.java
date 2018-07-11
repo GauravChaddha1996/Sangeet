@@ -10,7 +10,10 @@ public interface MusicService {
 
     void resume();
 
+    void reset();
+
     PublishSubject<Integer> observeProgress();
 
     PublishSubject<Boolean> observeSongCompletion();
+
 }

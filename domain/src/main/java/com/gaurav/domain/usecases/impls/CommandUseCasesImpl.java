@@ -8,12 +8,20 @@ import com.gaurav.domain.models.Artist;
 import com.gaurav.domain.models.Song;
 import com.gaurav.domain.musicState.PartialChanges;
 import com.gaurav.domain.usecases.actions.Action;
+import com.gaurav.domain.usecases.actions.AddAlbumToQueueAction;
+import com.gaurav.domain.usecases.actions.AddSongToQueueAction;
+import com.gaurav.domain.usecases.actions.GoToAlbumAction;
+import com.gaurav.domain.usecases.actions.GoToArtistAction;
 import com.gaurav.domain.usecases.actions.NextSongAction;
 import com.gaurav.domain.usecases.actions.PauseSongAction;
+import com.gaurav.domain.usecases.actions.PlayAlbumAction;
+import com.gaurav.domain.usecases.actions.PlayArtistAction;
 import com.gaurav.domain.usecases.actions.PlaySongAction;
 import com.gaurav.domain.usecases.actions.PrevSongAction;
+import com.gaurav.domain.usecases.actions.RearrangeQueueAction;
 import com.gaurav.domain.usecases.actions.RepeatAction;
 import com.gaurav.domain.usecases.actions.ResumeSongAction;
+import com.gaurav.domain.usecases.actions.SeekbarMovementAction;
 import com.gaurav.domain.usecases.actions.ShuffleAction;
 import com.gaurav.domain.usecases.interfaces.CommandUseCases;
 
@@ -88,7 +96,14 @@ public class CommandUseCasesImpl implements CommandUseCases {
         Disposable disposable = actionPublishSubject.subscribe(action -> {
             // TODO: 7/7/18 think of a better way to do this if-else case
             if (action instanceof PlaySongAction) {
-                playCommandHelper(((PlaySongAction) action).getSong(), ((PlaySongAction) action).getSong());
+                playCommandHelper(((PlaySongAction) action).getSong(),
+                        ((PlaySongAction) action).getSong());
+            } else if (action instanceof PlayAlbumAction) {
+                playCommandHelper(((PlayAlbumAction) action).getAlbum(),
+                        ((PlayAlbumAction) action).getSong());
+            } else if (action instanceof PlayArtistAction) {
+                playCommandHelper(((PlayArtistAction) action).getArtist(),
+                        ((PlayArtistAction) action).getSong());
             } else if (action instanceof PauseSongAction) {
                 musicService.pause();
                 partialChangesSubject.onNext(new PartialChanges.PlayingStatusChanged(false));
@@ -98,13 +113,29 @@ public class CommandUseCasesImpl implements CommandUseCases {
                 partialChangesSubject.onNext(new PartialChanges.PlayingStatusChanged(true));
                 partialChangesSubject.onNext(new PartialChanges.Complete());
             } else if (action instanceof PrevSongAction) {
-                System.out.println("Action is Prev");
+                partialChangesSubject.onNext(new PartialChanges.PrevSongRequested());
+                partialChangesSubject.onNext(new PartialChanges.Complete());
             } else if (action instanceof NextSongAction) {
-                System.out.println("Action is Next");
+                partialChangesSubject.onNext(new PartialChanges.NextSongRequested());
+                partialChangesSubject.onNext(new PartialChanges.Complete());
             } else if (action instanceof ShuffleAction) {
-                System.out.println("Action is Shuffle");
+                partialChangesSubject.onNext(new PartialChanges.ShuffleToggle());
+                partialChangesSubject.onNext(new PartialChanges.Complete());
             } else if (action instanceof RepeatAction) {
-                System.out.println("Action is Repeat");
+                partialChangesSubject.onNext(new PartialChanges.RepeatToggle());
+                partialChangesSubject.onNext(new PartialChanges.Complete());
+            } else if (action instanceof SeekbarMovementAction) {
+                System.out.println("Action is SeekbarMovement");
+            } else if (action instanceof RearrangeQueueAction) {
+                System.out.println("Action is RearrangeQueue");
+            } else if (action instanceof AddSongToQueueAction) {
+                System.out.println("Action is AddSongToQueue");
+            } else if (action instanceof AddAlbumToQueueAction) {
+                System.out.println("Action is AddAlbumToQueue");
+            } else if (action instanceof GoToAlbumAction) {
+                System.out.println("Action is GoToAlbum");
+            } else if (action instanceof GoToArtistAction) {
+                System.out.println("Action is GoToArtist");
             }
         });
         partialChangesSubject = PublishSubject.create();
@@ -112,6 +143,7 @@ public class CommandUseCasesImpl implements CommandUseCases {
 
     private <T> T playCommandHelper(T object, Song song) {
         makeQueue(object)
+                .doOnSuccess(songs -> partialChangesSubject.onNext(new PartialChanges.SaveOriginalQueue(songs)))
                 .map(this::shuffleQueueIfNeeded)
                 .doOnSuccess(songs -> partialChangesSubject.onNext(new PartialChanges.QueueUpdated(songs)))
                 .map(songs -> songs.indexOf(song))

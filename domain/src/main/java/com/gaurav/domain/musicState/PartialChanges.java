@@ -6,6 +6,18 @@ import java.util.List;
 
 public interface PartialChanges {
 
+    public class SaveOriginalQueue implements PartialChanges {
+        private List<Song> originalSongQueue;
+
+        public SaveOriginalQueue(List<Song> originalSongQueue) {
+            this.originalSongQueue = originalSongQueue;
+        }
+
+        public List<Song> getOriginalSongQueue() {
+            return originalSongQueue;
+        }
+    }
+
     public class QueueUpdated implements PartialChanges {
         private List<Song> songQueue;
 
@@ -40,6 +52,22 @@ public interface PartialChanges {
         public boolean isPlaying() {
             return isPlaying;
         }
+    }
+
+    public class PrevSongRequested implements PartialChanges {
+
+    }
+
+    public class NextSongRequested implements PartialChanges {
+
+    }
+
+    public class ShuffleToggle implements PartialChanges {
+
+    }
+
+    public class RepeatToggle implements PartialChanges {
+
     }
 
     public class ProgressUpdated implements PartialChanges {
