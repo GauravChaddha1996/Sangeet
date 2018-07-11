@@ -3,15 +3,15 @@ package com.gaurav.sangeet.viewModels.bottomSheet;
 import android.arch.lifecycle.MutableLiveData;
 import android.view.View;
 
-import com.gaurav.domain.MusicState;
 import com.gaurav.domain.interfaces.MusicStateManager;
-import com.gaurav.domain.usecases.CommandUseCases;
+import com.gaurav.domain.musicState.MusicState;
 import com.gaurav.domain.usecases.actions.NextSongAction;
 import com.gaurav.domain.usecases.actions.PauseSongAction;
 import com.gaurav.domain.usecases.actions.PrevSongAction;
 import com.gaurav.domain.usecases.actions.RepeatAction;
 import com.gaurav.domain.usecases.actions.ResumeSongAction;
 import com.gaurav.domain.usecases.actions.ShuffleAction;
+import com.gaurav.domain.usecases.interfaces.CommandUseCases;
 import com.gaurav.sangeet.viewModels.BaseViewModel;
 import com.gaurav.sangeet.views.interfaces.BottomSheetView;
 import com.gaurav.sangeet.views.uiEvents.bottomSheet.BaseViewUIEvent;

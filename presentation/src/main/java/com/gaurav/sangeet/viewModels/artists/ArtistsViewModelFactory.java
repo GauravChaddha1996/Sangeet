@@ -4,8 +4,8 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
 
-import com.gaurav.domain.usecases.CommandUseCases;
-import com.gaurav.domain.usecases.FetchUseCases;
+import com.gaurav.domain.usecases.interfaces.CommandUseCases;
+import com.gaurav.domain.usecases.interfaces.FetchUseCases;
 import com.gaurav.sangeet.views.interfaces.ArtistsView;
 
 public class ArtistsViewModelFactory extends ViewModelProvider.NewInstanceFactory {

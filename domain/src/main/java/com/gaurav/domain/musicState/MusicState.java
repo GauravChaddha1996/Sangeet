@@ -1,4 +1,4 @@
-package com.gaurav.domain;
+package com.gaurav.domain.musicState;
 
 import com.gaurav.domain.models.Song;
 

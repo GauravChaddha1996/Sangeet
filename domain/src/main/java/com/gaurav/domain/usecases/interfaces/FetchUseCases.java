@@ -1,8 +1,7 @@
-package com.gaurav.domain.usecases;
+package com.gaurav.domain.usecases.interfaces;
 
 import com.gaurav.domain.models.Album;
 import com.gaurav.domain.models.Artist;
-import com.gaurav.domain.models.Playlist;
 import com.gaurav.domain.models.Song;
 
 import java.util.List;
@@ -15,6 +14,4 @@ public interface FetchUseCases {
     Observable<List<Album>> getAllAlbums();
 
     Observable<List<Artist>> getAllArtists();
-
-    Observable<List<Playlist>> getAllPlaylists();
 }

@@ -7,10 +7,9 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.gaurav.domain.MusicState;
 import com.gaurav.domain.models.Song;
+import com.gaurav.domain.musicState.MusicState;
 import com.gaurav.sangeet.R;
-import com.gaurav.sangeet.viewModels.bottomSheet.BottomSheetViewModel;
 import com.gaurav.sangeet.views.interfaces.BottomSheetView;
 import com.gaurav.sangeet.views.uiEvents.bottomSheet.BaseViewUIEvent;
 import com.gaurav.sangeet.views.uiEvents.bottomSheet.BottomSheetUIEvent;

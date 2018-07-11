@@ -6,8 +6,7 @@ import android.support.annotation.NonNull;
 import android.view.View;
 
 import com.gaurav.domain.interfaces.MusicStateManager;
-import com.gaurav.domain.usecases.CommandUseCases;
-import com.gaurav.sangeet.viewModels.songs.SongsViewModel;
+import com.gaurav.domain.usecases.interfaces.CommandUseCases;
 import com.gaurav.sangeet.views.interfaces.BottomSheetView;
 
 public class BottomSheetViewModelFactory extends ViewModelProvider.NewInstanceFactory {

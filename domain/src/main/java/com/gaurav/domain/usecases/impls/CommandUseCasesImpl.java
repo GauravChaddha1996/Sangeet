@@ -1,14 +1,12 @@
 package com.gaurav.domain.usecases.impls;
 
-import com.gaurav.domain.PartialChanges;
 import com.gaurav.domain.interfaces.MusicRepository;
 import com.gaurav.domain.interfaces.MusicService;
 import com.gaurav.domain.interfaces.MusicStateManager;
 import com.gaurav.domain.models.Album;
 import com.gaurav.domain.models.Artist;
-import com.gaurav.domain.models.Playlist;
 import com.gaurav.domain.models.Song;
-import com.gaurav.domain.usecases.CommandUseCases;
+import com.gaurav.domain.musicState.PartialChanges;
 import com.gaurav.domain.usecases.actions.Action;
 import com.gaurav.domain.usecases.actions.NextSongAction;
 import com.gaurav.domain.usecases.actions.PauseSongAction;
@@ -17,6 +15,7 @@ import com.gaurav.domain.usecases.actions.PrevSongAction;
 import com.gaurav.domain.usecases.actions.RepeatAction;
 import com.gaurav.domain.usecases.actions.ResumeSongAction;
 import com.gaurav.domain.usecases.actions.ShuffleAction;
+import com.gaurav.domain.usecases.interfaces.CommandUseCases;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -73,13 +72,6 @@ public class CommandUseCasesImpl implements CommandUseCases {
         playCommandHelper(artist, artist.songSet.stream()
                 .filter(song -> song.songId == id)
                 .findFirst().orElse(artist.songSet.first()));
-    }
-
-    @Override
-    public void play(Playlist playlist, long id) {
-        playCommandHelper(playlist, playlist.songSet.stream()
-                .filter(song -> song.songId == id)
-                .findFirst().orElse(playlist.songSet.first()));
     }
 
     @Override
@@ -140,8 +132,6 @@ public class CommandUseCasesImpl implements CommandUseCases {
             return Single.just(new ArrayList<>(((Album) object).songSet));
         } else if (object instanceof Artist) {
             return Single.just(new ArrayList<>(((Artist) object).songSet));
-        } else if (object instanceof Playlist) {
-            return Single.just(new ArrayList<>(((Playlist) object).songSet));
         } else {
             return null;
         }

@@ -5,11 +5,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.gaurav.domain.usecases.CommandUseCases;
-import com.gaurav.domain.usecases.FetchUseCases;
+import com.gaurav.domain.usecases.interfaces.CommandUseCases;
+import com.gaurav.domain.usecases.interfaces.FetchUseCases;
 import com.gaurav.sangeet.views.implementations.albums.AlbumsViewImpl;
 import com.gaurav.sangeet.views.implementations.artists.ArtistsViewImpl;
-import com.gaurav.sangeet.views.implementations.playlists.PlaylistsViewImpl;
 import com.gaurav.sangeet.views.implementations.songs.SongsViewImpl;
 
 public class PageAdapter extends FragmentStatePagerAdapter {
@@ -32,8 +31,6 @@ public class PageAdapter extends FragmentStatePagerAdapter {
                 return new AlbumsViewImpl(fetchUseCases, commandUseCases);
             case 2:
                 return new ArtistsViewImpl(fetchUseCases, commandUseCases);
-            case 3:
-                return new PlaylistsViewImpl(fetchUseCases, commandUseCases);
             default:
                 return new SongsViewImpl(fetchUseCases, commandUseCases);
         }
@@ -42,7 +39,7 @@ public class PageAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        return 4;
+        return 3;
     }
 
     @Nullable
@@ -55,8 +52,6 @@ public class PageAdapter extends FragmentStatePagerAdapter {
                 return "Albums";
             case 2:
                 return "Artists";
-            case 3:
-                return "Playlists";
             default:
                 return "Default";
         }

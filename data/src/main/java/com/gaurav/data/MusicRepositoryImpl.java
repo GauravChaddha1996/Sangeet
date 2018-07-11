@@ -5,12 +5,11 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.provider.MediaStore;
 
-import com.gaurav.domain.MusicState;
 import com.gaurav.domain.interfaces.MusicRepository;
 import com.gaurav.domain.models.Album;
 import com.gaurav.domain.models.Artist;
-import com.gaurav.domain.models.Playlist;
 import com.gaurav.domain.models.Song;
+import com.gaurav.domain.musicState.MusicState;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -30,8 +29,6 @@ public class MusicRepositoryImpl implements MusicRepository {
 
     private ContentResolver contentResolver;
     private SharedPreferences sharedPreferences;
-    private MusicDatabase musicDatabase;
-    private ModelMapper modelMapper;
     private Gson gson;
     private String serializedMusicState;
 
@@ -39,13 +36,14 @@ public class MusicRepositoryImpl implements MusicRepository {
     private List<Album> albumList;
     private List<Artist> artistList;
 
+    // Helper private fields
+    private Album albumResult = null;
+    private Artist artistResult = null;
+
     public MusicRepositoryImpl(ContentResolver contentResolver,
-                               SharedPreferences sharedPreferences,
-                               MusicDatabase musicDatabase) {
+                               SharedPreferences sharedPreferences) {
         this.contentResolver = contentResolver;
         this.sharedPreferences = sharedPreferences;
-        this.musicDatabase = musicDatabase;
-        this.modelMapper = new ModelMapper();
         this.gson = new GsonBuilder().create();
     }
 
@@ -82,36 +80,37 @@ public class MusicRepositoryImpl implements MusicRepository {
     }
 
     @Override
-    public Observable<List<Playlist>> getAllPlaylists() {
-        // TODO: 7/5/18 Return live data update from Room
-        return Observable.fromCallable(() -> musicDatabase.playlistDao().getAllPlaylists())
-                .subscribeOn(Schedulers.io())
-                .flatMapIterable(playlistEntities -> playlistEntities)
-                .map(modelMapper::convertPlaylistEntityToPlaylist)
-                .toList()
-                .toObservable();
-
+    public Single<Album> getAlbum(long albumId) {
+        for (Album album : albumList) {
+            if (album.id == albumId) {
+                albumResult = album;
+                break;
+            }
+        }
+        return Single.create(e -> {
+            if (albumResult != null) {
+                e.onSuccess(albumResult);
+            } else {
+                e.onError(new Throwable("No such album"));
+            }
+        });
     }
 
     @Override
-    public Completable insertPlaylist(Playlist playlist) {
-        return Completable.fromAction(() -> musicDatabase.playlistDao()
-                .insert(modelMapper.convertPlaylistToPlaylistEntity(playlist)))
-                .subscribeOn(Schedulers.io());
-    }
-
-    @Override
-    public Completable updatePlaylist(Playlist playlist) {
-        return Completable.fromAction(() -> musicDatabase.playlistDao()
-                .update(modelMapper.convertPlaylistToPlaylistEntity(playlist)))
-                .subscribeOn(Schedulers.io());
-    }
-
-    @Override
-    public Completable deletePlaylist(long id) {
-        return Completable.fromAction(() -> musicDatabase.playlistDao()
-                .deletePlaylist(id))
-                .subscribeOn(Schedulers.io());
+    public Single<Artist> getArtist(long artistId) {
+        for (Artist artist : artistList) {
+            if (artist.id == artistId) {
+                artistResult = artist;
+                break;
+            }
+        }
+        return Single.create(e -> {
+            if (artistResult != null) {
+                e.onSuccess(artistResult);
+            } else {
+                e.onError(new Throwable("No such artist"));
+            }
+        });
     }
 
     @Override

@@ -2,8 +2,8 @@ package com.gaurav.sangeet.viewModels.albums;
 
 import android.arch.lifecycle.MutableLiveData;
 
-import com.gaurav.domain.usecases.CommandUseCases;
-import com.gaurav.domain.usecases.FetchUseCases;
+import com.gaurav.domain.usecases.interfaces.CommandUseCases;
+import com.gaurav.domain.usecases.interfaces.FetchUseCases;
 import com.gaurav.sangeet.viewModels.BaseViewModel;
 import com.gaurav.sangeet.views.implementations.albums.AlbumsViewState;
 import com.gaurav.sangeet.views.interfaces.AlbumsView;
@@ -34,7 +34,7 @@ public class AlbumsViewModel extends BaseViewModel {
 
     @Override
     public void bindIntents() {
-        compositeDisposable.add(albumsView.playIntent().subscribe(album -> commandUseCases.play(album,-1)));
+        compositeDisposable.add(albumsView.playIntent().subscribe(album -> commandUseCases.play(album, -1)));
     }
 
     public MutableLiveData<AlbumsViewState> getState() {

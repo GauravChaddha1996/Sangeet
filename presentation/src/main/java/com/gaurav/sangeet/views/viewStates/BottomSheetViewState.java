@@ -1,7 +1,7 @@
 package com.gaurav.sangeet.views.viewStates;
 
-import com.gaurav.domain.MusicState;
 import com.gaurav.domain.models.Song;
+import com.gaurav.domain.musicState.MusicState;
 
 public class BottomSheetViewState {
     private MusicState musicState;

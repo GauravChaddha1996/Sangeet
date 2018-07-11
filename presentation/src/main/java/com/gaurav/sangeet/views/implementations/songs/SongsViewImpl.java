@@ -12,8 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.gaurav.domain.usecases.CommandUseCases;
-import com.gaurav.domain.usecases.FetchUseCases;
+import com.gaurav.domain.usecases.interfaces.CommandUseCases;
+import com.gaurav.domain.usecases.interfaces.FetchUseCases;
 import com.gaurav.sangeet.R;
 import com.gaurav.sangeet.utils.ItemClickSupport;
 import com.gaurav.sangeet.viewModels.songs.SongsViewModel;

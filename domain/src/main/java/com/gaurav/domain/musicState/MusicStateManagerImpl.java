@@ -1,9 +1,9 @@
-package com.gaurav.domain;
+package com.gaurav.domain.musicState;
 
 import com.gaurav.domain.interfaces.MusicRepository;
 import com.gaurav.domain.interfaces.MusicService;
 import com.gaurav.domain.interfaces.MusicStateManager;
-import com.gaurav.domain.usecases.CommandUseCases;
+import com.gaurav.domain.usecases.interfaces.CommandUseCases;
 
 import java.util.ArrayList;
 
@@ -13,16 +13,15 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.BehaviorSubject;
 
-import static com.gaurav.domain.PartialChanges.CurrentSongIndexChanged;
-import static com.gaurav.domain.PartialChanges.PlayingStatusChanged;
-import static com.gaurav.domain.PartialChanges.ProgressUpdated;
-import static com.gaurav.domain.PartialChanges.QueueUpdated;
+import static com.gaurav.domain.musicState.PartialChanges.CurrentSongIndexChanged;
+import static com.gaurav.domain.musicState.PartialChanges.PlayingStatusChanged;
+import static com.gaurav.domain.musicState.PartialChanges.ProgressUpdated;
+import static com.gaurav.domain.musicState.PartialChanges.QueueUpdated;
 
 public class MusicStateManagerImpl implements MusicStateManager {
 
     private MusicRepository musicRepository;
     private MusicService musicService;
-    private CommandUseCases commandUseCases;
 
     private MusicState musicState;
     private BehaviorSubject<MusicState> musicStateBehaviorSubject;
@@ -71,14 +70,12 @@ public class MusicStateManagerImpl implements MusicStateManager {
 
     @Override
     public void attachCommandUseCases(CommandUseCases commandUseCases) {
-        this.commandUseCases = commandUseCases;
         partialChagesDisposable = commandUseCases.observePartialChanges()
                 .subscribe(this::transform);
     }
 
     @Override
     public void detachCommandUseCases() {
-        this.commandUseCases = null;
         if (partialChagesDisposable != null && !partialChagesDisposable.isDisposed()) {
             partialChagesDisposable.dispose();
         }

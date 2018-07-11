@@ -2,8 +2,8 @@ package com.gaurav.sangeet.viewModels.artists;
 
 import android.arch.lifecycle.MutableLiveData;
 
-import com.gaurav.domain.usecases.CommandUseCases;
-import com.gaurav.domain.usecases.FetchUseCases;
+import com.gaurav.domain.usecases.interfaces.CommandUseCases;
+import com.gaurav.domain.usecases.interfaces.FetchUseCases;
 import com.gaurav.sangeet.viewModels.BaseViewModel;
 import com.gaurav.sangeet.views.implementations.artists.ArtistsViewState;
 import com.gaurav.sangeet.views.interfaces.ArtistsView;
