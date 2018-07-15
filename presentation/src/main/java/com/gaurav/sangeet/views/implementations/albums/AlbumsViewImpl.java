@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.gaurav.domain.models.Album;
 import com.gaurav.domain.usecases.interfaces.CommandUseCases;
 import com.gaurav.domain.usecases.interfaces.FetchUseCases;
 import com.gaurav.sangeet.R;
@@ -20,11 +19,13 @@ import com.gaurav.sangeet.utils.ItemClickSupport;
 import com.gaurav.sangeet.viewModels.albums.AlbumsViewModel;
 import com.gaurav.sangeet.viewModels.albums.AlbumsViewModelFactory;
 import com.gaurav.sangeet.views.interfaces.AlbumsView;
+import com.gaurav.sangeet.views.uiEvents.albums.AlbumItemClickUIEvent;
+import com.gaurav.sangeet.views.uiEvents.albums.AlbumViewUIEvent;
+import com.gaurav.sangeet.views.viewStates.AlbumsViewState;
 
 import java.util.ArrayList;
 
-import io.reactivex.Emitter;
-import io.reactivex.Observable;
+import io.reactivex.subjects.PublishSubject;
 
 @SuppressLint("ValidFragment")
 public class AlbumsViewImpl extends Fragment implements AlbumsView {
@@ -35,11 +36,12 @@ public class AlbumsViewImpl extends Fragment implements AlbumsView {
     AlbumsViewModel viewModel;
     RecyclerView recyclerView;
     AlbumsRVAdapter albumsRVAdapter;
-    Emitter<Album> playAlbumEmitter;
+    PublishSubject<AlbumViewUIEvent> uiEventsSubject;
 
     public AlbumsViewImpl(FetchUseCases fetchUseCases, CommandUseCases commandUseCases) {
         this.fetchUseCases = fetchUseCases;
         this.commandUseCases = commandUseCases;
+        uiEventsSubject = PublishSubject.create();
     }
 
     @Nullable
@@ -51,9 +53,8 @@ public class AlbumsViewImpl extends Fragment implements AlbumsView {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(albumsRVAdapter);
-        ItemClickSupport.addTo(recyclerView).setOnItemClickListener((recyclerView, position, v) -> {
-            playAlbumEmitter.onNext(albumsRVAdapter.getAlbum(position));
-        });
+        ItemClickSupport.addTo(recyclerView).setOnItemClickListener((recyclerView, position, v) ->
+                uiEventsSubject.onNext(new AlbumItemClickUIEvent(albumsRVAdapter.getAlbum(position))));
         return view;
     }
 
@@ -77,7 +78,7 @@ public class AlbumsViewImpl extends Fragment implements AlbumsView {
     }
 
     @Override
-    public Observable<Album> playIntent() {
-        return Observable.create(emitter -> playAlbumEmitter = emitter);
+    public PublishSubject<AlbumViewUIEvent> getUIEvents() {
+        return uiEventsSubject;
     }
 }

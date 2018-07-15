@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.gaurav.domain.models.Artist;
 import com.gaurav.domain.usecases.interfaces.CommandUseCases;
 import com.gaurav.domain.usecases.interfaces.FetchUseCases;
 import com.gaurav.sangeet.R;
@@ -20,11 +19,13 @@ import com.gaurav.sangeet.utils.ItemClickSupport;
 import com.gaurav.sangeet.viewModels.artists.ArtistsViewModel;
 import com.gaurav.sangeet.viewModels.artists.ArtistsViewModelFactory;
 import com.gaurav.sangeet.views.interfaces.ArtistsView;
+import com.gaurav.sangeet.views.uiEvents.artists.ArtistItemClickUIEvent;
+import com.gaurav.sangeet.views.uiEvents.artists.ArtistsViewUIEvent;
+import com.gaurav.sangeet.views.viewStates.ArtistsViewState;
 
 import java.util.ArrayList;
 
-import io.reactivex.Emitter;
-import io.reactivex.Observable;
+import io.reactivex.subjects.PublishSubject;
 
 @SuppressLint("ValidFragment")
 public class ArtistsViewImpl extends Fragment implements ArtistsView {
@@ -35,11 +36,12 @@ public class ArtistsViewImpl extends Fragment implements ArtistsView {
     ArtistsViewModel viewModel;
     RecyclerView recyclerView;
     ArtistsRVAdapter artistsRVAdapter;
-    Emitter<Artist> playArtistEmitter;
+    PublishSubject<ArtistsViewUIEvent> uiEventsSubject;
 
     public ArtistsViewImpl(FetchUseCases fetchUseCases, CommandUseCases commandUseCases) {
         this.fetchUseCases = fetchUseCases;
         this.commandUseCases = commandUseCases;
+        uiEventsSubject = PublishSubject.create();
     }
 
     @Nullable
@@ -52,7 +54,7 @@ public class ArtistsViewImpl extends Fragment implements ArtistsView {
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(artistsRVAdapter);
         ItemClickSupport.addTo(recyclerView).setOnItemClickListener((recyclerView, position, v) -> {
-            playArtistEmitter.onNext(artistsRVAdapter.getArtist(position));
+            uiEventsSubject.onNext(new ArtistItemClickUIEvent(artistsRVAdapter.getArtist(position)));
         });
         return view;
     }
@@ -77,7 +79,7 @@ public class ArtistsViewImpl extends Fragment implements ArtistsView {
     }
 
     @Override
-    public Observable<Artist> playIntent() {
-        return Observable.create(emitter -> playArtistEmitter = emitter);
+    public PublishSubject<ArtistsViewUIEvent> getUIEvents() {
+        return uiEventsSubject;
     }
 }

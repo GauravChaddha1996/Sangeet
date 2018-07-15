@@ -1,12 +1,12 @@
 package com.gaurav.sangeet.views.interfaces;
 
-import com.gaurav.domain.models.Artist;
-import com.gaurav.sangeet.views.implementations.artists.ArtistsViewState;
+import com.gaurav.sangeet.views.uiEvents.artists.ArtistsViewUIEvent;
+import com.gaurav.sangeet.views.viewStates.ArtistsViewState;
 
-import io.reactivex.Observable;
+import io.reactivex.subjects.PublishSubject;
 
 public interface ArtistsView {
     void render(ArtistsViewState songsViewState);
 
-    Observable<Artist> playIntent();
+    PublishSubject<ArtistsViewUIEvent> getUIEvents();
 }

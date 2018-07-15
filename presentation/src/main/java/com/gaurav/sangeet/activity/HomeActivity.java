@@ -8,9 +8,7 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -25,7 +23,6 @@ import com.gaurav.sangeet.R;
 import com.gaurav.sangeet.viewModels.bottomSheet.BottomSheetViewModel;
 import com.gaurav.sangeet.viewModels.bottomSheet.BottomSheetViewModelFactory;
 import com.gaurav.sangeet.views.implementations.bottomSheet.BottomSheetViewImpl;
-import com.rom4ek.arcnavigationview.ArcNavigationView;
 
 import static com.gaurav.sangeet.Constants.Search.EXTRA_CIRCULAR_REVEAL_X;
 import static com.gaurav.sangeet.Constants.Search.EXTRA_CIRCULAR_REVEAL_Y;
@@ -121,7 +118,7 @@ public class HomeActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-       if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED ||
+        if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED ||
                 bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_DRAGGING ||
                 bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_SETTLING) {
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);

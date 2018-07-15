@@ -2,11 +2,13 @@ package com.gaurav.sangeet.viewModels.albums;
 
 import android.arch.lifecycle.MutableLiveData;
 
+import com.gaurav.domain.usecases.actions.PlayAlbumAction;
 import com.gaurav.domain.usecases.interfaces.CommandUseCases;
 import com.gaurav.domain.usecases.interfaces.FetchUseCases;
 import com.gaurav.sangeet.viewModels.BaseViewModel;
-import com.gaurav.sangeet.views.implementations.albums.AlbumsViewState;
 import com.gaurav.sangeet.views.interfaces.AlbumsView;
+import com.gaurav.sangeet.views.uiEvents.albums.AlbumItemClickUIEvent;
+import com.gaurav.sangeet.views.viewStates.AlbumsViewState;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
@@ -34,7 +36,15 @@ public class AlbumsViewModel extends BaseViewModel {
 
     @Override
     public void bindIntents() {
-        compositeDisposable.add(albumsView.playIntent().subscribe());
+        compositeDisposable.add(albumsView.getUIEvents()
+                .map(albumViewUIEvent -> {
+                    if (albumViewUIEvent instanceof AlbumItemClickUIEvent) {
+                        return new PlayAlbumAction(((AlbumItemClickUIEvent) albumViewUIEvent).getAlbum(),
+                                ((AlbumItemClickUIEvent) albumViewUIEvent).getAlbum().songSet.first());
+                    }
+                    return new PlayAlbumAction(null, null);
+                }).subscribe(playAlbumAction -> commandUseCases.actionSubject()
+                        .onNext(playAlbumAction)));
     }
 
     public MutableLiveData<AlbumsViewState> getState() {

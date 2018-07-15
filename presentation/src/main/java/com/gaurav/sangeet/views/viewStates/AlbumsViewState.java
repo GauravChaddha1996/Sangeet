@@ -1,17 +1,17 @@
-package com.gaurav.sangeet.views.implementations.albums;
+package com.gaurav.sangeet.views.viewStates;
 
 import com.gaurav.domain.models.Album;
 
 import java.util.List;
 
 public interface AlbumsViewState {
-    class Loading implements AlbumsViewState {
+    public class Loading implements AlbumsViewState {
     }
 
-    class Error implements AlbumsViewState {
+    public class Error implements AlbumsViewState {
     }
 
-    class Result implements AlbumsViewState {
+    public class Result implements AlbumsViewState {
         private List<Album> albumList;
 
         public Result(List<Album> albumList) {
@@ -22,4 +22,5 @@ public interface AlbumsViewState {
             return albumList;
         }
     }
+
 }

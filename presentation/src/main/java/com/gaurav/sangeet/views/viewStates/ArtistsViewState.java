@@ -1,17 +1,17 @@
-package com.gaurav.sangeet.views.implementations.artists;
+package com.gaurav.sangeet.views.viewStates;
 
 import com.gaurav.domain.models.Artist;
 
 import java.util.List;
 
 public interface ArtistsViewState {
-    class Loading implements ArtistsViewState {
+    public class Loading implements ArtistsViewState {
     }
 
-    class Error implements ArtistsViewState {
+    public class Error implements ArtistsViewState {
     }
 
-    class Result implements ArtistsViewState {
+    public class Result implements ArtistsViewState {
         private List<Artist> artistList;
 
         public Result(List<Artist> artistList) {
@@ -22,4 +22,5 @@ public interface ArtistsViewState {
             return artistList;
         }
     }
+
 }
