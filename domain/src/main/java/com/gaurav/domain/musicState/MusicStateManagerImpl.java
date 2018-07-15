@@ -3,7 +3,6 @@ package com.gaurav.domain.musicState;
 import com.gaurav.domain.interfaces.MusicRepository;
 import com.gaurav.domain.interfaces.MusicService;
 import com.gaurav.domain.interfaces.MusicStateManager;
-import com.gaurav.domain.models.Song;
 import com.gaurav.domain.musicState.PartialChanges.NextSongRequested;
 import com.gaurav.domain.musicState.PartialChanges.PrevSongRequested;
 import com.gaurav.domain.musicState.PartialChanges.RepeatToggle;
@@ -12,13 +11,12 @@ import com.gaurav.domain.usecases.interfaces.CommandUseCases;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 import io.reactivex.Completable;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subjects.BehaviorSubject;
+import io.reactivex.subjects.PublishSubject;
 
 import static com.gaurav.domain.musicState.PartialChanges.CurrentSongIndexChanged;
 import static com.gaurav.domain.musicState.PartialChanges.PlayingStatusChanged;
@@ -31,23 +29,20 @@ public class MusicStateManagerImpl implements MusicStateManager {
     private MusicService musicService;
 
     private MusicState musicState;
-    private BehaviorSubject<MusicState> musicStateBehaviorSubject;
+    private PublishSubject<MusicState> musicStateSubject;
     private CompositeDisposable musicServiceCompositeDisposable;
     private Disposable partialChagesDisposable;
 
     public MusicStateManagerImpl(MusicRepository musicRepository) {
         this.musicRepository = musicRepository;
-        this.musicStateBehaviorSubject = BehaviorSubject.createDefault(getInitialState());
+        this.musicStateSubject = PublishSubject.create();
         musicServiceCompositeDisposable = new CompositeDisposable();
     }
 
     @Override
     public Completable init() {
         return Completable.create(emitter -> {
-            this.musicState = musicRepository.getMusicState();
-            if (musicState == null) {
-                musicState = getInitialState();
-            }
+            this.musicState = null;
             emitter.onComplete();
         }).subscribeOn(Schedulers.io());
     }
@@ -89,8 +84,29 @@ public class MusicStateManagerImpl implements MusicStateManager {
     }
 
     @Override
-    public BehaviorSubject<MusicState> observeMusicState() {
-        return musicStateBehaviorSubject;
+    public boolean shuffle() {
+        if (musicState != null) {
+            return musicState.isShuffle();
+        }
+        return true;
+    }
+
+    @Override
+    public void initMusicState() {
+        if (musicState == null) {
+            musicState = new MusicState(0, null,
+                    false, 0, false, true, new ArrayList<>());
+        }
+    }
+
+    @Override
+    public MusicState getMusicState() {
+        return musicState;
+    }
+
+    @Override
+    public PublishSubject<MusicState> observeMusicState() {
+        return musicStateSubject;
     }
 
     @Override
@@ -99,35 +115,26 @@ public class MusicStateManagerImpl implements MusicStateManager {
             this.musicState = musicState.builder()
                     .setSongQueue(((QueueUpdated) changes).getSongQueue())
                     .build();
-        }
-        if (changes instanceof PartialChanges.SaveOriginalQueue) {
-            this.musicState = musicState.builder()
-                    .setOriginalSongQueue(((PartialChanges.SaveOriginalQueue) changes)
-                            .getOriginalSongQueue())
-                    .build();
         } else if (changes instanceof CurrentSongIndexChanged) {
             this.musicState = musicState.builder()
-//                    .setCurrentSongIndex(((CurrentSongIndexChanged) changes).getIndex())
-                    .setCurrentSongIndex(musicState.getSongQueue().size() - 1)
+                    .setCurrentSongIndex(((CurrentSongIndexChanged) changes).getIndex())
                     .build();
         } else if (changes instanceof PlayingStatusChanged) {
             this.musicState = musicState.builder()
                     .setPlaying(((PlayingStatusChanged) changes).isPlaying())
                     .build();
         } else if (changes instanceof PrevSongRequested) {
-            if (musicState.getCurrentSongIndex() == 0 && !musicState.isRepeat()) {
+            if (musicState.getCurrentSongIndex() == 0) {
                 musicService.reset();
                 this.musicState = musicState.builder()
                         .setCurrentSongIndex(0)
                         .setProgress(0)
                         .setPlaying(false).build();
             } else {
-                int newSongIndex = (musicState.getCurrentSongIndex() - 1 + musicState.getSongQueue().size())
-                        % (musicState.getSongQueue().size());
                 this.musicState = musicState.builder()
-                        .setCurrentSongIndex(newSongIndex)
-                        .setProgress(0)
+                        .setCurrentSongIndex(musicState.getCurrentSongIndex() - 1)
                         .setPlaying(true)
+                        .setProgress(0)
                         .build();
                 musicService.play(musicState.getCurrentSong().data);
             }
@@ -157,13 +164,13 @@ public class MusicStateManagerImpl implements MusicStateManager {
             this.musicState = musicState.builder()
                     .setShuffle(!musicState.isShuffle())
                     .build();
-            List<Song> newQueue = new ArrayList<>(musicState.getOriginalSongQueue());
             if (musicState.isShuffle()) {
-                Collections.shuffle(newQueue);
+                Collections.shuffle(this.musicState.getSongQueue());
             }
             this.musicState = musicState.builder()
-                    .setCurrentSongIndex(newQueue.indexOf(musicState.getCurrentSong()))
-                    .setSongQueue(newQueue)
+                    .setCurrentSongIndex(musicState.getSongQueue()
+                            .indexOf(musicState.getCurrentSong()))
+                    .setSongQueue(musicState.getSongQueue())
                     .build();
         } else if (changes instanceof RepeatToggle) {
             this.musicState = musicState.builder()
@@ -187,34 +194,9 @@ public class MusicStateManagerImpl implements MusicStateManager {
                 musicService.play(musicState.getCurrentSong().data);
             }
         } else if (changes instanceof PartialChanges.Complete) {
-            musicState = musicState.builder().setShowStatus(true).build();
-            musicStateBehaviorSubject.onNext(musicState);
-        }
-
-        handleMusicStateSave(changes);
-    }
-
-    @Override
-    public MusicState getInitialState() {
-        return new MusicStateBuilder()
-                .setShowStatus(false)
-                .setProgress(0)
-                .setSongQueue(new ArrayList<>())
-                .setCurrentSongIndex(0)
-                .setShuffle(true)
-                .setRepeat(true)
-                .setDisablePrev(false)
-                .setPlaying(false)
-                .build();
-    }
-
-
-    private void handleMusicStateSave(PartialChanges changes) {
-        if (changes instanceof PartialChanges.QueueUpdated
-                || changes instanceof CurrentSongIndexChanged
-                || changes instanceof PlayingStatusChanged
-                || changes instanceof PartialChanges.SongCompleted) {
-            musicRepository.saveMusicState(musicState).subscribe();
+            if (musicState != null) {
+                musicStateSubject.onNext(musicState);
+            }
         }
     }
 }

@@ -6,18 +6,6 @@ import java.util.List;
 
 public interface PartialChanges {
 
-    public class SaveOriginalQueue implements PartialChanges {
-        private List<Song> originalSongQueue;
-
-        public SaveOriginalQueue(List<Song> originalSongQueue) {
-            this.originalSongQueue = originalSongQueue;
-        }
-
-        public List<Song> getOriginalSongQueue() {
-            return originalSongQueue;
-        }
-    }
-
     public class QueueUpdated implements PartialChanges {
         private List<Song> songQueue;
 

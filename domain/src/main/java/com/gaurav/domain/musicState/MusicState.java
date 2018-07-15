@@ -5,42 +5,44 @@ import com.gaurav.domain.models.Song;
 import java.util.List;
 
 public class MusicState {
-    private boolean showStatus;
-    private long progress;
     private int currentSongIndex;
     private Song currentSong;
+    private boolean isPlaying;
+    private long progress;
     private boolean shuffle;
     private boolean repeat;
     private List<Song> songQueue;
-    private List<Song> originalSongQueue;
-    private boolean disablePrev;
-    private boolean isPlaying;
 
-    public MusicState(boolean showStatus, long progress, int currentSongIndex, Song currentSong,
-                      boolean shuffle, boolean repeat, List<Song> songQueue,
-                      List<Song> originalSongQueue, boolean disablePrev, boolean isPlaying) {
-        this.showStatus = showStatus;
-        this.progress = progress;
+    public MusicState(int currentSongIndex, Song currentSong, boolean isPlaying, long progress,
+                      boolean shuffle, boolean repeat, List<Song> songQueue) {
         this.currentSongIndex = currentSongIndex;
         this.currentSong = currentSong;
+        this.isPlaying = isPlaying;
+        this.progress = progress;
         this.shuffle = shuffle;
         this.repeat = repeat;
         this.songQueue = songQueue;
-        this.originalSongQueue = originalSongQueue;
-        this.disablePrev = disablePrev;
-        this.isPlaying = isPlaying;
     }
 
-    public boolean isShowStatus() {
-        return showStatus;
-    }
-
-    public long getProgress() {
-        return progress;
+    public MusicStateBuilder builder() {
+        return new MusicStateBuilder(currentSongIndex, currentSong, isPlaying, progress, shuffle,
+                repeat, songQueue);
     }
 
     public int getCurrentSongIndex() {
         return currentSongIndex;
+    }
+
+    public Song getCurrentSong() {
+        return currentSong;
+    }
+
+    public boolean isPlaying() {
+        return isPlaying;
+    }
+
+    public long getProgress() {
+        return progress;
     }
 
     public boolean isShuffle() {
@@ -53,26 +55,5 @@ public class MusicState {
 
     public List<Song> getSongQueue() {
         return songQueue;
-    }
-
-    public boolean isDisablePrev() {
-        return disablePrev;
-    }
-
-    public boolean isPlaying() {
-        return isPlaying;
-    }
-
-    public Song getCurrentSong() {
-        return currentSong;
-    }
-
-    public List<Song> getOriginalSongQueue() {
-        return originalSongQueue;
-    }
-
-    public MusicStateBuilder builder() {
-        return new MusicStateBuilder(showStatus, progress, currentSongIndex, currentSong, shuffle, repeat,
-                songQueue, originalSongQueue, disablePrev, isPlaying);
     }
 }

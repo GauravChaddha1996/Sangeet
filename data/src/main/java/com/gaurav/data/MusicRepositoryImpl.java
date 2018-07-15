@@ -28,9 +28,6 @@ import io.reactivex.schedulers.Schedulers;
 public class MusicRepositoryImpl implements MusicRepository {
 
     private ContentResolver contentResolver;
-    private SharedPreferences sharedPreferences;
-    private Gson gson;
-    private String serializedMusicState;
 
     private List<Song> songList;
     private List<Album> albumList;
@@ -40,11 +37,8 @@ public class MusicRepositoryImpl implements MusicRepository {
     private Album albumResult = null;
     private Artist artistResult = null;
 
-    public MusicRepositoryImpl(ContentResolver contentResolver,
-                               SharedPreferences sharedPreferences) {
+    public MusicRepositoryImpl(ContentResolver contentResolver) {
         this.contentResolver = contentResolver;
-        this.sharedPreferences = sharedPreferences;
-        this.gson = new GsonBuilder().create();
     }
 
     @Override
@@ -110,26 +104,6 @@ public class MusicRepositoryImpl implements MusicRepository {
             } else {
                 e.onError(new Throwable("No such artist"));
             }
-        });
-    }
-
-    @Override
-    public MusicState getMusicState() {
-        String storedMusicState = sharedPreferences.getString("music_state", "null");
-        if (!storedMusicState.equals("null")) {
-            return gson.fromJson(storedMusicState, new TypeToken<MusicState>() {
-            }.getType());
-        } else {
-            return null;
-        }
-    }
-
-    @Override
-    public Completable saveMusicState(MusicState musicState) {
-        return Completable.create(e -> {
-            serializedMusicState = gson.toJson(musicState);
-            sharedPreferences.edit().putString("music_state", serializedMusicState).apply();
-            e.onComplete();
         });
     }
 

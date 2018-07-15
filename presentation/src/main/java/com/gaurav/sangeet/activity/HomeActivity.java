@@ -39,8 +39,6 @@ public class HomeActivity extends AppCompatActivity {
     private MusicStateManager musicStateManager;
 
     // Views
-    private DrawerLayout drawerLayout;
-    private ArcNavigationView navigationView;
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -61,8 +59,6 @@ public class HomeActivity extends AppCompatActivity {
         commandUseCases = ((MusicApplication) getApplication()).commandUseCases;
         musicStateManager = ((MusicApplication) getApplication()).musicStateManager;
 
-        drawerLayout = findViewById(R.id.drawer_layout);
-        navigationView = findViewById(R.id.nav_view);
         tabLayout = findViewById(R.id.tab_layout);
         toolbar = findViewById(R.id.toolbar);
         viewPager = findViewById(R.id.viewPager);
@@ -71,8 +67,6 @@ public class HomeActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Sangeet");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu);
 
         pageAdapter = new PageAdapter(getSupportFragmentManager(), fetchUseCases, commandUseCases);
         viewPager.setAdapter(pageAdapter);
@@ -118,9 +112,6 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home:
-                drawerLayout.openDrawer(GravityCompat.START);
-                return true;
             case R.id.search_button:
                 presentSearchActivity(findViewById(R.id.search_button));
                 return true;
@@ -130,9 +121,7 @@ public class HomeActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (drawerLayout.isDrawerOpen(navigationView)) {
-            drawerLayout.closeDrawer(GravityCompat.START);
-        } else if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED ||
+       if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED ||
                 bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_DRAGGING ||
                 bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_SETTLING) {
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);

@@ -13,12 +13,6 @@ public interface CommandUseCases {
 
     PublishSubject<Action> actionSubject();
 
-    void play(Song song);
-
-    void play(Album album, long id);
-
-    void play(Artist artist, long id);
-
     void attachMusicService(MusicService musicService);
 
     void detachMusicService();

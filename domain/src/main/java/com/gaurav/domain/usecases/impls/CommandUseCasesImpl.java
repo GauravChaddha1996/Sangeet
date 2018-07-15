@@ -8,8 +8,6 @@ import com.gaurav.domain.models.Artist;
 import com.gaurav.domain.models.Song;
 import com.gaurav.domain.musicState.PartialChanges;
 import com.gaurav.domain.usecases.actions.Action;
-import com.gaurav.domain.usecases.actions.AddAlbumToQueueAction;
-import com.gaurav.domain.usecases.actions.AddSongToQueueAction;
 import com.gaurav.domain.usecases.actions.GoToAlbumAction;
 import com.gaurav.domain.usecases.actions.GoToArtistAction;
 import com.gaurav.domain.usecases.actions.NextSongAction;
@@ -18,7 +16,6 @@ import com.gaurav.domain.usecases.actions.PlayAlbumAction;
 import com.gaurav.domain.usecases.actions.PlayArtistAction;
 import com.gaurav.domain.usecases.actions.PlaySongAction;
 import com.gaurav.domain.usecases.actions.PrevSongAction;
-import com.gaurav.domain.usecases.actions.RearrangeQueueAction;
 import com.gaurav.domain.usecases.actions.RepeatAction;
 import com.gaurav.domain.usecases.actions.ResumeSongAction;
 import com.gaurav.domain.usecases.actions.SeekbarMovementAction;
@@ -49,7 +46,7 @@ public class CommandUseCasesImpl implements CommandUseCases {
     }
 
     @Override
-    public PublishSubject actionSubject() {
+    public PublishSubject<Action> actionSubject() {
         return actionPublishSubject;
     }
 
@@ -64,25 +61,6 @@ public class CommandUseCasesImpl implements CommandUseCases {
     }
 
     @Override
-    public void play(Song song) {
-        playCommandHelper(song, song);
-    }
-
-    @Override
-    public void play(Album album, long id) {
-        playCommandHelper(album, album.songSet.stream()
-                .filter(song -> song.songId == id)
-                .findFirst().orElse(album.songSet.first()));
-    }
-
-    @Override
-    public void play(Artist artist, long id) {
-        playCommandHelper(artist, artist.songSet.stream()
-                .filter(song -> song.songId == id)
-                .findFirst().orElse(artist.songSet.first()));
-    }
-
-    @Override
     public PublishSubject<PartialChanges> observePartialChanges() {
         return partialChangesSubject;
     }
@@ -94,6 +72,7 @@ public class CommandUseCasesImpl implements CommandUseCases {
     private void prepareObservablesAndEmitters() {
         actionPublishSubject = PublishSubject.create();
         Disposable disposable = actionPublishSubject.subscribe(action -> {
+            musicStateManager.initMusicState();
             // TODO: 7/7/18 think of a better way to do this if-else case
             if (action instanceof PlaySongAction) {
                 playCommandHelper(((PlaySongAction) action).getSong(),
@@ -109,9 +88,15 @@ public class CommandUseCasesImpl implements CommandUseCases {
                 partialChangesSubject.onNext(new PartialChanges.PlayingStatusChanged(false));
                 partialChangesSubject.onNext(new PartialChanges.Complete());
             } else if (action instanceof ResumeSongAction) {
-                musicService.resume();
-                partialChangesSubject.onNext(new PartialChanges.PlayingStatusChanged(true));
-                partialChangesSubject.onNext(new PartialChanges.Complete());
+                if (musicService.isMediaPlayerSet()) {
+                    musicService.resume();
+                    partialChangesSubject.onNext(new PartialChanges.PlayingStatusChanged(true));
+                    partialChangesSubject.onNext(new PartialChanges.Complete());
+                } else {
+                    partialChangesSubject.onNext(new PartialChanges.PlayingStatusChanged(true));
+                    partialChangesSubject.onNext(new PartialChanges.Complete());
+                    musicService.play(musicStateManager.getMusicState().getCurrentSong().data);
+                }
             } else if (action instanceof PrevSongAction) {
                 partialChangesSubject.onNext(new PartialChanges.PrevSongRequested());
                 partialChangesSubject.onNext(new PartialChanges.Complete());
@@ -126,12 +111,6 @@ public class CommandUseCasesImpl implements CommandUseCases {
                 partialChangesSubject.onNext(new PartialChanges.Complete());
             } else if (action instanceof SeekbarMovementAction) {
                 System.out.println("Action is SeekbarMovement");
-            } else if (action instanceof RearrangeQueueAction) {
-                System.out.println("Action is RearrangeQueue");
-            } else if (action instanceof AddSongToQueueAction) {
-                System.out.println("Action is AddSongToQueue");
-            } else if (action instanceof AddAlbumToQueueAction) {
-                System.out.println("Action is AddAlbumToQueue");
             } else if (action instanceof GoToAlbumAction) {
                 System.out.println("Action is GoToAlbum");
             } else if (action instanceof GoToArtistAction) {
@@ -143,7 +122,6 @@ public class CommandUseCasesImpl implements CommandUseCases {
 
     private <T> T playCommandHelper(T object, Song song) {
         makeQueue(object)
-                .doOnSuccess(songs -> partialChangesSubject.onNext(new PartialChanges.SaveOriginalQueue(songs)))
                 .map(this::shuffleQueueIfNeeded)
                 .doOnSuccess(songs -> partialChangesSubject.onNext(new PartialChanges.QueueUpdated(songs)))
                 .map(songs -> songs.indexOf(song))
@@ -170,7 +148,7 @@ public class CommandUseCasesImpl implements CommandUseCases {
     }
 
     private List<Song> shuffleQueueIfNeeded(List<Song> songs) {
-        if (musicStateManager.observeMusicState().getValue().isShuffle()) {
+        if (musicStateManager.shuffle()) {
             Collections.shuffle(songs);
         }
         return songs;

@@ -74,20 +74,15 @@ public class BottomSheetViewImpl implements BottomSheetView {
     @Override
     public void render(BottomSheetViewState viewState) {
         this.musicState = viewState.getMusicState();
-        if (musicState.isShowStatus()) {
-            if (viewState.isUpdateCurrentSongDetails()) {
-                updateCurrentSongDetails(viewState.getCurrentSong());
-            }
-            updateSongQueue(musicState.getSongQueue());
-            updatePlayPauseButtonState(musicState.isPlaying());
-            updatePrevButtonState(musicState.isDisablePrev());
-            updateRepeatShuffleState(musicState.isRepeat(), musicState.isShuffle());
-            updateProgress(musicState.getProgress());
-            if (baseView.getVisibility() != View.VISIBLE) {
-                show();
-            }
-        } else {
-            hide();
+        if (viewState.isUpdateCurrentSongDetails()) {
+            updateCurrentSongDetails(viewState.getCurrentSong());
+        }
+        updateSongQueue(musicState.getSongQueue());
+        updatePlayPauseButtonState(musicState.isPlaying());
+        updateRepeatShuffleState(musicState.isRepeat(), musicState.isShuffle());
+        updateProgress(musicState.getProgress());
+        if (baseView.getVisibility() != View.VISIBLE) {
+            show();
         }
     }
 
@@ -129,10 +124,6 @@ public class BottomSheetViewImpl implements BottomSheetView {
         return this;
     }
 
-    private void updatePrevButtonState(boolean disablePrev) {
-        prevButton.setEnabled(!disablePrev);
-    }
-
     private void updateRepeatShuffleState(boolean repeat, boolean shuffle) {
         repeatButton.setAlpha(repeat ? 1f : 0.5f);
         shuffleButton.setAlpha(shuffle ? 1f : 0.5f);
@@ -140,10 +131,6 @@ public class BottomSheetViewImpl implements BottomSheetView {
 
     private void show() {
         baseView.setVisibility(View.VISIBLE);
-    }
-
-    private void hide() {
-        baseView.setVisibility(View.GONE);
     }
 
     public View getBaseView() {

@@ -34,7 +34,7 @@ public class ArtistsViewModel extends BaseViewModel {
 
     @Override
     public void bindIntents() {
-        compositeDisposable.add(artistsView.playIntent().subscribe(artist -> commandUseCases.play(artist, -1)));
+        compositeDisposable.add(artistsView.playIntent().subscribe());
     }
 
     public MutableLiveData<ArtistsViewState> getState() {

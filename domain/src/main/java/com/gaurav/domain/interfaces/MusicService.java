@@ -12,6 +12,8 @@ public interface MusicService {
 
     void reset();
 
+    boolean isMediaPlayerSet();
+
     PublishSubject<Integer> observeProgress();
 
     PublishSubject<Boolean> observeSongCompletion();

@@ -33,8 +33,7 @@ public class MusicApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        musicRepository = new MusicRepositoryImpl(getContentResolver(),
-                getSharedPreferences("sangeet", MODE_PRIVATE));
+        musicRepository = new MusicRepositoryImpl(getContentResolver());
         musicStateManager = new MusicStateManagerImpl(musicRepository);
         fetchUseCases = new FetchUseCasesImpl(musicRepository);
         commandUseCases = new CommandUseCasesImpl(musicRepository, musicStateManager);

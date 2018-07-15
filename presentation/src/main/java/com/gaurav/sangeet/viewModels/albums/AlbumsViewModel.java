@@ -34,7 +34,7 @@ public class AlbumsViewModel extends BaseViewModel {
 
     @Override
     public void bindIntents() {
-        compositeDisposable.add(albumsView.playIntent().subscribe(album -> commandUseCases.play(album, -1)));
+        compositeDisposable.add(albumsView.playIntent().subscribe());
     }
 
     public MutableLiveData<AlbumsViewState> getState() {

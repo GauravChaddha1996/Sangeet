@@ -6,10 +6,15 @@ import com.gaurav.domain.usecases.interfaces.CommandUseCases;
 
 import io.reactivex.Completable;
 import io.reactivex.subjects.BehaviorSubject;
+import io.reactivex.subjects.PublishSubject;
 
 public interface MusicStateManager {
 
     Completable init();
+
+    void initMusicState();
+
+    MusicState getMusicState();
 
     void attachMusicService(MusicService musicService);
 
@@ -19,9 +24,9 @@ public interface MusicStateManager {
 
     void detachCommandUseCases();
 
-    MusicState getInitialState();
+    boolean shuffle();
 
-    BehaviorSubject<MusicState> observeMusicState();
+    PublishSubject<MusicState> observeMusicState();
 
     void transform(PartialChanges changes);
 }
