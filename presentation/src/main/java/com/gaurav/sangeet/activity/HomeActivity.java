@@ -59,7 +59,6 @@ public class HomeActivity extends AppCompatActivity {
         tabLayout = findViewById(R.id.tab_layout);
         toolbar = findViewById(R.id.toolbar);
         viewPager = findViewById(R.id.viewPager);
-
         bottomSheetViewImpl = new BottomSheetViewImpl(findViewById(R.id.bottom_sheet));
 
         setSupportActionBar(toolbar);

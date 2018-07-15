@@ -42,12 +42,12 @@ public class SongsRVAdapter extends RecyclerView.Adapter<SongsRVAdapter.SongItem
         return data.size();
     }
 
-    void updateData(List<Song> newData) {
+    public void updateData(List<Song> newData) {
         this.data = newData;
         notifyDataSetChanged();
     }
 
-    Song getSong(int pos) {
+    public Song getSong(int pos) {
         return data.get(pos);
     }
 

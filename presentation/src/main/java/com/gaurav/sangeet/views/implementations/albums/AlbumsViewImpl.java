@@ -2,6 +2,7 @@ package com.gaurav.sangeet.views.implementations.albums;
 
 import android.annotation.SuppressLint;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,11 +16,11 @@ import android.view.ViewGroup;
 import com.gaurav.domain.usecases.interfaces.CommandUseCases;
 import com.gaurav.domain.usecases.interfaces.FetchUseCases;
 import com.gaurav.sangeet.R;
+import com.gaurav.sangeet.activity.AlbumDetailActivity;
 import com.gaurav.sangeet.utils.ItemClickSupport;
 import com.gaurav.sangeet.viewModels.albums.AlbumsViewModel;
 import com.gaurav.sangeet.viewModels.albums.AlbumsViewModelFactory;
 import com.gaurav.sangeet.views.interfaces.AlbumsView;
-import com.gaurav.sangeet.views.uiEvents.albums.AlbumItemClickUIEvent;
 import com.gaurav.sangeet.views.uiEvents.albums.AlbumViewUIEvent;
 import com.gaurav.sangeet.views.viewStates.AlbumsViewState;
 
@@ -54,7 +55,12 @@ public class AlbumsViewImpl extends Fragment implements AlbumsView {
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(albumsRVAdapter);
         ItemClickSupport.addTo(recyclerView).setOnItemClickListener((recyclerView, position, v) ->
-                uiEventsSubject.onNext(new AlbumItemClickUIEvent(albumsRVAdapter.getAlbum(position))));
+        {
+            // TODO: 7/15/18 Do this via proper navigation channels
+//            uiEventsSubject.onNext(new AlbumItemClickUIEvent(albumsRVAdapter.getAlbum(position)));
+            startActivity(new Intent(inflater.getContext(), AlbumDetailActivity.class).putExtra(
+                    "albumId", albumsRVAdapter.getAlbum(position).id));
+        });
         return view;
     }
 

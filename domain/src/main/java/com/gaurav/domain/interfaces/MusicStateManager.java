@@ -5,7 +5,6 @@ import com.gaurav.domain.musicState.PartialChanges;
 import com.gaurav.domain.usecases.interfaces.CommandUseCases;
 
 import io.reactivex.Completable;
-import io.reactivex.subjects.BehaviorSubject;
 import io.reactivex.subjects.PublishSubject;
 
 public interface MusicStateManager {

@@ -9,6 +9,7 @@ import com.gaurav.domain.usecases.interfaces.FetchUseCases;
 import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.Single;
 
 public class FetchUseCasesImpl implements FetchUseCases {
     MusicRepository musicRepository;
@@ -30,5 +31,10 @@ public class FetchUseCasesImpl implements FetchUseCases {
     @Override
     public Observable<List<Artist>> getAllArtists() {
         return musicRepository.getAllArtists();
+    }
+
+    @Override
+    public Single<Album> getAlbum(long id) {
+        return musicRepository.getAlbum(id);
     }
 }
