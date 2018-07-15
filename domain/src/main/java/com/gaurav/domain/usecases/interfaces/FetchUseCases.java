@@ -17,4 +17,6 @@ public interface FetchUseCases {
     Observable<List<Artist>> getAllArtists();
 
     Single<Album> getAlbum(long id);
+
+    Single<Artist> getArtist(long id);
 }

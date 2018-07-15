@@ -31,23 +31,18 @@
             android:name=".activity.SearchActivity"
             android:label="@string/title_activity_search"
             android:launchMode="singleTask"
-            android:parentActivityName=".activity.HomeActivity"
             android:theme="@style/SearchStyle"
-            android:windowSoftInputMode="adjustPan|adjustResize">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.HomeActivity" />
-        </activity>
+            android:windowSoftInputMode="adjustPan|adjustResize"></activity>
 
         <activity
             android:name=".activity.AlbumDetailActivity"
             android:launchMode="singleTask"
-            android:parentActivityName=".activity.HomeActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.HomeActivity" />
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+
+        <activity
+            android:name=".activity.ArtistDetailActivity"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

@@ -2,6 +2,7 @@ package com.gaurav.sangeet.views.implementations.artists;
 
 import android.annotation.SuppressLint;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,11 +16,11 @@ import android.view.ViewGroup;
 import com.gaurav.domain.usecases.interfaces.CommandUseCases;
 import com.gaurav.domain.usecases.interfaces.FetchUseCases;
 import com.gaurav.sangeet.R;
+import com.gaurav.sangeet.activity.ArtistDetailActivity;
 import com.gaurav.sangeet.utils.ItemClickSupport;
 import com.gaurav.sangeet.viewModels.artists.ArtistsViewModel;
 import com.gaurav.sangeet.viewModels.artists.ArtistsViewModelFactory;
 import com.gaurav.sangeet.views.interfaces.ArtistsView;
-import com.gaurav.sangeet.views.uiEvents.artists.ArtistItemClickUIEvent;
 import com.gaurav.sangeet.views.uiEvents.artists.ArtistsViewUIEvent;
 import com.gaurav.sangeet.views.viewStates.ArtistsViewState;
 
@@ -54,7 +55,9 @@ public class ArtistsViewImpl extends Fragment implements ArtistsView {
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(artistsRVAdapter);
         ItemClickSupport.addTo(recyclerView).setOnItemClickListener((recyclerView, position, v) -> {
-            uiEventsSubject.onNext(new ArtistItemClickUIEvent(artistsRVAdapter.getArtist(position)));
+//            uiEventsSubject.onNext(new ArtistItemClickUIEvent(artistsRVAdapter.getArtist(position)));
+            startActivity(new Intent(inflater.getContext(), ArtistDetailActivity.class).putExtra(
+                    "artistId", artistsRVAdapter.getArtist(position).id));
         });
         return view;
     }

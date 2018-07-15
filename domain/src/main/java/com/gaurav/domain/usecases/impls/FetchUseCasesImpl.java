@@ -37,4 +37,9 @@ public class FetchUseCasesImpl implements FetchUseCases {
     public Single<Album> getAlbum(long id) {
         return musicRepository.getAlbum(id);
     }
+
+    @Override
+    public Single<Artist> getArtist(long id) {
+        return musicRepository.getArtist(id);
+    }
 }

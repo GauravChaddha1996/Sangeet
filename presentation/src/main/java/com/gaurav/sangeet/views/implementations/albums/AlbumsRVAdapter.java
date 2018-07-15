@@ -37,12 +37,12 @@ public class AlbumsRVAdapter extends RecyclerView.Adapter<AlbumsRVAdapter.Albums
         return data.size();
     }
 
-    void updateData(List<Album> albums) {
+    public void updateData(List<Album> albums) {
         this.data = albums;
         notifyDataSetChanged();
     }
 
-    Album getAlbum(int pos) {
+    public Album getAlbum(int pos) {
         return data.get(pos);
     }
 
