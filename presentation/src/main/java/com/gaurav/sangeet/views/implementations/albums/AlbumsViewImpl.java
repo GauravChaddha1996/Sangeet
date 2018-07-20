@@ -30,18 +30,12 @@ import io.reactivex.subjects.PublishSubject;
 
 @SuppressLint("ValidFragment")
 public class AlbumsViewImpl extends Fragment implements AlbumsView {
-
-    FetchUseCases fetchUseCases;
-    CommandUseCases commandUseCases;
-
     AlbumsViewModel viewModel;
     RecyclerView recyclerView;
     AlbumsRVAdapter albumsRVAdapter;
     PublishSubject<AlbumViewUIEvent> uiEventsSubject;
 
-    public AlbumsViewImpl(FetchUseCases fetchUseCases, CommandUseCases commandUseCases) {
-        this.fetchUseCases = fetchUseCases;
-        this.commandUseCases = commandUseCases;
+    public AlbumsViewImpl() {
         uiEventsSubject = PublishSubject.create();
     }
 
@@ -67,7 +61,7 @@ public class AlbumsViewImpl extends Fragment implements AlbumsView {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         viewModel = ViewModelProviders.of(this,
-                new AlbumsViewModelFactory(fetchUseCases, commandUseCases, this))
+                new AlbumsViewModelFactory(this))
                 .get(AlbumsViewModel.class);
         viewModel.getState().observe(this, this::render);
     }

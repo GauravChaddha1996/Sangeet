@@ -13,11 +13,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
-import com.gaurav.domain.interfaces.MusicStateManager;
 import com.gaurav.domain.models.Artist;
-import com.gaurav.domain.usecases.interfaces.CommandUseCases;
-import com.gaurav.domain.usecases.interfaces.FetchUseCases;
-import com.gaurav.sangeet.MusicApplication;
 import com.gaurav.sangeet.R;
 import com.gaurav.sangeet.utils.ItemClickSupport;
 import com.gaurav.sangeet.viewModels.artistDetails.ArtistDetailViewModel;
@@ -37,12 +33,6 @@ import java.util.ArrayList;
 import io.reactivex.subjects.PublishSubject;
 
 public class ArtistDetailActivity extends AppCompatActivity implements ArtistDetailView {
-
-
-    private FetchUseCases fetchUseCases;
-    private CommandUseCases commandUseCases;
-
-    private MusicStateManager musicStateManager;
 
     private ArtistDetailViewModel viewModel;
     private PublishSubject<ArtistDetailUIEvent> uiEventsSubject;
@@ -67,10 +57,6 @@ public class ArtistDetailActivity extends AppCompatActivity implements ArtistDet
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_artist_detail);
 
-        // TODO: 6/1/18 improve via DI
-        fetchUseCases = ((MusicApplication) getApplication()).fetchUseCases;
-        commandUseCases = ((MusicApplication) getApplication()).commandUseCases;
-        musicStateManager = ((MusicApplication) getApplication()).musicStateManager;
         uiEventsSubject = PublishSubject.create();
 
         toolbar = findViewById(R.id.toolbar);
@@ -123,8 +109,7 @@ public class ArtistDetailActivity extends AppCompatActivity implements ArtistDet
             }
         });
         BottomSheetViewModel viewModel = ViewModelProviders.of(this,
-                new BottomSheetViewModelFactory(bottomSheetViewImpl, commandUseCases, musicStateManager,
-                        v -> {
+                new BottomSheetViewModelFactory(bottomSheetViewImpl, v -> {
                             if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
                                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                             }
@@ -139,7 +124,7 @@ public class ArtistDetailActivity extends AppCompatActivity implements ArtistDet
     protected void onStart() {
         super.onStart();
         viewModel = ViewModelProviders.of(this,
-                new ArtistDetailViewModelFactory(fetchUseCases, commandUseCases, this,
+                new ArtistDetailViewModelFactory(this,
                         getIntent().getLongExtra("artistId", -1)))
                 .get(ArtistDetailViewModel.class);
         viewModel.getState().observe(this, this::render);

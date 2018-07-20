@@ -7,32 +7,30 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.gaurav.domain.usecases.interfaces.CommandUseCases;
 import com.gaurav.domain.usecases.interfaces.FetchUseCases;
+import com.gaurav.sangeet.MusicApplication;
 import com.gaurav.sangeet.views.implementations.albums.AlbumsViewImpl;
 import com.gaurav.sangeet.views.implementations.artists.ArtistsViewImpl;
 import com.gaurav.sangeet.views.implementations.songs.SongsViewImpl;
 
+import javax.inject.Inject;
+
 public class PageAdapter extends FragmentStatePagerAdapter {
 
-    private FetchUseCases fetchUseCases;
-    private CommandUseCases commandUseCases;
-
-    public PageAdapter(FragmentManager fm, FetchUseCases fetchUseCases, CommandUseCases commandUseCases) {
+    public PageAdapter(FragmentManager fm) {
         super(fm);
-        this.fetchUseCases = fetchUseCases;
-        this.commandUseCases = commandUseCases;
     }
 
     @Override
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return new SongsViewImpl(fetchUseCases, commandUseCases);
+                return new SongsViewImpl();
             case 1:
-                return new AlbumsViewImpl(fetchUseCases, commandUseCases);
+                return new AlbumsViewImpl();
             case 2:
-                return new ArtistsViewImpl(fetchUseCases, commandUseCases);
+                return new ArtistsViewImpl();
             default:
-                return new SongsViewImpl(fetchUseCases, commandUseCases);
+                return new SongsViewImpl();
         }
 
     }

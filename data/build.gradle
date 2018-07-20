@@ -32,6 +32,10 @@ dependencies {
     androidTestImplementation libraries.testRunner
     androidTestImplementation libraries.espressoCore
 
+    // Dependency Injection related - Dagger
+    annotationProcessor libraries.daggerCompiler
+    implementation libraries.dagger
+
     // Room
     implementation libraries.roomRuntime
     annotationProcessor libraries.roomCompiler

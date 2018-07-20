@@ -8,12 +8,17 @@ import com.gaurav.domain.usecases.interfaces.FetchUseCases;
 
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import io.reactivex.Observable;
 import io.reactivex.Single;
 
+@Singleton
 public class FetchUseCasesImpl implements FetchUseCases {
     MusicRepository musicRepository;
 
+    @Inject
     public FetchUseCasesImpl(MusicRepository musicRepository) {
         this.musicRepository = musicRepository;
     }

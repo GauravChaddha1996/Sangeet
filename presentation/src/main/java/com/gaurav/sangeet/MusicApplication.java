@@ -6,16 +6,18 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 
-import com.gaurav.data.MusicRepositoryImpl;
 import com.gaurav.domain.interfaces.MusicRepository;
 import com.gaurav.domain.interfaces.MusicService;
 import com.gaurav.domain.interfaces.MusicStateManager;
-import com.gaurav.domain.musicState.MusicStateManagerImpl;
-import com.gaurav.domain.usecases.impls.CommandUseCasesImpl;
-import com.gaurav.domain.usecases.impls.FetchUseCasesImpl;
 import com.gaurav.domain.usecases.interfaces.CommandUseCases;
 import com.gaurav.domain.usecases.interfaces.FetchUseCases;
+import com.gaurav.sangeet.di.ContentResolverModule;
+import com.gaurav.sangeet.di.DaggerSingletonComponent;
+import com.gaurav.sangeet.di.SingletonComponent;
+import com.gaurav.sangeet.di.SingletonModule;
 import com.gaurav.service.MusicServiceImpl;
+
+import javax.inject.Inject;
 
 import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -23,20 +25,28 @@ import io.reactivex.schedulers.Schedulers;
 
 public class MusicApplication extends Application {
 
-    public MusicStateManager musicStateManager;
-    public FetchUseCases fetchUseCases;
-    public CommandUseCases commandUseCases;
+    private static MusicApplication instance = null;
+    private SingletonComponent component;
+
+    @Inject
     MusicRepository musicRepository;
-    MusicService musicService;
+    @Inject
+    MusicStateManager musicStateManager;
+    @Inject
+    FetchUseCases fetchUseCases;
+    @Inject
+    CommandUseCases commandUseCases;
+    private MusicService musicService;
 
     @Override
     public void onCreate() {
         super.onCreate();
-
-        musicRepository = new MusicRepositoryImpl(getContentResolver());
-        musicStateManager = new MusicStateManagerImpl(musicRepository);
-        fetchUseCases = new FetchUseCasesImpl(musicRepository);
-        commandUseCases = new CommandUseCasesImpl(musicRepository, musicStateManager);
+        instance = this;
+        component = DaggerSingletonComponent.builder()
+                .contentResolverModule(new ContentResolverModule(getContentResolver()))
+                .singletonModule(new SingletonModule())
+                .build();
+        component.inject(this);
     }
 
     public Completable init() {
@@ -66,5 +76,13 @@ public class MusicApplication extends Application {
                     }
                 }, BIND_AUTO_CREATE)
         ).subscribeOn(Schedulers.io());
+    }
+
+    public static MusicApplication getInstance() {
+        return instance;
+    }
+
+    public SingletonComponent getComponent() {
+        return component;
     }
 }

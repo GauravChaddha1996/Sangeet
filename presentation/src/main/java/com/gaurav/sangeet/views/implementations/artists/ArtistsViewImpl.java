@@ -31,17 +31,12 @@ import io.reactivex.subjects.PublishSubject;
 @SuppressLint("ValidFragment")
 public class ArtistsViewImpl extends Fragment implements ArtistsView {
 
-    FetchUseCases fetchUseCases;
-    CommandUseCases commandUseCases;
-
     ArtistsViewModel viewModel;
     RecyclerView recyclerView;
     ArtistsRVAdapter artistsRVAdapter;
     PublishSubject<ArtistsViewUIEvent> uiEventsSubject;
 
-    public ArtistsViewImpl(FetchUseCases fetchUseCases, CommandUseCases commandUseCases) {
-        this.fetchUseCases = fetchUseCases;
-        this.commandUseCases = commandUseCases;
+    public ArtistsViewImpl() {
         uiEventsSubject = PublishSubject.create();
     }
 
@@ -65,7 +60,7 @@ public class ArtistsViewImpl extends Fragment implements ArtistsView {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         viewModel = ViewModelProviders.of(this,
-                new ArtistsViewModelFactory(fetchUseCases, commandUseCases, this))
+                new ArtistsViewModelFactory(this))
                 .get(ArtistsViewModel.class);
         viewModel.getState().observe(this, this::render);
     }

@@ -12,6 +12,8 @@ import com.gaurav.domain.usecases.actions.RepeatAction;
 import com.gaurav.domain.usecases.actions.ResumeSongAction;
 import com.gaurav.domain.usecases.actions.ShuffleAction;
 import com.gaurav.domain.usecases.interfaces.CommandUseCases;
+import com.gaurav.sangeet.MusicApplication;
+import com.gaurav.sangeet.di.Injector;
 import com.gaurav.sangeet.viewModels.BaseViewModel;
 import com.gaurav.sangeet.views.interfaces.BottomSheetView;
 import com.gaurav.sangeet.views.uiEvents.bottomSheet.BaseViewUIEvent;
@@ -22,13 +24,17 @@ import com.gaurav.sangeet.views.uiEvents.bottomSheet.RepeatUIEvent;
 import com.gaurav.sangeet.views.uiEvents.bottomSheet.ShuffleUIEvent;
 import com.gaurav.sangeet.views.viewStates.BottomSheetViewState;
 
+import javax.inject.Inject;
+
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
 public class BottomSheetViewModel extends BaseViewModel {
 
     private BottomSheetView bottomSheetView;
-    private CommandUseCases commandUseCases;
-    private MusicStateManager musicStateManager;
+    @Inject
+    CommandUseCases commandUseCases;
+    @Inject
+    MusicStateManager musicStateManager;
     private View.OnClickListener onClickListener;
 
     private MutableLiveData<BottomSheetViewState> viewState;
@@ -36,13 +42,11 @@ public class BottomSheetViewModel extends BaseViewModel {
     // helper vars
     private MusicState storedMusicState;
 
-    public BottomSheetViewModel(BottomSheetView bottomSheetView, CommandUseCases commandUseCases,
-                                MusicStateManager musicStateManager,
+    public BottomSheetViewModel(BottomSheetView bottomSheetView,
                                 View.OnClickListener onClickListener) {
         this.bottomSheetView = bottomSheetView;
-        this.commandUseCases = commandUseCases;
-        this.musicStateManager = musicStateManager;
         this.onClickListener = onClickListener;
+        Injector.get().inject(this);
 
         bindIntents();
 

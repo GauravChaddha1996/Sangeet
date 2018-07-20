@@ -26,10 +26,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import io.reactivex.Single;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.subjects.PublishSubject;
 
+@Singleton
 public class CommandUseCasesImpl implements CommandUseCases {
 
     private MusicRepository musicRepository;
@@ -39,6 +43,7 @@ public class CommandUseCasesImpl implements CommandUseCases {
     private PublishSubject<Action> actionPublishSubject;
     private PublishSubject<PartialChanges> partialChangesSubject;
 
+    @Inject
     public CommandUseCasesImpl(MusicRepository musicRepository, MusicStateManager musicStateManager) {
         this.musicRepository = musicRepository;
         this.musicStateManager = musicStateManager;

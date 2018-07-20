@@ -45,6 +45,10 @@ dependencies {
     implementation libraries.dachshungTab
     implementation libraries.arcNavigationView
 
+    // Dependency Injection related - Dagger
+    annotationProcessor libraries.daggerCompiler
+    implementation libraries.dagger
+
     // Room
     implementation libraries.roomRuntime
     annotationProcessor libraries.roomCompiler

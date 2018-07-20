@@ -29,12 +29,6 @@ import static com.gaurav.sangeet.Constants.Search.EXTRA_CIRCULAR_REVEAL_Y;
 
 public class HomeActivity extends AppCompatActivity {
 
-    // Use cases
-    private FetchUseCases fetchUseCases;
-    private CommandUseCases commandUseCases;
-
-    private MusicStateManager musicStateManager;
-
     // Views
     private Toolbar toolbar;
     private TabLayout tabLayout;
@@ -51,11 +45,6 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        // TODO: 6/1/18 improve via DI
-        fetchUseCases = ((MusicApplication) getApplication()).fetchUseCases;
-        commandUseCases = ((MusicApplication) getApplication()).commandUseCases;
-        musicStateManager = ((MusicApplication) getApplication()).musicStateManager;
-
         tabLayout = findViewById(R.id.tab_layout);
         toolbar = findViewById(R.id.toolbar);
         viewPager = findViewById(R.id.viewPager);
@@ -64,11 +53,12 @@ public class HomeActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Sangeet");
 
-        pageAdapter = new PageAdapter(getSupportFragmentManager(), fetchUseCases, commandUseCases);
+        pageAdapter = new PageAdapter(getSupportFragmentManager());
         viewPager.setAdapter(pageAdapter);
         viewPager.setCurrentItem(0);
         tabLayout.setupWithViewPager(viewPager);
 
+        // TODO: 7/20/18 Clean up code in a such a way of bottom sheet that it's managed easily
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetViewImpl.getBaseView());
         bottomSheetBehavior.setHideable(false);
         bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
@@ -87,7 +77,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
         BottomSheetViewModel viewModel = ViewModelProviders.of(HomeActivity.this,
-                new BottomSheetViewModelFactory(bottomSheetViewImpl, commandUseCases, musicStateManager,
+                new BottomSheetViewModelFactory(bottomSheetViewImpl,
                         v -> {
                             if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
                                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);

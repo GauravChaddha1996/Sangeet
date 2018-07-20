@@ -6,23 +6,27 @@ import com.gaurav.domain.models.Song;
 import com.gaurav.domain.usecases.actions.PlayAlbumAction;
 import com.gaurav.domain.usecases.interfaces.CommandUseCases;
 import com.gaurav.domain.usecases.interfaces.FetchUseCases;
+import com.gaurav.sangeet.MusicApplication;
+import com.gaurav.sangeet.di.Injector;
 import com.gaurav.sangeet.viewModels.BaseViewModel;
 import com.gaurav.sangeet.views.interfaces.AlbumDetailView;
 import com.gaurav.sangeet.views.uiEvents.albumDetails.PlayAlbumDetailUIEvent;
 import com.gaurav.sangeet.views.viewStates.AlbumDetailViewState;
 
+import javax.inject.Inject;
+
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
 public class AlbumDetailViewModel extends BaseViewModel {
-    private FetchUseCases fetchUseCases;
-    private CommandUseCases commandUseCases;
+    @Inject
+    FetchUseCases fetchUseCases;
+    @Inject
+    CommandUseCases commandUseCases;
     private AlbumDetailView albumDetailView;
     private MutableLiveData<AlbumDetailViewState> state;
 
-    public AlbumDetailViewModel(FetchUseCases fetchUseCases, CommandUseCases commandUseCases,
-                                AlbumDetailView albumDetailView, long albumId) {
-        this.fetchUseCases = fetchUseCases;
-        this.commandUseCases = commandUseCases;
+    public AlbumDetailViewModel( AlbumDetailView albumDetailView, long albumId) {
+        Injector.get().inject(this);
         this.albumDetailView = albumDetailView;
         bindIntents();
 

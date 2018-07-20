@@ -37,11 +37,6 @@ import io.reactivex.subjects.PublishSubject;
 public class AlbumDetailActivity extends AppCompatActivity implements AlbumDetailView {
 
 
-    private FetchUseCases fetchUseCases;
-    private CommandUseCases commandUseCases;
-
-    private MusicStateManager musicStateManager;
-
     private AlbumDetailViewModel viewModel;
     private PublishSubject<AlbumDetailUIEvent> uiEventsSubject;
 
@@ -63,10 +58,6 @@ public class AlbumDetailActivity extends AppCompatActivity implements AlbumDetai
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_album_detail);
 
-        // TODO: 6/1/18 improve via DI
-        fetchUseCases = ((MusicApplication) getApplication()).fetchUseCases;
-        commandUseCases = ((MusicApplication) getApplication()).commandUseCases;
-        musicStateManager = ((MusicApplication) getApplication()).musicStateManager;
         uiEventsSubject = PublishSubject.create();
 
         toolbar = findViewById(R.id.toolbar);
@@ -110,7 +101,7 @@ public class AlbumDetailActivity extends AppCompatActivity implements AlbumDetai
             }
         });
         BottomSheetViewModel viewModel = ViewModelProviders.of(this,
-                new BottomSheetViewModelFactory(bottomSheetViewImpl, commandUseCases, musicStateManager,
+                new BottomSheetViewModelFactory(bottomSheetViewImpl,
                         v -> {
                             if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
                                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
@@ -126,7 +117,7 @@ public class AlbumDetailActivity extends AppCompatActivity implements AlbumDetai
     protected void onStart() {
         super.onStart();
         viewModel = ViewModelProviders.of(this,
-                new AlbumDetailViewModelFactory(fetchUseCases, commandUseCases, this,
+                new AlbumDetailViewModelFactory(this,
                         getIntent().getLongExtra("albumId", -1)))
                 .get(AlbumDetailViewModel.class);
         viewModel.getState().observe(this, this::render);

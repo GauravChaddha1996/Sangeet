@@ -20,11 +20,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
-
+@Singleton
 public class MusicRepositoryImpl implements MusicRepository {
 
     private ContentResolver contentResolver;
@@ -37,6 +40,7 @@ public class MusicRepositoryImpl implements MusicRepository {
     private Album albumResult = null;
     private Artist artistResult = null;
 
+    @Inject
     public MusicRepositoryImpl(ContentResolver contentResolver) {
         this.contentResolver = contentResolver;
     }

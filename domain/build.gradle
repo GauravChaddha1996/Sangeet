@@ -1,7 +1,15 @@
+plugins {
+    id "net.ltgt.apt" version "0.10"
+}
+
 apply plugin: 'java-library'
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    // Dependency Injection related - Dagger
+    apt libraries.daggerCompiler
+    implementation libraries.dagger
 
     // RxJava and RxAndroid
     implementation libraries.rxjava

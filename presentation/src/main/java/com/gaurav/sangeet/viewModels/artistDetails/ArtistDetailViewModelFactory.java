@@ -10,15 +10,10 @@ import com.gaurav.sangeet.views.interfaces.ArtistDetailView;
 
 public class ArtistDetailViewModelFactory extends ViewModelProvider.NewInstanceFactory {
 
-    FetchUseCases fetchUseCases;
-    CommandUseCases commandUseCases;
     ArtistDetailView artistDetailView;
     long artistId;
 
-    public ArtistDetailViewModelFactory(FetchUseCases fetchUseCases, CommandUseCases commandUseCases,
-                                        ArtistDetailView artistDetailView, long artistId) {
-        this.fetchUseCases = fetchUseCases;
-        this.commandUseCases = commandUseCases;
+    public ArtistDetailViewModelFactory( ArtistDetailView artistDetailView, long artistId) {
         this.artistDetailView = artistDetailView;
         this.artistId = artistId;
     }
@@ -28,7 +23,7 @@ public class ArtistDetailViewModelFactory extends ViewModelProvider.NewInstanceF
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         if (modelClass == ArtistDetailViewModel.class) {
-            return (T) new ArtistDetailViewModel(fetchUseCases, commandUseCases, artistDetailView, artistId);
+            return (T) new ArtistDetailViewModel(artistDetailView, artistId);
         }
         return super.create(modelClass);
     }

@@ -12,6 +12,9 @@ import com.gaurav.domain.usecases.interfaces.CommandUseCases;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import io.reactivex.Completable;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -23,6 +26,7 @@ import static com.gaurav.domain.musicState.PartialChanges.PlayingStatusChanged;
 import static com.gaurav.domain.musicState.PartialChanges.ProgressUpdated;
 import static com.gaurav.domain.musicState.PartialChanges.QueueUpdated;
 
+@Singleton
 public class MusicStateManagerImpl implements MusicStateManager {
 
     private MusicRepository musicRepository;
@@ -33,6 +37,7 @@ public class MusicStateManagerImpl implements MusicStateManager {
     private CompositeDisposable musicServiceCompositeDisposable;
     private Disposable partialChagesDisposable;
 
+    @Inject
     public MusicStateManagerImpl(MusicRepository musicRepository) {
         this.musicRepository = musicRepository;
         this.musicStateSubject = PublishSubject.create();

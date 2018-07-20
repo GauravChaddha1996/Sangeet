@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 
 import com.gaurav.domain.usecases.interfaces.CommandUseCases;
 import com.gaurav.domain.usecases.interfaces.FetchUseCases;
+import com.gaurav.sangeet.MusicApplication;
 import com.gaurav.sangeet.R;
 import com.gaurav.sangeet.utils.ItemClickSupport;
 import com.gaurav.sangeet.viewModels.songs.SongsViewModel;
@@ -25,21 +26,18 @@ import com.gaurav.sangeet.views.viewStates.SongsViewState;
 
 import java.util.ArrayList;
 
+import javax.inject.Inject;
+
 import io.reactivex.subjects.PublishSubject;
 
 @SuppressLint("ValidFragment")
 public class SongsViewImpl extends Fragment implements SongsView {
-    FetchUseCases fetchUseCases;
-    CommandUseCases commandUseCases;
-
     SongsViewModel viewModel;
     RecyclerView recyclerView;
     SongsRVAdapter songsRVAdapter;
     private PublishSubject<SongViewUIEvent> uiEventsSubject;
 
-    public SongsViewImpl(FetchUseCases fetchUseCases, CommandUseCases commandUseCases) {
-        this.fetchUseCases = fetchUseCases;
-        this.commandUseCases = commandUseCases;
+    public SongsViewImpl() {
         this.uiEventsSubject = PublishSubject.create();
     }
 
@@ -61,7 +59,7 @@ public class SongsViewImpl extends Fragment implements SongsView {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         viewModel = ViewModelProviders.of(this,
-                new SongsViewModelFactory(fetchUseCases, commandUseCases, this))
+                new SongsViewModelFactory(this))
                 .get(SongsViewModel.class);
         viewModel.getState().observe(this, this::render);
     }
