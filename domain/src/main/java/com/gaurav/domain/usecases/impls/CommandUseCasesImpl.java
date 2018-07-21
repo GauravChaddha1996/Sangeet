@@ -6,7 +6,7 @@ import com.gaurav.domain.interfaces.MusicStateManager;
 import com.gaurav.domain.models.Album;
 import com.gaurav.domain.models.Artist;
 import com.gaurav.domain.models.Song;
-import com.gaurav.domain.musicState.PartialChanges;
+import com.gaurav.domain.musicstate.PartialChanges;
 import com.gaurav.domain.usecases.actions.Action;
 import com.gaurav.domain.usecases.actions.GoToAlbumAction;
 import com.gaurav.domain.usecases.actions.GoToArtistAction;
@@ -44,7 +44,8 @@ public class CommandUseCasesImpl implements CommandUseCases {
     private PublishSubject<PartialChanges> partialChangesSubject;
 
     @Inject
-    public CommandUseCasesImpl(MusicRepository musicRepository, MusicStateManager musicStateManager) {
+    public CommandUseCasesImpl(MusicRepository musicRepository,
+                               MusicStateManager musicStateManager) {
         this.musicRepository = musicRepository;
         this.musicStateManager = musicStateManager;
         prepareObservablesAndEmitters();
@@ -90,15 +91,18 @@ public class CommandUseCasesImpl implements CommandUseCases {
                         ((PlayArtistAction) action).getSong());
             } else if (action instanceof PauseSongAction) {
                 musicService.pause();
-                partialChangesSubject.onNext(new PartialChanges.PlayingStatusChanged(false));
+                partialChangesSubject
+                        .onNext(new PartialChanges.PlayingStatusChanged(false));
                 partialChangesSubject.onNext(new PartialChanges.Complete());
             } else if (action instanceof ResumeSongAction) {
                 if (musicService.isMediaPlayerSet()) {
                     musicService.resume();
-                    partialChangesSubject.onNext(new PartialChanges.PlayingStatusChanged(true));
+                    partialChangesSubject
+                            .onNext(new PartialChanges.PlayingStatusChanged(true));
                     partialChangesSubject.onNext(new PartialChanges.Complete());
                 } else {
-                    partialChangesSubject.onNext(new PartialChanges.PlayingStatusChanged(true));
+                    partialChangesSubject
+                            .onNext(new PartialChanges.PlayingStatusChanged(true));
                     partialChangesSubject.onNext(new PartialChanges.Complete());
                     musicService.play(musicStateManager.getMusicState().getCurrentSong().data);
                 }
@@ -115,11 +119,8 @@ public class CommandUseCasesImpl implements CommandUseCases {
                 partialChangesSubject.onNext(new PartialChanges.RepeatToggle());
                 partialChangesSubject.onNext(new PartialChanges.Complete());
             } else if (action instanceof SeekbarMovementAction) {
-                System.out.println("Action is SeekbarMovement");
             } else if (action instanceof GoToAlbumAction) {
-                System.out.println("Action is GoToAlbum");
             } else if (action instanceof GoToArtistAction) {
-                System.out.println("Action is GoToArtist");
             }
         });
         partialChangesSubject = PublishSubject.create();
@@ -128,11 +129,15 @@ public class CommandUseCasesImpl implements CommandUseCases {
     private <T> T playCommandHelper(T object, Song song) {
         makeQueue(object)
                 .map(this::shuffleQueueIfNeeded)
-                .doOnSuccess(songs -> partialChangesSubject.onNext(new PartialChanges.QueueUpdated(songs)))
+                .doOnSuccess(songs ->
+                        partialChangesSubject.onNext(new PartialChanges.QueueUpdated(songs)))
                 .map(songs -> songs.indexOf(song))
-                .doOnSuccess(currentSongIndex -> partialChangesSubject.onNext(new PartialChanges.CurrentSongIndexChanged(currentSongIndex)))
+                .doOnSuccess(currentSongIndex ->
+                        partialChangesSubject.onNext(
+                                new PartialChanges.CurrentSongIndexChanged(currentSongIndex)))
                 .doOnSuccess(__ -> playCurrentSongIndex(song))
-                .doOnSuccess(__ -> partialChangesSubject.onNext(new PartialChanges.PlayingStatusChanged(true)))
+                .doOnSuccess(__ -> partialChangesSubject
+                        .onNext(new PartialChanges.PlayingStatusChanged(true)))
                 .doOnSuccess(__ -> partialChangesSubject.onNext(new PartialChanges.Complete()))
                 .subscribe().dispose();
         return object;

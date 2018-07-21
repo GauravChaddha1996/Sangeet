@@ -1,7 +1,7 @@
 package com.gaurav.domain.interfaces;
 
-import com.gaurav.domain.musicState.MusicState;
-import com.gaurav.domain.musicState.PartialChanges;
+import com.gaurav.domain.musicstate.MusicState;
+import com.gaurav.domain.musicstate.PartialChanges;
 import com.gaurav.domain.usecases.interfaces.CommandUseCases;
 
 import io.reactivex.Completable;

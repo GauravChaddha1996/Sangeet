@@ -1,7 +1,7 @@
 package com.gaurav.sangeet.views.interfaces;
 
-import com.gaurav.sangeet.views.uiEvents.bottomSheet.BottomSheetUIEvent;
-import com.gaurav.sangeet.views.viewStates.BottomSheetViewState;
+import com.gaurav.sangeet.views.uievents.bottomsheet.BottomSheetUIEvent;
+import com.gaurav.sangeet.views.viewstates.BottomSheetViewState;
 
 import io.reactivex.subjects.PublishSubject;
 

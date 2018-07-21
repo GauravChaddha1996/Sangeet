@@ -12,23 +12,19 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
-import com.gaurav.domain.interfaces.MusicStateManager;
 import com.gaurav.domain.models.Album;
-import com.gaurav.domain.usecases.interfaces.CommandUseCases;
-import com.gaurav.domain.usecases.interfaces.FetchUseCases;
-import com.gaurav.sangeet.MusicApplication;
 import com.gaurav.sangeet.R;
 import com.gaurav.sangeet.utils.ItemClickSupport;
-import com.gaurav.sangeet.viewModels.albumDetails.AlbumDetailViewModel;
-import com.gaurav.sangeet.viewModels.albumDetails.AlbumDetailViewModelFactory;
-import com.gaurav.sangeet.viewModels.bottomSheet.BottomSheetViewModel;
-import com.gaurav.sangeet.viewModels.bottomSheet.BottomSheetViewModelFactory;
-import com.gaurav.sangeet.views.implementations.bottomSheet.BottomSheetViewImpl;
+import com.gaurav.sangeet.viewmodels.albumdetails.AlbumDetailViewModel;
+import com.gaurav.sangeet.viewmodels.albumdetails.AlbumDetailViewModelFactory;
+import com.gaurav.sangeet.viewmodels.bottomsheet.BottomSheetViewModel;
+import com.gaurav.sangeet.viewmodels.bottomsheet.BottomSheetViewModelFactory;
+import com.gaurav.sangeet.views.implementations.bottomsheet.BottomSheetViewImpl;
 import com.gaurav.sangeet.views.implementations.songs.SongsRVAdapter;
 import com.gaurav.sangeet.views.interfaces.AlbumDetailView;
-import com.gaurav.sangeet.views.uiEvents.albumDetails.AlbumDetailUIEvent;
-import com.gaurav.sangeet.views.uiEvents.albumDetails.PlayAlbumDetailUIEvent;
-import com.gaurav.sangeet.views.viewStates.AlbumDetailViewState;
+import com.gaurav.sangeet.views.uievents.albumdetails.AlbumDetailUIEvent;
+import com.gaurav.sangeet.views.uievents.albumdetails.PlayAlbumDetailUIEvent;
+import com.gaurav.sangeet.views.viewstates.AlbumDetailViewState;
 
 import java.util.ArrayList;
 
@@ -71,13 +67,14 @@ public class AlbumDetailActivity extends AppCompatActivity implements AlbumDetai
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(getDrawable(android.R.drawable.arrow_up_float));
         playAlbumButton.setOnClickListener(v -> uiEventsSubject.onNext(new PlayAlbumDetailUIEvent(
-                ((AlbumDetailViewState.Result) viewModel.getState().getValue()).getAlbum(), null
-        )));
+                ((AlbumDetailViewState.Result) viewModel.getState().getValue()).getAlbum(),
+                null)));
         adapter = new SongsRVAdapter(new ArrayList<>());
         albumSongRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         albumSongRecyclerView.setHasFixedSize(true);
         albumSongRecyclerView.setAdapter(adapter);
-        ItemClickSupport.addTo(albumSongRecyclerView).setOnItemClickListener((albumSongRecyclerView, position, v) ->
+        ItemClickSupport.addTo(albumSongRecyclerView).setOnItemClickListener((albumSongRecyclerView,
+                                                                              position, v) ->
                 uiEventsSubject.onNext(new PlayAlbumDetailUIEvent(
                         ((AlbumDetailViewState.Result) viewModel.getState().getValue()).getAlbum()
                         , adapter.getSong(position))));
@@ -103,7 +100,8 @@ public class AlbumDetailActivity extends AppCompatActivity implements AlbumDetai
         BottomSheetViewModel viewModel = ViewModelProviders.of(this,
                 new BottomSheetViewModelFactory(bottomSheetViewImpl,
                         v -> {
-                            if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
+                            if (bottomSheetBehavior.getState() ==
+                                    BottomSheetBehavior.STATE_COLLAPSED) {
                                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                             }
                         }))

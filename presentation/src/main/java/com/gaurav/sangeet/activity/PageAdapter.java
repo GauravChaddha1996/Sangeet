@@ -5,14 +5,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.gaurav.domain.usecases.interfaces.CommandUseCases;
-import com.gaurav.domain.usecases.interfaces.FetchUseCases;
-import com.gaurav.sangeet.MusicApplication;
 import com.gaurav.sangeet.views.implementations.albums.AlbumsViewImpl;
 import com.gaurav.sangeet.views.implementations.artists.ArtistsViewImpl;
 import com.gaurav.sangeet.views.implementations.songs.SongsViewImpl;
-
-import javax.inject.Inject;
 
 public class PageAdapter extends FragmentStatePagerAdapter {
 

@@ -13,16 +13,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.gaurav.domain.usecases.interfaces.CommandUseCases;
-import com.gaurav.domain.usecases.interfaces.FetchUseCases;
 import com.gaurav.sangeet.R;
 import com.gaurav.sangeet.activity.AlbumDetailActivity;
 import com.gaurav.sangeet.utils.ItemClickSupport;
-import com.gaurav.sangeet.viewModels.albums.AlbumsViewModel;
-import com.gaurav.sangeet.viewModels.albums.AlbumsViewModelFactory;
+import com.gaurav.sangeet.viewmodels.albums.AlbumsViewModel;
+import com.gaurav.sangeet.viewmodels.albums.AlbumsViewModelFactory;
 import com.gaurav.sangeet.views.interfaces.AlbumsView;
-import com.gaurav.sangeet.views.uiEvents.albums.AlbumViewUIEvent;
-import com.gaurav.sangeet.views.viewStates.AlbumsViewState;
+import com.gaurav.sangeet.views.uievents.albums.AlbumViewUIEvent;
+import com.gaurav.sangeet.views.viewstates.AlbumsViewState;
 
 import java.util.ArrayList;
 
@@ -41,7 +39,8 @@ public class AlbumsViewImpl extends Fragment implements AlbumsView {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.albums_view, container, false);
         albumsRVAdapter = new AlbumsRVAdapter(new ArrayList<>());
         recyclerView = view.findViewById(R.id.recyclerView);

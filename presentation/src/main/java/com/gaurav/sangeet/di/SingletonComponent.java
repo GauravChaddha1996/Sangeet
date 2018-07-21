@@ -1,12 +1,12 @@
 package com.gaurav.sangeet.di;
 
 import com.gaurav.sangeet.MusicApplication;
-import com.gaurav.sangeet.viewModels.albumDetails.AlbumDetailViewModel;
-import com.gaurav.sangeet.viewModels.albums.AlbumsViewModel;
-import com.gaurav.sangeet.viewModels.artistDetails.ArtistDetailViewModel;
-import com.gaurav.sangeet.viewModels.artists.ArtistsViewModel;
-import com.gaurav.sangeet.viewModels.bottomSheet.BottomSheetViewModel;
-import com.gaurav.sangeet.viewModels.songs.SongsViewModel;
+import com.gaurav.sangeet.viewmodels.albumdetails.AlbumDetailViewModel;
+import com.gaurav.sangeet.viewmodels.albums.AlbumsViewModel;
+import com.gaurav.sangeet.viewmodels.artistdetails.ArtistDetailViewModel;
+import com.gaurav.sangeet.viewmodels.artists.ArtistsViewModel;
+import com.gaurav.sangeet.viewmodels.bottomsheet.BottomSheetViewModel;
+import com.gaurav.sangeet.viewmodels.songs.SongsViewModel;
 
 import javax.inject.Singleton;
 

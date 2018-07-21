@@ -16,17 +16,17 @@ import android.widget.ImageView;
 import com.gaurav.domain.models.Artist;
 import com.gaurav.sangeet.R;
 import com.gaurav.sangeet.utils.ItemClickSupport;
-import com.gaurav.sangeet.viewModels.artistDetails.ArtistDetailViewModel;
-import com.gaurav.sangeet.viewModels.artistDetails.ArtistDetailViewModelFactory;
-import com.gaurav.sangeet.viewModels.bottomSheet.BottomSheetViewModel;
-import com.gaurav.sangeet.viewModels.bottomSheet.BottomSheetViewModelFactory;
+import com.gaurav.sangeet.viewmodels.artistdetails.ArtistDetailViewModel;
+import com.gaurav.sangeet.viewmodels.artistdetails.ArtistDetailViewModelFactory;
+import com.gaurav.sangeet.viewmodels.bottomsheet.BottomSheetViewModel;
+import com.gaurav.sangeet.viewmodels.bottomsheet.BottomSheetViewModelFactory;
 import com.gaurav.sangeet.views.implementations.albums.AlbumsRVAdapter;
-import com.gaurav.sangeet.views.implementations.bottomSheet.BottomSheetViewImpl;
+import com.gaurav.sangeet.views.implementations.bottomsheet.BottomSheetViewImpl;
 import com.gaurav.sangeet.views.implementations.songs.SongsRVAdapter;
 import com.gaurav.sangeet.views.interfaces.ArtistDetailView;
-import com.gaurav.sangeet.views.uiEvents.artistDetails.ArtistDetailUIEvent;
-import com.gaurav.sangeet.views.uiEvents.artistDetails.PlayArtistDetailUIEvent;
-import com.gaurav.sangeet.views.viewStates.ArtistDetailViewState;
+import com.gaurav.sangeet.views.uievents.artistdetails.ArtistDetailUIEvent;
+import com.gaurav.sangeet.views.uievents.artistdetails.PlayArtistDetailUIEvent;
+import com.gaurav.sangeet.views.viewstates.ArtistDetailViewState;
 
 import java.util.ArrayList;
 
@@ -71,8 +71,8 @@ public class ArtistDetailActivity extends AppCompatActivity implements ArtistDet
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(getDrawable(android.R.drawable.arrow_up_float));
         playArtistButton.setOnClickListener(v -> uiEventsSubject.onNext(new PlayArtistDetailUIEvent(
-                ((ArtistDetailViewState.Result) viewModel.getState().getValue()).getArtist(), null
-        )));
+                ((ArtistDetailViewState.Result) viewModel.getState().getValue()).getArtist(),
+                null)));
         songsRVAdapter = new SongsRVAdapter(new ArrayList<>());
         albumsRVAdapter = new AlbumsRVAdapter(new ArrayList<>());
         artistSongRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -81,11 +81,13 @@ public class ArtistDetailActivity extends AppCompatActivity implements ArtistDet
         artistAlbumRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         artistAlbumRecyclerView.setHasFixedSize(true);
         artistAlbumRecyclerView.setAdapter(albumsRVAdapter);
-        ItemClickSupport.addTo(artistSongRecyclerView).setOnItemClickListener((recyclerView, position, v) ->
-                uiEventsSubject.onNext(new PlayArtistDetailUIEvent(
+        ItemClickSupport.addTo(artistSongRecyclerView)
+                .setOnItemClickListener((recyclerView, position, v) ->
+                        uiEventsSubject.onNext(new PlayArtistDetailUIEvent(
                         ((ArtistDetailViewState.Result) viewModel.getState().getValue()).getArtist()
                         , songsRVAdapter.getSong(position))));
-        ItemClickSupport.addTo(artistAlbumRecyclerView).setOnItemClickListener((recyclerView, position, v) -> {
+        ItemClickSupport.addTo(artistAlbumRecyclerView)
+                .setOnItemClickListener((recyclerView, position, v) -> {
             startActivity(new Intent(this, AlbumDetailActivity.class).putExtra(
                     "albumId", albumsRVAdapter.getAlbum(position).id));
         });
@@ -110,7 +112,8 @@ public class ArtistDetailActivity extends AppCompatActivity implements ArtistDet
         });
         BottomSheetViewModel viewModel = ViewModelProviders.of(this,
                 new BottomSheetViewModelFactory(bottomSheetViewImpl, v -> {
-                            if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
+                    if (bottomSheetBehavior.getState() ==
+                            BottomSheetBehavior.STATE_COLLAPSED) {
                                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                             }
                         }))

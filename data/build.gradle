@@ -1,5 +1,5 @@
 apply plugin: 'com.android.library'
-
+apply from: '../quality/quality.gradle'
 android {
     compileSdkVersion versions.compileSDK
 
@@ -22,6 +22,15 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    lintOptions{
+        abortOnError  false
+        ignoreWarnings false
+        xmlReport false
+        htmlReport true
+        htmlOutput file("$project.rootDir/reports/$project.projectDir.name/lint.html")
+    }
+
 }
 
 dependencies {

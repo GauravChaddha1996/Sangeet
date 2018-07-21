@@ -1,7 +1,7 @@
 package com.gaurav.sangeet.views.interfaces;
 
-import com.gaurav.sangeet.views.uiEvents.artistDetails.ArtistDetailUIEvent;
-import com.gaurav.sangeet.views.viewStates.ArtistDetailViewState;
+import com.gaurav.sangeet.views.uievents.artistdetails.ArtistDetailUIEvent;
+import com.gaurav.sangeet.views.viewstates.ArtistDetailViewState;
 
 import io.reactivex.subjects.PublishSubject;
 

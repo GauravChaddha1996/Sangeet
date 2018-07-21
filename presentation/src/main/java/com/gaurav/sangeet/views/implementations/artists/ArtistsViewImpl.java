@@ -13,16 +13,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.gaurav.domain.usecases.interfaces.CommandUseCases;
-import com.gaurav.domain.usecases.interfaces.FetchUseCases;
 import com.gaurav.sangeet.R;
 import com.gaurav.sangeet.activity.ArtistDetailActivity;
 import com.gaurav.sangeet.utils.ItemClickSupport;
-import com.gaurav.sangeet.viewModels.artists.ArtistsViewModel;
-import com.gaurav.sangeet.viewModels.artists.ArtistsViewModelFactory;
+import com.gaurav.sangeet.viewmodels.artists.ArtistsViewModel;
+import com.gaurav.sangeet.viewmodels.artists.ArtistsViewModelFactory;
 import com.gaurav.sangeet.views.interfaces.ArtistsView;
-import com.gaurav.sangeet.views.uiEvents.artists.ArtistsViewUIEvent;
-import com.gaurav.sangeet.views.viewStates.ArtistsViewState;
+import com.gaurav.sangeet.views.uievents.artists.ArtistsViewUIEvent;
+import com.gaurav.sangeet.views.viewstates.ArtistsViewState;
 
 import java.util.ArrayList;
 
@@ -42,7 +40,8 @@ public class ArtistsViewImpl extends Fragment implements ArtistsView {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.artists_view, container, false);
         artistsRVAdapter = new ArtistsRVAdapter(new ArrayList<>());
         recyclerView = view.findViewById(R.id.recyclerView);
@@ -50,7 +49,8 @@ public class ArtistsViewImpl extends Fragment implements ArtistsView {
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(artistsRVAdapter);
         ItemClickSupport.addTo(recyclerView).setOnItemClickListener((recyclerView, position, v) -> {
-//            uiEventsSubject.onNext(new ArtistItemClickUIEvent(artistsRVAdapter.getArtist(position)));
+//            uiEventsSubject.onNext(
+// new ArtistItemClickUIEvent(artistsRVAdapter.getArtist(position)));
             startActivity(new Intent(inflater.getContext(), ArtistDetailActivity.class).putExtra(
                     "artistId", artistsRVAdapter.getArtist(position).id));
         });

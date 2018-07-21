@@ -3,6 +3,7 @@ plugins {
 }
 
 apply plugin: 'java-library'
+apply from: '../quality/qualityDomain.gradle'
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])

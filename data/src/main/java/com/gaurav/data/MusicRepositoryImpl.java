@@ -1,7 +1,6 @@
 package com.gaurav.data;
 
 import android.content.ContentResolver;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.provider.MediaStore;
 
@@ -9,10 +8,6 @@ import com.gaurav.domain.interfaces.MusicRepository;
 import com.gaurav.domain.models.Album;
 import com.gaurav.domain.models.Artist;
 import com.gaurav.domain.models.Song;
-import com.gaurav.domain.musicState.MusicState;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -194,16 +189,20 @@ public class MusicRepositoryImpl implements MusicRepository {
         for (Song song : songList) {
             artist = artistMap.getOrDefault(song.artist.toLowerCase().trim(),
                     new Artist(song.artistId, song.artist,
-                            new TreeSet<>((album1, album2) -> album1.name.compareToIgnoreCase(album2.name)),
-                            new TreeSet<>((song1, song2) -> song1.title.compareToIgnoreCase(song2.title))));
+                            new TreeSet<>((album1, album2) ->
+                                    album1.name.compareToIgnoreCase(album2.name)),
+                            new TreeSet<>((song1, song2) ->
+                                    song1.title.compareToIgnoreCase(song2.title))));
             artist.songSet.add(song);
             artistMap.put(artist.name.toLowerCase().trim(), artist);
         }
         for (Album album : albumList) {
             artist = artistMap.getOrDefault(album.artistName.toLowerCase().trim(),
                     new Artist(album.artistId, album.artistName,
-                            new TreeSet<>((album1, album2) -> album1.name.compareToIgnoreCase(album2.name)),
-                            new TreeSet<>((song1, song2) -> song1.title.compareToIgnoreCase(song2.title))));
+                            new TreeSet<>((album1, album2) ->
+                                    album1.name.compareToIgnoreCase(album2.name)),
+                            new TreeSet<>((song1, song2) ->
+                                    song1.title.compareToIgnoreCase(song2.title))));
             artist.albumSet.add(album);
             artistMap.put(artist.name.toLowerCase().trim(), artist);
         }

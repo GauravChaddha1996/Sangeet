@@ -12,21 +12,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.gaurav.domain.usecases.interfaces.CommandUseCases;
-import com.gaurav.domain.usecases.interfaces.FetchUseCases;
-import com.gaurav.sangeet.MusicApplication;
 import com.gaurav.sangeet.R;
 import com.gaurav.sangeet.utils.ItemClickSupport;
-import com.gaurav.sangeet.viewModels.songs.SongsViewModel;
-import com.gaurav.sangeet.viewModels.songs.SongsViewModelFactory;
+import com.gaurav.sangeet.viewmodels.songs.SongsViewModel;
+import com.gaurav.sangeet.viewmodels.songs.SongsViewModelFactory;
 import com.gaurav.sangeet.views.interfaces.SongsView;
-import com.gaurav.sangeet.views.uiEvents.songs.SongItemClickUIEvent;
-import com.gaurav.sangeet.views.uiEvents.songs.SongViewUIEvent;
-import com.gaurav.sangeet.views.viewStates.SongsViewState;
+import com.gaurav.sangeet.views.uievents.songs.SongItemClickUIEvent;
+import com.gaurav.sangeet.views.uievents.songs.SongViewUIEvent;
+import com.gaurav.sangeet.views.viewstates.SongsViewState;
 
 import java.util.ArrayList;
-
-import javax.inject.Inject;
 
 import io.reactivex.subjects.PublishSubject;
 
@@ -43,7 +38,8 @@ public class SongsViewImpl extends Fragment implements SongsView {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.songs_view, container, false);
         songsRVAdapter = new SongsRVAdapter(new ArrayList<>());
         recyclerView = view.findViewById(R.id.recyclerView);

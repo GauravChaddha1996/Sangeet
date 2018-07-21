@@ -1,7 +1,7 @@
 package com.gaurav.sangeet.views.interfaces;
 
-import com.gaurav.sangeet.views.uiEvents.albums.AlbumViewUIEvent;
-import com.gaurav.sangeet.views.viewStates.AlbumsViewState;
+import com.gaurav.sangeet.views.uievents.albums.AlbumViewUIEvent;
+import com.gaurav.sangeet.views.viewstates.AlbumsViewState;
 
 import io.reactivex.subjects.PublishSubject;
 

@@ -7,48 +7,40 @@ import com.gaurav.sangeet.R;
 
 /*
   Source: http://www.littlerobots.nl/blog/Handle-Android-RecyclerView-Clicks/
-  USAGE:
-   
-  ItemClickSupport.addTo(mRecyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
-      @Override
-      public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-          // do it
-      }
-  });
-
 */
 public class ItemClickSupport {
-    private final RecyclerView mRecyclerView;
-    private OnItemClickListener mOnItemClickListener;
-    private OnItemLongClickListener mOnItemLongClickListener;
-    private View.OnClickListener mOnClickListener = new View.OnClickListener() {
+    private final RecyclerView recyclerView;
+    private OnItemClickListener onItemClickListener;
+    private OnItemLongClickListener onItemLongClickListener;
+    private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            if (mOnItemClickListener != null) {
-                RecyclerView.ViewHolder holder = mRecyclerView.getChildViewHolder(v);
-                mOnItemClickListener.onItemClicked(mRecyclerView, holder.getAdapterPosition(), v);
+            if (onItemClickListener != null) {
+                RecyclerView.ViewHolder holder = recyclerView.getChildViewHolder(v);
+                onItemClickListener.onItemClicked(recyclerView, holder.getAdapterPosition(), v);
             }
         }
     };
-    private View.OnLongClickListener mOnLongClickListener = new View.OnLongClickListener() {
+    private View.OnLongClickListener onLongClickListener = new View.OnLongClickListener() {
         @Override
         public boolean onLongClick(View v) {
-            if (mOnItemLongClickListener != null) {
-                RecyclerView.ViewHolder holder = mRecyclerView.getChildViewHolder(v);
-                return mOnItemLongClickListener.onItemLongClicked(mRecyclerView, holder.getAdapterPosition(), v);
+            if (onItemLongClickListener != null) {
+                RecyclerView.ViewHolder holder = recyclerView.getChildViewHolder(v);
+                return onItemLongClickListener.onItemLongClicked(recyclerView,
+                        holder.getAdapterPosition(), v);
             }
             return false;
         }
     };
-    private RecyclerView.OnChildAttachStateChangeListener mAttachListener
+    private RecyclerView.OnChildAttachStateChangeListener attachListener
             = new RecyclerView.OnChildAttachStateChangeListener() {
         @Override
         public void onChildViewAttachedToWindow(View view) {
-            if (mOnItemClickListener != null) {
-                view.setOnClickListener(mOnClickListener);
+            if (onItemClickListener != null) {
+                view.setOnClickListener(onClickListener);
             }
-            if (mOnItemLongClickListener != null) {
-                view.setOnLongClickListener(mOnLongClickListener);
+            if (onItemLongClickListener != null) {
+                view.setOnLongClickListener(onLongClickListener);
             }
         }
 
@@ -59,9 +51,9 @@ public class ItemClickSupport {
     };
 
     private ItemClickSupport(RecyclerView recyclerView) {
-        mRecyclerView = recyclerView;
-        mRecyclerView.setTag(R.id.item_click_support, this);
-        mRecyclerView.addOnChildAttachStateChangeListener(mAttachListener);
+        this.recyclerView = recyclerView;
+        this.recyclerView.setTag(R.id.item_click_support, this);
+        this.recyclerView.addOnChildAttachStateChangeListener(attachListener);
     }
 
     public static ItemClickSupport addTo(RecyclerView view) {
@@ -81,17 +73,17 @@ public class ItemClickSupport {
     }
 
     public ItemClickSupport setOnItemClickListener(OnItemClickListener listener) {
-        mOnItemClickListener = listener;
+        onItemClickListener = listener;
         return this;
     }
 
     public ItemClickSupport setOnItemLongClickListener(OnItemLongClickListener listener) {
-        mOnItemLongClickListener = listener;
+        onItemLongClickListener = listener;
         return this;
     }
 
     private void detach(RecyclerView view) {
-        view.removeOnChildAttachStateChangeListener(mAttachListener);
+        view.removeOnChildAttachStateChangeListener(attachListener);
         view.setTag(R.id.item_click_support, null);
     }
 

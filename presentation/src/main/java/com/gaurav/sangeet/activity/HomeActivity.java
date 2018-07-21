@@ -15,14 +15,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.gaurav.domain.interfaces.MusicStateManager;
-import com.gaurav.domain.usecases.interfaces.CommandUseCases;
-import com.gaurav.domain.usecases.interfaces.FetchUseCases;
-import com.gaurav.sangeet.MusicApplication;
 import com.gaurav.sangeet.R;
-import com.gaurav.sangeet.viewModels.bottomSheet.BottomSheetViewModel;
-import com.gaurav.sangeet.viewModels.bottomSheet.BottomSheetViewModelFactory;
-import com.gaurav.sangeet.views.implementations.bottomSheet.BottomSheetViewImpl;
+import com.gaurav.sangeet.viewmodels.bottomsheet.BottomSheetViewModel;
+import com.gaurav.sangeet.viewmodels.bottomsheet.BottomSheetViewModelFactory;
+import com.gaurav.sangeet.views.implementations.bottomsheet.BottomSheetViewImpl;
 
 import static com.gaurav.sangeet.Constants.Search.EXTRA_CIRCULAR_REVEAL_X;
 import static com.gaurav.sangeet.Constants.Search.EXTRA_CIRCULAR_REVEAL_Y;
@@ -79,7 +75,8 @@ public class HomeActivity extends AppCompatActivity {
         BottomSheetViewModel viewModel = ViewModelProviders.of(HomeActivity.this,
                 new BottomSheetViewModelFactory(bottomSheetViewImpl,
                         v -> {
-                            if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
+                            if (bottomSheetBehavior.getState() ==
+                                    BottomSheetBehavior.STATE_COLLAPSED) {
                                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                             }
                         }))
