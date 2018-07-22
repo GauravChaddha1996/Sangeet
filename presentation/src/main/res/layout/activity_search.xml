@@ -34,11 +34,9 @@
             android:layout_marginEnd="16dp"
             android:layout_toEndOf="@id/search_icon"
             android:alpha="0"
-            android:backgroundTint="@color/textColor"
             android:hint="@string/search"
             android:inputType="text"
             android:paddingBottom="12dp"
-            android:textColor="@color/textColor"
             android:textSize="18sp" />
         <!--android:transitionName="search_text"-->
 

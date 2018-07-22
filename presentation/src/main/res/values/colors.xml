@@ -3,21 +3,28 @@
 
     <!-- Primary colors -->
     <color name="white">#EDF2F4</color>
-    <color name="darkerWhite">#9ba0a7</color>
+    <color name="darkerWhite1">#9ba0a7</color>
     <color name="darkerWhite2">#858B94</color>
+    <color name="vibrantRed">#c31432</color>
+    <color name="pureBlack">#000000</color>
+    <color name="lightGrey">#a9a9a9</color>
 
     <!-- Base colors -->
-    <color name="colorPrimary">#2B2D42</color>
-    <color name="colorPrimaryDark">#202131</color>
-    <color name="colorAccent">#EF233C</color>
+    <color name="colorPrimary">@color/white</color>
+    <color name="colorPrimaryDark">@color/white</color>
+    <color name="colorAccent">@color/vibrantRed</color>
 
     <!-- Extended -->
-    <color name="backgroundColor">@color/colorPrimary</color>
-    <color name="backgroundDarkColor">@color/colorPrimaryDark</color>
-    <color name="textColor">@color/white</color>
-    <color name="darkerTextColor">@color/darkerWhite</color>
-    <color name="darkerTextColor2">@color/darkerWhite2</color>
-    <color name="buttonsColor">@color/colorAccent</color>
+    <color name="toolbarBgColor">@color/white</color>
+
+    <color name="tabLayoutBgColor">@color/white</color>
+    <color name="tabLayoutIndicatorColor">@color/pureBlack</color>
+    <color name="tabLayoutSelectedTabColor">@color/pureBlack</color>
+    <color name="tabLayoutUnselectedTabColor">@color/lightGrey</color>
+
+    <color name="pageBgColor">@color/white</color>
+
+    <color name="bottomSheetBgColor">@color/white</color>
 
     <color name="backgroundGradientStart">#240b36</color>
     <color name="backgroundGradientEnd">#c31432</color>

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
 import android.support.v4.view.ViewPager;
@@ -19,6 +18,7 @@ import com.gaurav.sangeet.R;
 import com.gaurav.sangeet.viewmodels.bottomsheet.BottomSheetViewModel;
 import com.gaurav.sangeet.viewmodels.bottomsheet.BottomSheetViewModelFactory;
 import com.gaurav.sangeet.views.implementations.bottomsheet.BottomSheetViewImpl;
+import com.kekstudio.dachshundtablayout.DachshundTabLayout;
 
 import static com.gaurav.sangeet.Constants.Search.EXTRA_CIRCULAR_REVEAL_X;
 import static com.gaurav.sangeet.Constants.Search.EXTRA_CIRCULAR_REVEAL_Y;
@@ -27,7 +27,7 @@ public class HomeActivity extends AppCompatActivity {
 
     // Views
     private Toolbar toolbar;
-    private TabLayout tabLayout;
+    private DachshundTabLayout tabLayout;
     private ViewPager viewPager;
     private BottomSheetViewImpl bottomSheetViewImpl;
 
@@ -40,50 +40,8 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
-        tabLayout = findViewById(R.id.tab_layout);
-        toolbar = findViewById(R.id.toolbar);
-        viewPager = findViewById(R.id.viewPager);
-        bottomSheetViewImpl = new BottomSheetViewImpl(findViewById(R.id.bottom_sheet));
-
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Sangeet");
-
-        pageAdapter = new PageAdapter(getSupportFragmentManager());
-        viewPager.setAdapter(pageAdapter);
-        viewPager.setCurrentItem(0);
-        tabLayout.setupWithViewPager(viewPager);
-
-        // TODO: 7/20/18 Clean up code in a such a way of bottom sheet that it's managed easily
-        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetViewImpl.getBaseView());
-        bottomSheetBehavior.setHideable(false);
-        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-            @Override
-            public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
-                    // TODO: 7/8/18 add menu items for actions like showQueue, gotoAlbum,gotoArtist
-                    // add to playlist here. Also hide these menus when state becomes moving or
-                    // collapsed.
-                }
-            }
-
-            @Override
-            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                // TODO: 7/8/18 UI task: change the position of views according to this.
-            }
-        });
-        BottomSheetViewModel viewModel = ViewModelProviders.of(HomeActivity.this,
-                new BottomSheetViewModelFactory(bottomSheetViewImpl,
-                        v -> {
-                            if (bottomSheetBehavior.getState() ==
-                                    BottomSheetBehavior.STATE_COLLAPSED) {
-                                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                            }
-                        }))
-                .get(BottomSheetViewModel.class);
-        viewModel.getViewState().observe(this, bottomSheetViewImpl::render);
-
-
+        initViews();
+        setUpViews();
     }
 
     @Override
@@ -111,6 +69,55 @@ public class HomeActivity extends AppCompatActivity {
         } else {
             super.onBackPressed();
         }
+    }
+
+    private void initViews() {
+        toolbar = findViewById(R.id.toolbar);
+        tabLayout = findViewById(R.id.tab_layout);
+        viewPager = findViewById(R.id.viewPager);
+        bottomSheetViewImpl = new BottomSheetViewImpl(findViewById(R.id.bottom_sheet));
+    }
+
+    private void setUpViews() {
+        // create view related objects
+        pageAdapter = new PageAdapter(getSupportFragmentManager());
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetViewImpl.getBaseView());
+
+        // setup toolbar, viewPager and tab layout
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(getString(R.string.app_name));
+        viewPager.setAdapter(pageAdapter);
+        viewPager.setCurrentItem(0);
+        tabLayout.setupWithViewPager(viewPager);
+
+        // setup bottom sheet
+        // TODO: 7/20/18 Clean up code in a such a way of bottom sheet that it's managed easily
+        bottomSheetBehavior.setHideable(false);
+        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+                    // TODO: 7/8/18 add menu items for actions like showQueue, gotoAlbum,gotoArtist
+                    // add to playlist here. Also hide these menus when state becomes moving or
+                    // collapsed.
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                // TODO: 7/8/18 UI task: change the position of views according to this.
+            }
+        });
+        BottomSheetViewModel viewModel = ViewModelProviders.of(HomeActivity.this,
+                new BottomSheetViewModelFactory(bottomSheetViewImpl,
+                        v -> {
+                            if (bottomSheetBehavior.getState() ==
+                                    BottomSheetBehavior.STATE_COLLAPSED) {
+                                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                            }
+                        }))
+                .get(BottomSheetViewModel.class);
+        viewModel.getViewState().observe(this, bottomSheetViewImpl::render);
     }
 
     @SuppressWarnings("unchecked")
