@@ -126,6 +126,7 @@ public class MusicRepositoryImpl implements MusicRepository {
         };
         Cursor c = contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                 columns, null, null, null);
+        Cursor artworkCursor;
         Song song;
         while (c != null && c.moveToNext()) {
             song = new Song();
@@ -139,6 +140,23 @@ public class MusicRepositoryImpl implements MusicRepository {
             song.artist = c.getString(c.getColumnIndex("artist"));
             song.year = c.getInt(c.getColumnIndex("year"));
             song.track = c.getInt(c.getColumnIndex("track"));
+            artworkCursor = contentResolver.query(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
+                    new String[]{MediaStore.Audio.Albums._ID, MediaStore.Audio.Albums.ALBUM_ART},
+                    MediaStore.Audio.Albums._ID + "=?",
+                    new String[]{String.valueOf(song.albumId)},
+                    null);
+            if (artworkCursor != null && artworkCursor.moveToFirst()) {
+                song.artworkPath = artworkCursor.getString(artworkCursor
+                        .getColumnIndex(MediaStore.Audio.Albums.ALBUM_ART));
+                if (song.artworkPath == null) {
+                    song.artworkPath = "null";
+                }
+            } else {
+                song.artworkPath = "null";
+            }
+            if (artworkCursor != null) {
+                artworkCursor.close();
+            }
             songList.add(song);
         }
         if (c != null) {

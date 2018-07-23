@@ -69,7 +69,7 @@ public class AlbumDetailActivity extends AppCompatActivity implements AlbumDetai
         playAlbumButton.setOnClickListener(v -> uiEventsSubject.onNext(new PlayAlbumDetailUIEvent(
                 ((AlbumDetailViewState.Result) viewModel.getState().getValue()).getAlbum(),
                 null)));
-        adapter = new SongsRVAdapter(new ArrayList<>());
+        adapter = new SongsRVAdapter(new ArrayList<>(),getDrawable(R.drawable.inspiration1));
         albumSongRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         albumSongRecyclerView.setHasFixedSize(true);
         albumSongRecyclerView.setAdapter(adapter);

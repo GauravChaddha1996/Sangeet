@@ -48,7 +48,7 @@ public class BottomSheetViewImpl implements BottomSheetView {
 
         this.baseView = baseView;
         songArtwork = baseView.findViewById(R.id.songArtwork);
-        songName = baseView.findViewById(R.id.songName);
+        songName = baseView.findViewById(R.id.songTitle);
         artistName = baseView.findViewById(R.id.artistName);
         albumName = baseView.findViewById(R.id.albumName);
         songQueueView = baseView.findViewById(R.id.songQueue);

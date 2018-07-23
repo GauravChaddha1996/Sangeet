@@ -13,13 +13,14 @@ public class Song implements Comparable {
     public String artist;
     public long year;
     public long track;
+    public String artworkPath;
 
     public Song() {
 
     }
 
-    public Song(long songId, long albumId, long artistId, String data, String title,
-                long duration, String album, String artist, long year, long track) {
+    public Song(long songId, long albumId, long artistId, String data, String title, long duration,
+                String album, String artist, long year, long track, String artworkPath) {
         this.songId = songId;
         this.albumId = albumId;
         this.artistId = artistId;
@@ -30,6 +31,7 @@ public class Song implements Comparable {
         this.artist = artist;
         this.year = year;
         this.track = track;
+        this.artworkPath = artworkPath;
     }
 
     @Override

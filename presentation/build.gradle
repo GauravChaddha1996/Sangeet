@@ -47,6 +47,7 @@ dependencies {
     implementation libraries.supportDesign
     implementation libraries.recyclerView
     implementation libraries.constraintLayout
+    implementation libraries.cardView
     implementation libraries.lifecycle
     annotationProcessor libraries.lifecycleCompiler
     implementation libraries.dachshungTab

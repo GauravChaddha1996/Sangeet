@@ -73,7 +73,7 @@ public class ArtistDetailActivity extends AppCompatActivity implements ArtistDet
         playArtistButton.setOnClickListener(v -> uiEventsSubject.onNext(new PlayArtistDetailUIEvent(
                 ((ArtistDetailViewState.Result) viewModel.getState().getValue()).getArtist(),
                 null)));
-        songsRVAdapter = new SongsRVAdapter(new ArrayList<>());
+        songsRVAdapter = new SongsRVAdapter(new ArrayList<>(),getDrawable(R.drawable.inspiration1));
         albumsRVAdapter = new AlbumsRVAdapter(new ArrayList<>());
         artistSongRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         artistSongRecyclerView.setHasFixedSize(true);

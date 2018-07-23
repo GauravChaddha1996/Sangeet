@@ -34,4 +34,6 @@
 
     <color name="search_bar_color">@color/colorAccent</color>
     <color name="search_hint_color">@color/colorPrimaryDark</color>
+    <color name="songDurationTextColor">@color/pureBlack</color>
+    <color name="songTitleTextColor">@color/pureBlack</color>
 </resources>
