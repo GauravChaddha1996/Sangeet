@@ -2,6 +2,7 @@ package com.gaurav.sangeet.activity;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
@@ -73,7 +74,7 @@ public class ArtistDetailActivity extends AppCompatActivity implements ArtistDet
         playArtistButton.setOnClickListener(v -> uiEventsSubject.onNext(new PlayArtistDetailUIEvent(
                 ((ArtistDetailViewState.Result) viewModel.getState().getValue()).getArtist(),
                 null)));
-        songsRVAdapter = new SongsRVAdapter(new ArrayList<>(),getDrawable(R.drawable.inspiration1));
+        songsRVAdapter = new SongsRVAdapter(new ArrayList<>());
         albumsRVAdapter = new AlbumsRVAdapter(new ArrayList<>());
         artistSongRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         artistSongRecyclerView.setHasFixedSize(true);

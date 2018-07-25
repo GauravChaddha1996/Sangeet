@@ -1,7 +1,5 @@
 package com.gaurav.sangeet.views.implementations.songs;
 
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,21 +10,22 @@ import android.widget.TextView;
 
 import com.gaurav.domain.models.Song;
 import com.gaurav.sangeet.R;
+import com.gaurav.sangeet.utils.RoundedCornersTransformation;
 import com.gaurav.sangeet.utils.Utils;
+import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.List;
 
 public class SongsRVAdapter extends RecyclerView.Adapter<SongsRVAdapter.SongItemViewHolder> {
 
     private List<Song> data;
-    private Drawable defaultIcon;
 
     // helper private variables
     private Song song;
 
-    public SongsRVAdapter(List<Song> data, Drawable defaultIcon) {
+    public SongsRVAdapter(List<Song> data) {
         this.data = data;
-        this.defaultIcon = defaultIcon;
     }
 
     @NonNull
@@ -40,10 +39,17 @@ public class SongsRVAdapter extends RecyclerView.Adapter<SongsRVAdapter.SongItem
     public void onBindViewHolder(@NonNull SongItemViewHolder holder, int position) {
         song = data.get(position);
         if (!song.artworkPath.equals("null")) {
-            holder.songIcon.setImageBitmap(BitmapFactory.decodeFile(song.artworkPath));
+            Picasso.get().load(new File(song.artworkPath))
+                    .transform(new RoundedCornersTransformation(24,16))
+                    .centerCrop()
+                    .resize(256,256)
+                    .into(holder.songIcon);
         } else {
-            // todo set a default icon here
-            holder.songIcon.setImageDrawable(defaultIcon);
+            Picasso.get().load(R.drawable.default_song_item_icon)
+                    .transform(new RoundedCornersTransformation(24,16))
+                    .centerCrop()
+                    .resize(256,256)
+                    .into(holder.songIcon);
         }
         holder.songTitle.setSelected(true);
         holder.songArtistAlbum.setSelected(true);

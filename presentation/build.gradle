@@ -51,7 +51,7 @@ dependencies {
     implementation libraries.lifecycle
     annotationProcessor libraries.lifecycleCompiler
     implementation libraries.dachshungTab
-    implementation libraries.arcNavigationView
+    implementation libraries.picasso
 
     // Dependency Injection related - Dagger
     annotationProcessor libraries.daggerCompiler

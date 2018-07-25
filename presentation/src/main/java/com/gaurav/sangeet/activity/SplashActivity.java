@@ -40,9 +40,7 @@ public class SplashActivity extends AppCompatActivity {
         initTasksDisposable = ((MusicApplication) getApplication()).init()
                 .subscribe(() -> {
                     animate = false;
-                    if (!logoAnimatable.isRunning()) {
-                        launchHomeActivity();
-                    }
+                    launchHomeActivity();
                 }, Throwable::printStackTrace);
     }
 
@@ -62,7 +60,7 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void onAnimationEnd(Drawable drawable) {
                 if (!animate) {
-                    launchHomeActivity();
+//                    launchHomeActivity();
                 }
             }
         });

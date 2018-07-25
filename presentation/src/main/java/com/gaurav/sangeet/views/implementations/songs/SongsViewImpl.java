@@ -2,6 +2,7 @@ package com.gaurav.sangeet.views.implementations.songs;
 
 import android.annotation.SuppressLint;
 import android.arch.lifecycle.ViewModelProviders;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -26,7 +27,6 @@ import java.util.ArrayList;
 
 import io.reactivex.subjects.PublishSubject;
 
-import static android.support.v7.widget.DividerItemDecoration.HORIZONTAL;
 import static android.support.v7.widget.DividerItemDecoration.VERTICAL;
 
 @SuppressLint("ValidFragment")
@@ -45,7 +45,7 @@ public class SongsViewImpl extends Fragment implements SongsView {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.songs_view, container, false);
-        songsRVAdapter = new SongsRVAdapter(new ArrayList<>(), getContext().getDrawable(R.drawable.inspiration1));
+        songsRVAdapter = new SongsRVAdapter(new ArrayList<>());
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), VERTICAL));

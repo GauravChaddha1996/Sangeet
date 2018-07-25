@@ -1,6 +1,7 @@
 package com.gaurav.sangeet.activity;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
@@ -69,7 +70,7 @@ public class AlbumDetailActivity extends AppCompatActivity implements AlbumDetai
         playAlbumButton.setOnClickListener(v -> uiEventsSubject.onNext(new PlayAlbumDetailUIEvent(
                 ((AlbumDetailViewState.Result) viewModel.getState().getValue()).getAlbum(),
                 null)));
-        adapter = new SongsRVAdapter(new ArrayList<>(),getDrawable(R.drawable.inspiration1));
+        adapter = new SongsRVAdapter(new ArrayList<>());
         albumSongRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         albumSongRecyclerView.setHasFixedSize(true);
         albumSongRecyclerView.setAdapter(adapter);
