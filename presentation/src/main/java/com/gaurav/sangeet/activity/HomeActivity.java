@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.gaurav.sangeet.R;
+import com.gaurav.sangeet.utils.BottomPaddingDachshundIndicator;
 import com.gaurav.sangeet.viewmodels.bottomsheet.BottomSheetViewModel;
 import com.gaurav.sangeet.viewmodels.bottomsheet.BottomSheetViewModelFactory;
 import com.gaurav.sangeet.views.implementations.bottomsheet.BottomSheetViewImpl;
@@ -84,11 +85,14 @@ public class HomeActivity extends AppCompatActivity {
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetViewImpl.getBaseView());
 
         // setup toolbar, viewPager and tab layout
+        toolbar.setTitleTextColor(getColor(R.color.toolbarTitleColor));
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.app_name));
+
         viewPager.setAdapter(pageAdapter);
         viewPager.setCurrentItem(0);
         tabLayout.setupWithViewPager(viewPager);
+        tabLayout.setAnimatedIndicator(new BottomPaddingDachshundIndicator(tabLayout));
 
         // setup bottom sheet
         // TODO: 7/20/18 Clean up code in a such a way of bottom sheet that it's managed easily

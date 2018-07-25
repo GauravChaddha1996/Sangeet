@@ -16,6 +16,7 @@
 
     <!-- Extended -->
     <color name="toolbarBgColor">@color/white</color>
+    <color name="toolbarTitleColor">@color/pureBlack</color>
 
     <color name="tabLayoutBgColor">@color/white</color>
     <color name="tabLayoutIndicatorColor">@color/pureBlack</color>
