@@ -19,7 +19,7 @@
     <color name="toolbarTitleColor">@color/pureBlack</color>
 
     <color name="tabLayoutBgColor">@color/white</color>
-    <color name="tabLayoutIndicatorColor">@color/pureBlack</color>
+    <color name="tabLayoutIndicatorColor">@color/vibrantRed</color>
     <color name="tabLayoutSelectedTabColor">@color/pureBlack</color>
     <color name="tabLayoutUnselectedTabColor">@color/lightGrey</color>
 

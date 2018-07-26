@@ -89,10 +89,10 @@ public class BottomPaddingDachshundIndicator implements AnimatedIndicatorInterfa
     }
 
     public void draw(Canvas canvas) {
-        this.rectF.top = (float) (this.dachshundTabLayout.getHeight() - 16 - this.height);
+        this.rectF.top = (float) (this.dachshundTabLayout.getHeight() - 20 - this.height);
         this.rectF.left = (float) (this.leftX - this.height / 2);
         this.rectF.right = (float) (this.rightX + this.height / 2);
-        this.rectF.bottom = (float) (this.dachshundTabLayout.getHeight() - 16);
+        this.rectF.bottom = (float) (this.dachshundTabLayout.getHeight() - 20);
         canvas.drawRoundRect(this.rectF, (float) this.height, (float) this.height, this.paint);
     }
 

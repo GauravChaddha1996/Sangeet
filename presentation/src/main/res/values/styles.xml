@@ -27,4 +27,13 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <!--<item name="android:fontFamily">@font/roboto_condensed_medium</item>-->
+    <!--add an item like above for custom font-->
+    <style name="ToolbarTitleFont">
+        <item name="android:textSize">20sp</item>
+        <item name="android:letterSpacing">0.15</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
 </resources>
