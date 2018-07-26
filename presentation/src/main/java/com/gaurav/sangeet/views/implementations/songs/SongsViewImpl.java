@@ -2,7 +2,6 @@ package com.gaurav.sangeet.views.implementations.songs;
 
 import android.annotation.SuppressLint;
 import android.arch.lifecycle.ViewModelProviders;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 
 import com.gaurav.sangeet.R;
 import com.gaurav.sangeet.utils.ItemClickSupport;
@@ -72,7 +72,19 @@ public class SongsViewImpl extends Fragment implements SongsView {
         } else if (songsViewState instanceof SongsViewState.Error) {
             // show error
         } else {
-            songsRVAdapter.updateData(((SongsViewState.Result) songsViewState).getSongList());
+            if (((SongsViewState.Result) songsViewState).isCurrentSongIndexChanged()) {
+                songsRVAdapter.updateCurrentSongPlayingIndex(
+                        ((SongsViewState.Result) songsViewState).getCurrentPlayingSong()
+                );
+            } else {
+                songsRVAdapter.updateData(((SongsViewState.Result) songsViewState).getSongList());
+                if (viewModel.isShouldAnimateList()) {
+                    recyclerView.setLayoutAnimation(AnimationUtils.loadLayoutAnimation(
+                            this.getContext(), R.anim.song_list_layout_animation));
+                    recyclerView.scheduleLayoutAnimation();
+                }
+            }
+
         }
     }
 

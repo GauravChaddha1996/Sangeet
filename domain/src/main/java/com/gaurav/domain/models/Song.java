@@ -36,6 +36,9 @@ public class Song implements Comparable {
 
     @Override
     public int compareTo(Object o) {
+        if (songId == ((Song) o).songId) {
+            return 0;
+        }
         return songId < ((Song) o).songId ? -1 : 1;
     }
 

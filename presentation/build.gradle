@@ -45,6 +45,7 @@ dependencies {
     // UI related
     implementation libraries.supportAppCompat
     implementation libraries.supportDesign
+    implementation libraries.palette
     implementation libraries.recyclerView
     implementation libraries.constraintLayout
     implementation libraries.cardView

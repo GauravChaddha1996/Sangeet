@@ -1,6 +1,8 @@
 package com.gaurav.sangeet.views.implementations.songs;
 
+import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,17 +22,24 @@ import java.util.List;
 public class SongsRVAdapter extends RecyclerView.Adapter<SongsRVAdapter.SongItemViewHolder> {
 
     private List<Song> data;
+    private Integer currentPlayingSongIndex;
 
     // helper private variables
     private Song song;
+    private int accentColor;
+    private int defaultTitleColor;
+
 
     public SongsRVAdapter(List<Song> data) {
         this.data = data;
+        this.currentPlayingSongIndex = -1;
     }
 
     @NonNull
     @Override
     public SongItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        accentColor = parent.getContext().getResources().getColor(R.color.colorAccent);
+        defaultTitleColor = parent.getContext().getResources().getColor(R.color.songTitleTextColor);
         return new SongItemViewHolder(LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.song_item, parent, false));
     }
@@ -38,19 +47,28 @@ public class SongsRVAdapter extends RecyclerView.Adapter<SongsRVAdapter.SongItem
     @Override
     public void onBindViewHolder(@NonNull SongItemViewHolder holder, int position) {
         song = data.get(position);
-        if (!song.artworkPath.equals("null")) {
-            Picasso.get().load(new File(song.artworkPath))
-                    .transform(new RoundedCornersTransformation(32,16))
+        if (position == currentPlayingSongIndex) {
+            Picasso.get().load(R.drawable.song_item_currently_playing)
+                    .transform(new RoundedCornersTransformation(32, 16))
                     .centerCrop()
-                    .resize(256,256)
+                    .resize(256, 256)
                     .into(holder.songIcon);
         } else {
-            Picasso.get().load(R.drawable.default_song_item_icon)
-                    .transform(new RoundedCornersTransformation(32,16))
-                    .centerCrop()
-                    .resize(256,256)
-                    .into(holder.songIcon);
+            if (!song.artworkPath.equals("null")) {
+                Picasso.get().load(new File(song.artworkPath))
+                        .transform(new RoundedCornersTransformation(32, 16))
+                        .centerCrop()
+                        .resize(256, 256)
+                        .into(holder.songIcon);
+            } else {
+                Picasso.get().load(R.drawable.default_song_item_icon)
+                        .transform(new RoundedCornersTransformation(32, 16))
+                        .centerCrop()
+                        .resize(256, 256)
+                        .into(holder.songIcon);
+            }
         }
+        updateTitleColor(holder, position);
         holder.songTitle.setSelected(true);
         holder.songArtistAlbum.setSelected(true);
         holder.songTitle.setText(song.title);
@@ -77,12 +95,36 @@ public class SongsRVAdapter extends RecyclerView.Adapter<SongsRVAdapter.SongItem
     }
 
     public void updateData(List<Song> newData) {
-        this.data = newData;
+        this.data.clear();
+        this.data.addAll(newData);
         notifyDataSetChanged();
     }
 
     public Song getSong(int pos) {
         return data.get(pos);
+    }
+
+    public void updateCurrentSongPlayingIndex(Song newSong) {
+        int newPos = data.indexOf(newSong);
+        int oldPos = this.currentPlayingSongIndex;
+        this.currentPlayingSongIndex = newPos;
+        if (oldPos != -1) {
+            notifyItemChanged(oldPos);
+        }
+        notifyItemChanged(newPos);
+
+    }
+
+    private void updateTitleColor(SongItemViewHolder viewHolder, int pos) {
+        if (pos == currentPlayingSongIndex && !song.artworkPath.equals("null")) {
+            new Palette.Builder(BitmapFactory.decodeFile(song.artworkPath))
+                    .generate(palette ->
+                            viewHolder.songTitle.setTextColor(palette.getDarkVibrantColor(accentColor)));
+        } else if (pos == currentPlayingSongIndex) {
+            viewHolder.songTitle.setTextColor(accentColor);
+        } else {
+            viewHolder.songTitle.setTextColor(defaultTitleColor);
+        }
     }
 
     class SongItemViewHolder extends RecyclerView.ViewHolder {
