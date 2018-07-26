@@ -40,13 +40,13 @@ public class SongsRVAdapter extends RecyclerView.Adapter<SongsRVAdapter.SongItem
         song = data.get(position);
         if (!song.artworkPath.equals("null")) {
             Picasso.get().load(new File(song.artworkPath))
-                    .transform(new RoundedCornersTransformation(24,16))
+                    .transform(new RoundedCornersTransformation(32,16))
                     .centerCrop()
                     .resize(256,256)
                     .into(holder.songIcon);
         } else {
             Picasso.get().load(R.drawable.default_song_item_icon)
-                    .transform(new RoundedCornersTransformation(24,16))
+                    .transform(new RoundedCornersTransformation(32,16))
                     .centerCrop()
                     .resize(256,256)
                     .into(holder.songIcon);

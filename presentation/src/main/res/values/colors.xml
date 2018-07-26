@@ -8,6 +8,7 @@
     <color name="vibrantRed">#c31432</color>
     <color name="pureBlack">#000000</color>
     <color name="lightGrey">#a9a9a9</color>
+    <color name="darkGrey">#414243</color>
 
     <!-- Base colors -->
     <color name="colorPrimary">@color/white</color>
@@ -15,13 +16,21 @@
     <color name="colorAccent">@color/vibrantRed</color>
 
     <!-- Extended -->
+
+    <!--Toolbar colors-->
     <color name="toolbarBgColor">@color/white</color>
     <color name="toolbarTitleColor">@color/pureBlack</color>
 
+    <!--Tab Layout colors-->
     <color name="tabLayoutBgColor">@color/white</color>
     <color name="tabLayoutIndicatorColor">@color/vibrantRed</color>
     <color name="tabLayoutSelectedTabColor">@color/pureBlack</color>
     <color name="tabLayoutUnselectedTabColor">@color/lightGrey</color>
+
+    <!-- Song item colors -->
+    <color name="songTitleTextColor">@color/pureBlack</color>
+    <color name="songArtistAlbumTextColor">@color/lightGrey</color>
+    <color name="songDurationTextColor">@color/darkGrey</color>
 
     <color name="pageBgColor">@color/white</color>
 
@@ -35,6 +44,5 @@
 
     <color name="search_bar_color">@color/colorAccent</color>
     <color name="search_hint_color">@color/colorPrimaryDark</color>
-    <color name="songDurationTextColor">@color/pureBlack</color>
-    <color name="songTitleTextColor">@color/pureBlack</color>
+
 </resources>
