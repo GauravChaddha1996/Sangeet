@@ -2,10 +2,12 @@ package com.gaurav.sangeet.views.implementations.songs;
 
 import android.annotation.SuppressLint;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 
+import com.gaurav.domain.models.Song;
 import com.gaurav.sangeet.R;
 import com.gaurav.sangeet.utils.ItemClickSupport;
 import com.gaurav.sangeet.viewmodels.songs.SongsViewModel;
@@ -54,6 +57,11 @@ public class SongsViewImpl extends Fragment implements SongsView {
         ItemClickSupport.addTo(recyclerView).setOnItemClickListener((recyclerView, position, v) -> {
             uiEventsSubject.onNext(new SongItemClickUIEvent(songsRVAdapter.getSong(position)));
         });
+        ItemClickSupport.addTo(recyclerView)
+                .setOnItemLongClickListener((recyclerView, position, v) -> {
+                    showDialog(songsRVAdapter.getSong(position));
+                    return true;
+                });
         return view;
     }
 
@@ -91,6 +99,25 @@ public class SongsViewImpl extends Fragment implements SongsView {
     @Override
     public PublishSubject<SongViewUIEvent> getUIEvents() {
         return uiEventsSubject;
+    }
+
+    private void showDialog(Song song) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
+        builder.setTitle(song.title);
+        builder.setMessage(String.format("%s • %s", song.artist, song.album));
+        builder.setPositiveButton("Go To Album", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        builder.setNegativeButton("Go To Artist", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        builder.create().show();
     }
 }
 
