@@ -5,31 +5,66 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.gaurav.domain.models.Album;
 import com.gaurav.sangeet.R;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
 
+import java.io.File;
 import java.util.List;
+
+import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
 public class AlbumsRVAdapter extends RecyclerView.Adapter<AlbumsRVAdapter.AlbumsViewHolder> {
 
-    List<Album> data;
+    private List<Album> data;
+    private Album album;
+    private Transformation roundedCornersTransformation;
 
     public AlbumsRVAdapter(List<Album> data) {
         this.data = data;
+        roundedCornersTransformation = new RoundedCornersTransformation(16, 8);
     }
 
     @NonNull
     @Override
     public AlbumsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new AlbumsViewHolder(LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.rv_item, parent, false));
+                .inflate(R.layout.album_item, parent, false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull AlbumsViewHolder holder, int position) {
-        holder.text.setText(data.get(position).name);
+        album = data.get(position);
+        if (!album.songSet.first().artworkPath.equals("null")) {
+            Picasso.get().load(new File(album.songSet.first().artworkPath))
+                    .transform(roundedCornersTransformation)
+                    .centerCrop()
+                    .resize(128, 128)
+                    .into(holder.backgroundImage);
+        } else {
+            Picasso.get().load(R.drawable.default_album_item_icon)
+                    .transform(roundedCornersTransformation)
+                    .centerCrop()
+                    .resize(128, 128)
+                    .into(holder.backgroundImage);
+        }
+        holder.albumTitle.setText(album.name);
+        holder.artistTotalSongs.setText(String.format("%s • %s %s", album.artistName,
+                album.songSet.size(), album.songSet.size() == 1 ? "Song" : "Songs"));
+        holder.albumTitle.setSelected(true);
+        holder.artistTotalSongs.setSelected(true);
+    }
+
+    @Override
+    public void onViewRecycled(@NonNull AlbumsViewHolder holder) {
+        holder.albumTitle.setSelected(false);
+        holder.artistTotalSongs.setSelected(false);
+        holder.backgroundImage.setImageDrawable(null);
+        super.onViewRecycled(holder);
     }
 
     @Override
@@ -47,11 +82,15 @@ public class AlbumsRVAdapter extends RecyclerView.Adapter<AlbumsRVAdapter.Albums
     }
 
     public class AlbumsViewHolder extends RecyclerView.ViewHolder {
-        TextView text;
+        TextView albumTitle;
+        TextView artistTotalSongs;
+        ImageView backgroundImage;
 
         public AlbumsViewHolder(View itemView) {
             super(itemView);
-            text = itemView.findViewById(R.id.rv_item_text);
+            albumTitle = itemView.findViewById(R.id.albumTitle);
+            artistTotalSongs = itemView.findViewById(R.id.artistTotalSongs);
+            backgroundImage = itemView.findViewById(R.id.albumItemImage);
         }
     }
 }

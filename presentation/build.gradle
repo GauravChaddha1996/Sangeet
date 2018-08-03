@@ -53,6 +53,7 @@ dependencies {
     annotationProcessor libraries.lifecycleCompiler
     implementation libraries.dachshungTab
     implementation libraries.picasso
+    implementation libraries.picassoTransformations
 
     // Dependency Injection related - Dagger
     annotationProcessor libraries.daggerCompiler

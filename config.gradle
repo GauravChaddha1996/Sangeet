@@ -1,28 +1,29 @@
 ext {
     versions = [
             // Android related
-            compileSDK       : 27,
-            minSDK           : 24,
-            targetSDK        : 27,
-            code             : 1,
-            name             : '1.0',
+            compileSDK            : 27,
+            minSDK                : 24,
+            targetSDK             : 27,
+            code                  : 1,
+            name                  : '1.0',
 
             // Test related dependencies versions
-            junit            : '4.12',
-            espressoCore     : '3.0.2',
-            testRunner       : '1.0.2',
+            junit                 : '4.12',
+            espressoCore          : '3.0.2',
+            testRunner            : '1.0.2',
 
             // Libraries dependencies versions
-            supportLib       : '27.1.0',
-            lifecycle        : '1.1.0',
-            constraintLayout : '1.1.0',
-            dagger           : '2.16',
-            gson             : '2.8.4',
-            room             : '1.1.0',
-            rxjava           : '2.1.14-RC1',
-            rxandroid        : '2.0.2',
-            dachshungTab     : 'v0.3.3',
-            picasso          : '2.71828'
+            supportLib            : '27.1.0',
+            lifecycle             : '1.1.0',
+            constraintLayout      : '1.1.0',
+            dagger                : '2.16',
+            gson                  : '2.8.4',
+            room                  : '1.1.0',
+            rxjava                : '2.1.14-RC1',
+            rxandroid             : '2.0.2',
+            dachshungTab          : 'v0.3.3',
+            picasso               : '2.71828',
+            picassoTransformations: '2.2.1'
     ]
 
     /*
@@ -31,28 +32,29 @@ ext {
     * */
 
     libraries = [
-            junit            : "junit:junit:$versions.junit",
-            espressoCore     : "com.android.support.test.espresso:espresso-core:$versions.espressoCore",
-            testRunner       : "com.android.support.test:runner:$versions.testRunner",
+            junit                 : "junit:junit:$versions.junit",
+            espressoCore          : "com.android.support.test.espresso:espresso-core:$versions.espressoCore",
+            testRunner            : "com.android.support.test:runner:$versions.testRunner",
 
-            supportAppCompat : "com.android.support:appcompat-v7:$versions.supportLib",
-            supportDesign    : "com.android.support:design:$versions.supportLib",
-            palette          : "com.android.support:palette-v7:$versions.supportLib",
-            recyclerView     : "com.android.support:recyclerview-v7:$versions.supportLib",
-            constraintLayout : "com.android.support.constraint:constraint-layout:$versions.constraintLayout",
-            cardView         : "com.android.support:cardview-v7:$versions.supportLib",
-            lifecycle        : "android.arch.lifecycle:extensions:$versions.lifecycle",
-            lifecycleCompiler: "android.arch.lifecycle:compiler:$versions.lifecycle",
-            dagger           : "com.google.dagger:dagger:$versions.dagger",
-            daggerCompiler   : "com.google.dagger:dagger-compiler:$versions.dagger",
-            gson             : "com.google.code.gson:gson:$versions.gson",
-            roomCompiler     : "android.arch.persistence.room:compiler:$versions.room",
-            roomRuntime      : "android.arch.persistence.room:runtime:$versions.room",
-            roomrxjava       : "android.arch.persistence.room:rxjava2:$versions.room",
-            roomCore         : "android.arch.core:runtime:$versions.room",
-            rxjava           : "io.reactivex.rxjava2:rxjava:$versions.rxjava",
-            rxandroid        : "io.reactivex.rxjava2:rxandroid:$versions.rxandroid",
-            dachshungTab     : "com.github.Andy671:Dachshund-Tab-Layout:$versions.dachshungTab",
-            picasso          : "com.squareup.picasso:picasso:$versions.picasso"
+            supportAppCompat      : "com.android.support:appcompat-v7:$versions.supportLib",
+            supportDesign         : "com.android.support:design:$versions.supportLib",
+            palette               : "com.android.support:palette-v7:$versions.supportLib",
+            recyclerView          : "com.android.support:recyclerview-v7:$versions.supportLib",
+            constraintLayout      : "com.android.support.constraint:constraint-layout:$versions.constraintLayout",
+            cardView              : "com.android.support:cardview-v7:$versions.supportLib",
+            lifecycle             : "android.arch.lifecycle:extensions:$versions.lifecycle",
+            lifecycleCompiler     : "android.arch.lifecycle:compiler:$versions.lifecycle",
+            dagger                : "com.google.dagger:dagger:$versions.dagger",
+            daggerCompiler        : "com.google.dagger:dagger-compiler:$versions.dagger",
+            gson                  : "com.google.code.gson:gson:$versions.gson",
+            roomCompiler          : "android.arch.persistence.room:compiler:$versions.room",
+            roomRuntime           : "android.arch.persistence.room:runtime:$versions.room",
+            roomrxjava            : "android.arch.persistence.room:rxjava2:$versions.room",
+            roomCore              : "android.arch.core:runtime:$versions.room",
+            rxjava                : "io.reactivex.rxjava2:rxjava:$versions.rxjava",
+            rxandroid             : "io.reactivex.rxjava2:rxandroid:$versions.rxandroid",
+            dachshungTab          : "com.github.Andy671:Dachshund-Tab-Layout:$versions.dachshungTab",
+            picasso               : "com.squareup.picasso:picasso:$versions.picasso",
+            picassoTransformations: "jp.wasabeef:picasso-transformations:$versions.picassoTransformations"
     ]
 }

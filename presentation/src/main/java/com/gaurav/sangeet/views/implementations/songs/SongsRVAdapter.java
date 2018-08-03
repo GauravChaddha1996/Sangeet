@@ -12,12 +12,13 @@ import android.widget.TextView;
 
 import com.gaurav.domain.models.Song;
 import com.gaurav.sangeet.R;
-import com.gaurav.sangeet.utils.RoundedCornersTransformation;
 import com.gaurav.sangeet.utils.Utils;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.List;
+
+import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
 public class SongsRVAdapter extends RecyclerView.Adapter<SongsRVAdapter.SongItemViewHolder> {
 
@@ -28,11 +29,13 @@ public class SongsRVAdapter extends RecyclerView.Adapter<SongsRVAdapter.SongItem
     private Song song;
     private int accentColor;
     private int defaultTitleColor;
+    private RoundedCornersTransformation roundedCornerTransformation;
 
 
     public SongsRVAdapter(List<Song> data) {
         this.data = data;
         this.currentPlayingSongIndex = -1;
+        roundedCornerTransformation = new RoundedCornersTransformation(32, 16);
     }
 
     @NonNull
@@ -49,20 +52,20 @@ public class SongsRVAdapter extends RecyclerView.Adapter<SongsRVAdapter.SongItem
         song = data.get(position);
         if (position == currentPlayingSongIndex) {
             Picasso.get().load(R.drawable.song_item_currently_playing)
-                    .transform(new RoundedCornersTransformation(32, 16))
+                    .transform(roundedCornerTransformation)
                     .centerCrop()
                     .resize(256, 256)
                     .into(holder.songIcon);
         } else {
             if (!song.artworkPath.equals("null")) {
                 Picasso.get().load(new File(song.artworkPath))
-                        .transform(new RoundedCornersTransformation(32, 16))
+                        .transform(roundedCornerTransformation)
                         .centerCrop()
                         .resize(256, 256)
                         .into(holder.songIcon);
             } else {
                 Picasso.get().load(R.drawable.default_song_item_icon)
-                        .transform(new RoundedCornersTransformation(32, 16))
+                        .transform(roundedCornerTransformation)
                         .centerCrop()
                         .resize(256, 256)
                         .into(holder.songIcon);

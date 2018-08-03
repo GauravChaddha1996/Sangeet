@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -25,6 +26,8 @@ import com.gaurav.sangeet.views.viewstates.AlbumsViewState;
 import java.util.ArrayList;
 
 import io.reactivex.subjects.PublishSubject;
+
+import static android.support.v7.widget.DividerItemDecoration.VERTICAL;
 
 @SuppressLint("ValidFragment")
 public class AlbumsViewImpl extends Fragment implements AlbumsView {
@@ -45,6 +48,7 @@ public class AlbumsViewImpl extends Fragment implements AlbumsView {
         albumsRVAdapter = new AlbumsRVAdapter(new ArrayList<>());
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), VERTICAL));
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(albumsRVAdapter);
         ItemClickSupport.addTo(recyclerView).setOnItemClickListener((recyclerView, position, v) ->

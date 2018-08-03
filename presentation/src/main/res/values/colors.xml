@@ -32,6 +32,10 @@
     <color name="songArtistAlbumTextColor">@color/lightGrey</color>
     <color name="songDurationTextColor">@color/darkGrey</color>
 
+    <!-- Album item colors-->
+    <color name="albumItemTitleTextColor">@color/pureBlack</color>
+    <color name="albumItemArtistTotalSongsTextColor">@color/darkGrey</color>
+
     <color name="pageBgColor">@color/white</color>
 
     <color name="bottomSheetBgColor">@color/white</color>
