@@ -53,7 +53,8 @@ public class AlbumsRVAdapter extends RecyclerView.Adapter<AlbumsRVAdapter.Albums
                     .into(holder.backgroundImage);
         }
         holder.albumTitle.setText(album.name);
-        holder.artistTotalSongs.setText(String.format("%s • %s %s", album.artistName,
+        holder.artistTotalSongs.setText(String.format("%s • %s %s",
+                album.multipleArtists ? "Various Artists" : album.artistName,
                 album.songSet.size(), album.songSet.size() == 1 ? "Song" : "Songs"));
         holder.albumTitle.setSelected(true);
         holder.artistTotalSongs.setSelected(true);

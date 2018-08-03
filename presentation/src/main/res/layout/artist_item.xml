@@ -12,7 +12,7 @@
     android:paddingTop="4dp">
 
     <ImageView
-        android:id="@+id/albumItemImage"
+        android:id="@+id/artistItemImage"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:scaleType="centerCrop"
@@ -26,30 +26,30 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="@id/albumItemImage"
+        app:layout_constraintBottom_toBottomOf="@id/artistItemImage"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/albumItemImage"
-        app:layout_constraintTop_toTopOf="@id/albumItemImage">
+        app:layout_constraintStart_toEndOf="@id/artistItemImage"
+        app:layout_constraintTop_toTopOf="@id/artistItemImage">
 
         <TextView
-            android:id="@+id/albumTitle"
+            android:id="@+id/artistName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="marquee"
             android:marqueeRepeatLimit="marquee_forever"
             android:singleLine="true"
-            android:textColor="@color/albumItemTitleTextColor"
+            android:textColor="@color/artistItemNameTextColor"
             android:textSize="20sp"
             tools:text="Album title" />
 
         <TextView
-            android:id="@+id/artistTotalSongs"
+            android:id="@+id/artistTotalAlbumsSongs"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="marquee"
             android:marqueeRepeatLimit="marquee_forever"
             android:singleLine="true"
-            android:textColor="@color/albumItemArtistTotalSongsTextColor"
+            android:textColor="@color/artistItemTotalAlbumsSongsTextColor"
             android:textSize="14sp"
             tools:text="Artist • Total Songs" />
     </LinearLayout>
