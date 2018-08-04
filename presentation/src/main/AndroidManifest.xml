@@ -37,7 +37,7 @@
         <activity
             android:name=".activity.AlbumDetailActivity"
             android:launchMode="singleTask"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AlbumDetailActivityStyle" />
 
         <activity
             android:name=".activity.ArtistDetailActivity"

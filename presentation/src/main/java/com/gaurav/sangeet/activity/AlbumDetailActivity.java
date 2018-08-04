@@ -1,14 +1,16 @@
 package com.gaurav.sangeet.activity;
 
 import android.arch.lifecycle.ViewModelProviders;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -26,7 +28,9 @@ import com.gaurav.sangeet.views.interfaces.AlbumDetailView;
 import com.gaurav.sangeet.views.uievents.albumdetails.AlbumDetailUIEvent;
 import com.gaurav.sangeet.views.uievents.albumdetails.PlayAlbumDetailUIEvent;
 import com.gaurav.sangeet.views.viewstates.AlbumDetailViewState;
+import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import io.reactivex.subjects.PublishSubject;
@@ -40,7 +44,6 @@ public class AlbumDetailActivity extends AppCompatActivity implements AlbumDetai
     // Views
     private Toolbar toolbar;
     private ImageView albumArtwork;
-    private ImageView artistIcon;
     private ImageButton playAlbumButton;
     private RecyclerView albumSongRecyclerView;
     private BottomSheetViewImpl bottomSheetViewImpl;
@@ -49,36 +52,101 @@ public class AlbumDetailActivity extends AppCompatActivity implements AlbumDetai
     private BottomSheetBehavior bottomSheetBehavior;
     private SongsRVAdapter adapter;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_album_detail);
 
         uiEventsSubject = PublishSubject.create();
+        initViews();
+        setupViews();
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        viewModel = ViewModelProviders.of(this,
+                new AlbumDetailViewModelFactory(this,
+                        getIntent().getLongExtra("albumId", -1)))
+                .get(AlbumDetailViewModel.class);
+        viewModel.getState().observe(this, this::render);
+    }
+
+    @Override
+    public void render(AlbumDetailViewState state) {
+        if (state instanceof AlbumDetailViewState.Loading) {
+            // show loading
+        } else if (state instanceof AlbumDetailViewState.Error) {
+            // show error
+        } else {
+            Album album = ((AlbumDetailViewState.Result) state).getAlbum();
+            ((CollapsingToolbarLayout)findViewById(R.id.collapsing_toolbar)).setTitle(album.name);
+            Picasso.get().load(new File(album.songSet.first().artworkPath))
+                    .into(albumArtwork);
+            adapter.updateData(new ArrayList<>(album.songSet));
+            // TODO: 7/15/18 update album artwork and artist icon here
+        }
+    }
+
+    @Override
+    public PublishSubject<AlbumDetailUIEvent> getUIEvents() {
+        return uiEventsSubject;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED ||
+                bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_DRAGGING ||
+                bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_SETTLING) {
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void initViews() {
         toolbar = findViewById(R.id.toolbar);
         albumArtwork = findViewById(R.id.albumArtwork);
-        artistIcon = findViewById(R.id.artistIcon);
         playAlbumButton = findViewById(R.id.playAlbumButton);
         albumSongRecyclerView = findViewById(R.id.recyclerView);
         bottomSheetViewImpl = new BottomSheetViewImpl(findViewById(R.id.bottom_sheet));
+    }
 
+    private void setupViews() {
+        // create view related objects
+        adapter = new SongsRVAdapter(new ArrayList<>());
+
+        // setup toolbar
+        toolbar.setTitleTextAppearance(this, R.style.ToolbarTitleFont);
+        toolbar.setTitleTextColor(getColor(R.color.toolbarTitleColor));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(getDrawable(android.R.drawable.arrow_up_float));
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.back);
+
+        // setup album play button
         playAlbumButton.setOnClickListener(v -> uiEventsSubject.onNext(new PlayAlbumDetailUIEvent(
                 ((AlbumDetailViewState.Result) viewModel.getState().getValue()).getAlbum(),
                 null)));
-        adapter = new SongsRVAdapter(new ArrayList<>());
+
+        // setup song recycler view
         albumSongRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        albumSongRecyclerView.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL));
         albumSongRecyclerView.setHasFixedSize(true);
         albumSongRecyclerView.setAdapter(adapter);
-        ItemClickSupport.addTo(albumSongRecyclerView).setOnItemClickListener((albumSongRecyclerView,
-                                                                              position, v) ->
-                uiEventsSubject.onNext(new PlayAlbumDetailUIEvent(
-                        ((AlbumDetailViewState.Result) viewModel.getState().getValue()).getAlbum()
-                        , adapter.getSong(position))));
+        ItemClickSupport.addTo(albumSongRecyclerView).setOnItemClickListener(
+                (albumSongRecyclerView, position, v) -> uiEventsSubject.onNext(
+                        new PlayAlbumDetailUIEvent(((AlbumDetailViewState.Result)
+                                viewModel.getState().getValue()).getAlbum(),
+                                adapter.getSong(position))));
 
         // TODO: 7/15/18 FInd a better way tro manage bottom sheet and it's info
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetViewImpl.getBaseView());
@@ -108,47 +176,5 @@ public class AlbumDetailActivity extends AppCompatActivity implements AlbumDetai
                         }))
                 .get(BottomSheetViewModel.class);
         viewModel.getViewState().observe(this, bottomSheetViewImpl::render);
-
-
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        viewModel = ViewModelProviders.of(this,
-                new AlbumDetailViewModelFactory(this,
-                        getIntent().getLongExtra("albumId", -1)))
-                .get(AlbumDetailViewModel.class);
-        viewModel.getState().observe(this, this::render);
-    }
-
-    @Override
-    public void render(AlbumDetailViewState state) {
-        if (state instanceof AlbumDetailViewState.Loading) {
-            // show loading
-        } else if (state instanceof AlbumDetailViewState.Error) {
-            // show error
-        } else {
-            Album album = ((AlbumDetailViewState.Result) state).getAlbum();
-            getSupportActionBar().setTitle(album.name);
-            adapter.updateData(new ArrayList<>(album.songSet));
-            // TODO: 7/15/18 update album artwork and artist icon here
-        }
-    }
-
-    @Override
-    public PublishSubject<AlbumDetailUIEvent> getUIEvents() {
-        return uiEventsSubject;
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED ||
-                bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_DRAGGING ||
-                bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_SETTLING) {
-            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-        } else {
-            super.onBackPressed();
-        }
     }
 }

@@ -17,6 +17,9 @@
     <style name="HomeActivityStyle" parent="AppTheme.NoActionBar">
         <item name="android:windowLightStatusBar">true</item>
     </style>
+    <style name="AlbumDetailActivityStyle" parent="AppTheme.NoActionBar">
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
 
     <style name="SearchStyle" parent="AppTheme.NoActionBar">
         <item name="android:windowIsTranslucent">true</item>
