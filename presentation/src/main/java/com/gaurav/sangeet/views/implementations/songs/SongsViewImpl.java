@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -30,8 +29,6 @@ import java.util.ArrayList;
 
 import io.reactivex.subjects.PublishSubject;
 
-import static android.support.v7.widget.DividerItemDecoration.VERTICAL;
-
 @SuppressLint("ValidFragment")
 public class SongsViewImpl extends Fragment implements SongsView {
     SongsViewModel viewModel;
@@ -51,7 +48,6 @@ public class SongsViewImpl extends Fragment implements SongsView {
         songsRVAdapter = new SongsRVAdapter(new ArrayList<>());
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), VERTICAL));
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(songsRVAdapter);
         ItemClickSupport.addTo(recyclerView).setOnItemClickListener((recyclerView, position, v) -> {

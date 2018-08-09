@@ -8,11 +8,15 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.TextView;
 
 import com.gaurav.sangeet.R;
 import com.gaurav.sangeet.utils.BottomPaddingDachshundIndicator;
@@ -35,6 +39,9 @@ public class HomeActivity extends AppCompatActivity {
     // View related objects
     private PageAdapter pageAdapter;
     private BottomSheetBehavior bottomSheetBehavior;
+    private Animation toolbarAnimation;
+    private Animation tabLayoutAnimation;
+    private Animation bottomSheetAnimation;
 
 
     @Override
@@ -88,7 +95,7 @@ public class HomeActivity extends AppCompatActivity {
         toolbar.setTitleTextAppearance(this, R.style.ToolbarTitleFont);
         toolbar.setTitleTextColor(getColor(R.color.toolbarTitleColor));
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(getString(R.string.app_name));
+        getSupportActionBar().setTitle(getString(R.string.app_title_toolbar));
 
         viewPager.setAdapter(pageAdapter);
         viewPager.setCurrentItem(0);
@@ -123,6 +130,7 @@ public class HomeActivity extends AppCompatActivity {
                         }))
                 .get(BottomSheetViewModel.class);
         viewModel.getViewState().observe(this, bottomSheetViewImpl::render);
+        animateToolbarAndTabLayout();
     }
 
     @SuppressWarnings("unchecked")
@@ -140,4 +148,33 @@ public class HomeActivity extends AppCompatActivity {
         startActivity(intent, options.toBundle());
     }
 
+    private void animateToolbarAndTabLayout() {
+        toolbarAnimation = AnimationUtils.loadAnimation(this, R.anim.toolbar_slide_down);
+        toolbarAnimation.setInterpolator(new FastOutSlowInInterpolator());
+        toolbarAnimation.setDuration(getResources().getInteger(R.integer.toolbarAnimDuration));
+        tabLayoutAnimation = AnimationUtils.loadAnimation(this, R.anim.tablayout_slide_down);
+        tabLayoutAnimation.setInterpolator(new FastOutSlowInInterpolator());
+        tabLayoutAnimation.setDuration(getResources().getInteger(R.integer.tabLayoutAnimDuration));
+        bottomSheetAnimation= AnimationUtils.loadAnimation(this, R.anim.bottom_sheet_slide_up);
+        bottomSheetAnimation.setInterpolator(new FastOutSlowInInterpolator());
+        bottomSheetAnimation.setDuration(getResources().getInteger(R.integer.bottomSheetAnimDuration));
+
+        toolbar.startAnimation(toolbarAnimation);
+        tabLayout.startAnimation(tabLayoutAnimation);
+        bottomSheetViewImpl.getBaseView().startAnimation(bottomSheetAnimation);
+
+        // Animating the toolbar title. No other way is provided in toolbar. This is a gross way.
+        View t = toolbar.getChildAt(0);
+        if (t != null && t instanceof TextView) {
+            TextView title = (TextView) t;
+            title.setScaleX(0.8f);
+            title.setAlpha(0f);
+            title.animate()
+                    .alpha(1f)
+                    .scaleX(1f)
+                    .setStartDelay(getResources().getInteger(R.integer.toolbarTitleStartDelay))
+                    .setDuration(getResources().getInteger(R.integer.toolbarTitleAnimDuration))
+                    .setInterpolator(new FastOutSlowInInterpolator());
+        }
+    }
 }

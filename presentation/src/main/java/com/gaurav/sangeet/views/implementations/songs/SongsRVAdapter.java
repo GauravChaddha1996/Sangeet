@@ -35,7 +35,7 @@ public class SongsRVAdapter extends RecyclerView.Adapter<SongsRVAdapter.SongItem
     public SongsRVAdapter(List<Song> data) {
         this.data = data;
         this.currentPlayingSongIndex = -1;
-        roundedCornerTransformation = new RoundedCornersTransformation(32, 16);
+        roundedCornerTransformation = new RoundedCornersTransformation(16, 16);
     }
 
     @NonNull

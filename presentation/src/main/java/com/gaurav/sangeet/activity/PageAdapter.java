@@ -24,6 +24,8 @@ public class PageAdapter extends FragmentStatePagerAdapter {
                 return new AlbumsViewImpl();
             case 2:
                 return new ArtistsViewImpl();
+            case 3:
+                return new SongsViewImpl();
             default:
                 return new SongsViewImpl();
         }
@@ -32,7 +34,7 @@ public class PageAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        return 3;
+        return 4;
     }
 
     @Nullable
@@ -45,6 +47,8 @@ public class PageAdapter extends FragmentStatePagerAdapter {
                 return "Albums";
             case 2:
                 return "Artists";
+            case 3:
+                return "Favorites";
             default:
                 return "Default";
         }

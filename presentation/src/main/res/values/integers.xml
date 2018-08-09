@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="song_item_anim_duration">350</integer>
+    <integer name="toolbarAnimDuration" >800</integer>
+    <integer name="tabLayoutAnimDuration" >800</integer>
+    <integer name="toolbarTitleStartDelay" >300</integer>
+    <integer name="toolbarTitleAnimDuration" >800</integer>
+    <integer name="bottomSheetAnimDuration">800</integer>
+</resources>

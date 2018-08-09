@@ -7,15 +7,13 @@
     android:background="?android:attr/selectableItemBackground"
     android:foreground="?android:attr/selectableItemBackground"
     android:clickable="true"
-    android:paddingBottom="8dp"
-    android:paddingEnd="4dp"
-    android:paddingStart="4dp"
-    android:paddingTop="8dp">
+    android:paddingEnd="16dp"
+    android:paddingStart="16dp">
 
     <ImageView
         android:id="@+id/songIcon"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
         android:scaleType="centerCrop"
         android:src="@drawable/inspiration1"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -27,9 +25,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="@+id/songIcon"
         app:layout_constraintEnd_toStartOf="@id/songDuration"
         app:layout_constraintStart_toEndOf="@+id/songIcon"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="@+id/songIcon">
 
         <TextView
             android:id="@+id/songTitle"
@@ -69,5 +68,16 @@
         app:layout_constraintBottom_toBottomOf="@+id/songItemTitleArtistAlbumLayout"
         app:layout_constraintEnd_toEndOf="parent"
         tools:text="2:03" />
+
+    <View
+        android:id="@+id/song_item_divider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="12dp"
+        android:background="@color/songDividerColor"
+        android:visibility="visible"
+        app:layout_constraintStart_toEndOf="@id/songIcon"
+        app:layout_constraintTop_toBottomOf="@id/songItemTitleArtistAlbumLayout" />
 
 </android.support.constraint.ConstraintLayout>
