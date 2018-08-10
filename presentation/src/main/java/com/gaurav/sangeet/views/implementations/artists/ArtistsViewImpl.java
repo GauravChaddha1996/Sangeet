@@ -7,8 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,8 +25,6 @@ import com.gaurav.sangeet.views.viewstates.ArtistsViewState;
 import java.util.ArrayList;
 
 import io.reactivex.subjects.PublishSubject;
-
-import static android.support.v7.widget.DividerItemDecoration.VERTICAL;
 
 @SuppressLint("ValidFragment")
 public class ArtistsViewImpl extends Fragment implements ArtistsView {
@@ -48,8 +45,7 @@ public class ArtistsViewImpl extends Fragment implements ArtistsView {
         View view = inflater.inflate(R.layout.artists_view, container, false);
         artistsRVAdapter = new ArtistsRVAdapter(new ArrayList<>());
         recyclerView = view.findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), VERTICAL));
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(artistsRVAdapter);
         ItemClickSupport.addTo(recyclerView).setOnItemClickListener((recyclerView, position, v) -> {

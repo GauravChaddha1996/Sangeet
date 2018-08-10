@@ -6,11 +6,15 @@
     android:layout_height="match_parent"
     tools:context=".activity.HomeActivity">
 
+    <!-- To make toolbar hide with scroll add scroll flags to toolbar and remove
+    app:layout_behavior from bottom sheet coordinator layout-->
+
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:elevation="0dp">
 
+            <!--app:layout_scrollFlags="scroll|snap|enterAlways"-->
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"

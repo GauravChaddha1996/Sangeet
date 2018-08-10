@@ -72,8 +72,6 @@ public class SongsRVAdapter extends RecyclerView.Adapter<SongsRVAdapter.SongItem
             }
         }
         updateTitleColor(holder, position);
-        holder.songTitle.setSelected(true);
-        holder.songArtistAlbum.setSelected(true);
         holder.songTitle.setText(song.title);
         holder.songArtistAlbum.setText(String.format("%s • %s", song.artist, song.album));
         holder.songDuration.setText(Utils.convertLongToDuration(song.duration));
@@ -81,8 +79,6 @@ public class SongsRVAdapter extends RecyclerView.Adapter<SongsRVAdapter.SongItem
 
     @Override
     public void onViewRecycled(@NonNull SongItemViewHolder holder) {
-        holder.songTitle.setSelected(false);
-        holder.songArtistAlbum.setSelected(false);
         holder.songIcon.setImageDrawable(null);
         super.onViewRecycled(holder);
     }

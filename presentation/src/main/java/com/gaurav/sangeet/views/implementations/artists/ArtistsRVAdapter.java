@@ -2,7 +2,6 @@ package com.gaurav.sangeet.views.implementations.artists;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,15 +21,16 @@ import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 public class ArtistsRVAdapter extends RecyclerView.Adapter<ArtistsRVAdapter.ArtistsViewHolder> {
 
     private List<Artist> data;
+
+    /* Helper variables*/
     private Artist artist;
     private Song song;
     private String albumsString, songsString;
-
     private RoundedCornersTransformation roundedCornersTransformation;
 
     public ArtistsRVAdapter(List<Artist> data) {
         this.data = data;
-        roundedCornersTransformation = new RoundedCornersTransformation(16, 8);
+        roundedCornersTransformation = new RoundedCornersTransformation(12, 8);
     }
 
     @NonNull
@@ -48,16 +48,16 @@ public class ArtistsRVAdapter extends RecyclerView.Adapter<ArtistsRVAdapter.Arti
             Picasso.get().load(new File(song.artworkPath))
                     .transform(roundedCornersTransformation)
                     .centerCrop()
-                    .resize(128, 128)
-                    .into(holder.artistImage);
+                    .resize(256, 256)
+                    .into(holder.artistIcon);
         } else {
             Picasso.get().load(R.drawable.default_album_item_icon)
                     .transform(roundedCornersTransformation)
                     .centerCrop()
-                    .resize(128, 128)
-                    .into(holder.artistImage);
+                    .resize(256, 256)
+                    .into(holder.artistIcon);
         }
-        holder.artistName.setText(artist.name);
+        holder.artistTitle.setText(artist.name);
         if (artist.albumSet.size() == 0) {
             albumsString = "";
         } else {
@@ -68,15 +68,11 @@ public class ArtistsRVAdapter extends RecyclerView.Adapter<ArtistsRVAdapter.Arti
         songsString = artist.songSet.size() == 1 ? "Song" : "Songs";
         holder.artistTotalAlbumsSongs.setText(String.format("%s %s %s", albumsString,
                 artist.songSet.size(), songsString));
-        holder.artistName.setSelected(true);
-        holder.artistTotalAlbumsSongs.setSelected(true);
     }
 
     @Override
     public void onViewRecycled(@NonNull ArtistsViewHolder holder) {
-        holder.artistName.setSelected(false);
-        holder.artistTotalAlbumsSongs.setSelected(false);
-        holder.artistImage.setImageDrawable(null);
+        holder.artistIcon.setImageDrawable(null);
         super.onViewRecycled(holder);
     }
 
@@ -95,15 +91,15 @@ public class ArtistsRVAdapter extends RecyclerView.Adapter<ArtistsRVAdapter.Arti
     }
 
     public class ArtistsViewHolder extends RecyclerView.ViewHolder {
-        TextView artistName;
+        TextView artistTitle;
         TextView artistTotalAlbumsSongs;
-        ImageView artistImage;
+        ImageView artistIcon;
 
         public ArtistsViewHolder(View itemView) {
             super(itemView);
-            artistName = itemView.findViewById(R.id.artistName);
+            artistTitle = itemView.findViewById(R.id.artistTitle);
             artistTotalAlbumsSongs = itemView.findViewById(R.id.artistTotalAlbumsSongs);
-            artistImage = itemView.findViewById(R.id.artistItemImage);
+            artistIcon = itemView.findViewById(R.id.artistIcon);
         }
     }
 }

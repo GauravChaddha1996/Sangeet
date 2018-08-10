@@ -6,37 +6,31 @@
     android:layout_height="wrap_content"
     android:background="?android:attr/selectableItemBackground"
     android:foreground="?android:attr/selectableItemBackground"
-    android:paddingBottom="4dp"
-    android:paddingEnd="4dp"
-    android:paddingStart="4dp"
-    android:paddingTop="4dp">
+    android:padding="8dp">
 
     <ImageView
-        android:id="@+id/albumItemImage"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:id="@+id/albumIcon"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
         android:scaleType="centerCrop"
+        app:layout_constraintHeight_percent="0.8"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         tools:src="@drawable/inspiration1" />
 
     <LinearLayout
+        android:id="@+id/albumItemArtistTotalSongsLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="@id/albumItemImage"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/albumItemImage"
-        app:layout_constraintTop_toTopOf="@id/albumItemImage">
+        app:layout_constraintTop_toBottomOf="@id/albumIcon">
 
         <TextView
             android:id="@+id/albumTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ellipsize="marquee"
-            android:marqueeRepeatLimit="marquee_forever"
+            android:ellipsize="end"
+            android:textStyle="bold"
             android:singleLine="true"
             android:textColor="@color/albumItemTitleTextColor"
             android:textSize="20sp"
@@ -46,13 +40,12 @@
             android:id="@+id/artistTotalSongs"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ellipsize="marquee"
-            android:marqueeRepeatLimit="marquee_forever"
+            android:layout_marginTop="2dp"
             android:singleLine="true"
+            android:ellipsize="end"
             android:textColor="@color/albumItemArtistTotalSongsTextColor"
             android:textSize="14sp"
             tools:text="Artist • Total Songs" />
     </LinearLayout>
-
 
 </android.support.constraint.ConstraintLayout>

@@ -26,7 +26,7 @@ public class AlbumsRVAdapter extends RecyclerView.Adapter<AlbumsRVAdapter.Albums
 
     public AlbumsRVAdapter(List<Album> data) {
         this.data = data;
-        roundedCornersTransformation = new RoundedCornersTransformation(16, 8);
+        roundedCornersTransformation = new RoundedCornersTransformation(12, 8);
     }
 
     @NonNull
@@ -43,27 +43,23 @@ public class AlbumsRVAdapter extends RecyclerView.Adapter<AlbumsRVAdapter.Albums
             Picasso.get().load(new File(album.songSet.first().artworkPath))
                     .transform(roundedCornersTransformation)
                     .centerCrop()
-                    .resize(128, 128)
+                    .resize(256, 256)
                     .into(holder.backgroundImage);
         } else {
             Picasso.get().load(R.drawable.default_album_item_icon)
                     .transform(roundedCornersTransformation)
                     .centerCrop()
-                    .resize(128, 128)
+                    .resize(256, 256)
                     .into(holder.backgroundImage);
         }
         holder.albumTitle.setText(album.name);
         holder.artistTotalSongs.setText(String.format("%s • %s %s",
                 album.multipleArtists ? "Various Artists" : album.artistName,
                 album.songSet.size(), album.songSet.size() == 1 ? "Song" : "Songs"));
-        holder.albumTitle.setSelected(true);
-        holder.artistTotalSongs.setSelected(true);
     }
 
     @Override
     public void onViewRecycled(@NonNull AlbumsViewHolder holder) {
-        holder.albumTitle.setSelected(false);
-        holder.artistTotalSongs.setSelected(false);
         holder.backgroundImage.setImageDrawable(null);
         super.onViewRecycled(holder);
     }
@@ -91,7 +87,7 @@ public class AlbumsRVAdapter extends RecyclerView.Adapter<AlbumsRVAdapter.Albums
             super(itemView);
             albumTitle = itemView.findViewById(R.id.albumTitle);
             artistTotalSongs = itemView.findViewById(R.id.artistTotalSongs);
-            backgroundImage = itemView.findViewById(R.id.albumItemImage);
+            backgroundImage = itemView.findViewById(R.id.albumIcon);
         }
     }
 }

@@ -8,17 +8,18 @@
     android:foreground="?android:attr/selectableItemBackground"
     android:clickable="true"
     android:paddingEnd="16dp"
-    android:paddingStart="16dp">
+    android:paddingStart="16dp"
+    android:paddingTop="1dp">
 
     <ImageView
         android:id="@+id/songIcon"
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/inspiration1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/inspiration1" />
 
     <LinearLayout
         android:id="@+id/songItemTitleArtistAlbumLayout"
@@ -35,10 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
-            android:layout_marginTop="8dp"
-            android:ellipsize="marquee"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:scrollHorizontally="true"
+            android:ellipsize="end"
             android:singleLine="true"
             android:textColor="@color/songTitleTextColor"
             android:textSize="16sp"
@@ -50,8 +48,8 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="12dp"
-            android:ellipsize="marquee"
-            android:marqueeRepeatLimit="marquee_forever"
+            android:layout_marginTop="2dp"
+            android:ellipsize="end"
             android:singleLine="true"
             android:textColor="@color/songArtistAlbumTextColor"
             android:textSize="12sp"
@@ -74,7 +72,7 @@
         android:layout_width="0dp"
         android:layout_height="1dp"
         android:layout_marginStart="12dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="16dp"
         android:background="@color/songDividerColor"
         android:visibility="visible"
         app:layout_constraintStart_toEndOf="@id/songIcon"
