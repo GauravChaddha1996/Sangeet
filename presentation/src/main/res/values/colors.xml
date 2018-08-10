@@ -42,8 +42,15 @@
     <color name="artistItemTitleTextColor">@color/pureBlack</color>
     <color name="artistItemTotalAlbumsSongsTextColor">@color/darkGrey</color>
 
+    <!-- Dialog colors -->
+    <color name="dialogTitleColor">@color/pureBlack</color>
+    <color name="dialogArtistAlbumColor">@color/lightGrey</color>
+    <color name="dialogButtonTextColor">@color/colorAccent</color>
+
+    <!-- View pager colors -->
     <color name="pageBgColor">@color/white</color>
 
+    <!-- Bottom sheet colors -->
     <color name="bottomSheetBgColor">@color/white</color>
 
     <color name="backgroundGradientStart">#240b36</color>

@@ -19,7 +19,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import com.gaurav.sangeet.R;
-import com.gaurav.sangeet.utils.BottomPaddingDachshundIndicator;
+import com.gaurav.sangeet.views.helperviews.BottomPaddingDachshundIndicator;
 import com.gaurav.sangeet.viewmodels.bottomsheet.BottomSheetViewModel;
 import com.gaurav.sangeet.viewmodels.bottomsheet.BottomSheetViewModelFactory;
 import com.gaurav.sangeet.views.implementations.bottomsheet.BottomSheetViewImpl;

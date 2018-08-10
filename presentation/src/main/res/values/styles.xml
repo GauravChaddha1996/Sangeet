@@ -17,8 +17,15 @@
     <style name="HomeActivityStyle" parent="AppTheme.NoActionBar">
         <item name="android:windowLightStatusBar">true</item>
     </style>
+
     <style name="AlbumDetailActivityStyle" parent="AppTheme.NoActionBar">
         <item name="android:windowLightStatusBar">true</item>
+    </style>
+
+    <style name="DialogTheme">
+        <item name="android:windowEnterAnimation">@anim/dialog_fade_in_overshoot</item>
+        <item name="android:windowExitAnimation">@anim/dialog_fade_out</item>
+
     </style>
 
     <style name="SearchStyle" parent="AppTheme.NoActionBar">

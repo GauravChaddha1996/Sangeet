@@ -18,6 +18,7 @@ import com.gaurav.sangeet.activity.AlbumDetailActivity;
 import com.gaurav.sangeet.utils.ItemClickSupport;
 import com.gaurav.sangeet.viewmodels.albums.AlbumsViewModel;
 import com.gaurav.sangeet.viewmodels.albums.AlbumsViewModelFactory;
+import com.gaurav.sangeet.views.helperviews.DialogViewHelper;
 import com.gaurav.sangeet.views.interfaces.AlbumsView;
 import com.gaurav.sangeet.views.uievents.albums.AlbumViewUIEvent;
 import com.gaurav.sangeet.views.viewstates.AlbumsViewState;
@@ -47,12 +48,16 @@ public class AlbumsViewImpl extends Fragment implements AlbumsView {
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(albumsRVAdapter);
-        ItemClickSupport.addTo(recyclerView).setOnItemClickListener((recyclerView, position, v) ->
-        {
+        ItemClickSupport.addTo(recyclerView).setOnItemClickListener((recyclerView, position, v) -> {
             // TODO: 7/15/18 Do this via proper navigation channels
 //            uiEventsSubject.onNext(new AlbumItemClickUIEvent(albumsRVAdapter.getAlbum(position)));
             startActivity(new Intent(inflater.getContext(), AlbumDetailActivity.class).putExtra(
                     "albumId", albumsRVAdapter.getAlbum(position).id));
+        });
+        ItemClickSupport.addTo(recyclerView).setOnItemLongClickListener((recyclerView1, position, v) -> {
+            new DialogViewHelper(getContext(), albumsRVAdapter.getAlbum(position))
+                    .getDialog().show();
+            return true;
         });
         return view;
     }

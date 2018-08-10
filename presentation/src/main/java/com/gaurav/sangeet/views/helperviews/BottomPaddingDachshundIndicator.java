@@ -3,7 +3,7 @@
 // (powered by Fernflower decompiler)
 //
 
-package com.gaurav.sangeet.utils;
+package com.gaurav.sangeet.views.helperviews;
 
 import android.animation.ValueAnimator;
 import android.animation.ValueAnimator.AnimatorUpdateListener;
