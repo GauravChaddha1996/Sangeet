@@ -108,6 +108,7 @@ public class DialogViewHelper {
         if (!isSongDialog) {
             dialogTitle.setGravity(Gravity.NO_GRAVITY);
             dialogArtistAlbum.setGravity(Gravity.NO_GRAVITY);
+            dialogButtonGotoAlbum.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -122,9 +123,6 @@ public class DialogViewHelper {
                     .putExtra("artistId", artistId));
             dialog.dismiss();
         });
-        if (!isSongDialog) {
-            dialogButtonGotoAlbum.setVisibility(View.INVISIBLE);
-        }
     }
 
     private void setAnimation() {

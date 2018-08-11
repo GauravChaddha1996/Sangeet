@@ -19,13 +19,12 @@
     </style>
 
     <style name="AlbumDetailActivityStyle" parent="AppTheme.NoActionBar">
-        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
     </style>
 
     <style name="DialogTheme">
         <item name="android:windowEnterAnimation">@anim/dialog_fade_in_overshoot</item>
-        <item name="android:windowExitAnimation">@anim/dialog_fade_out</item>
-
+        <item name="android:windowExitAnimation">@anim/dialog_fade_out_overshoot</item>
     </style>
 
     <style name="SearchStyle" parent="AppTheme.NoActionBar">

@@ -6,6 +6,7 @@
     <color name="darkerWhite1">#9ba0a7</color>
     <color name="darkerWhite2">#858B94</color>
     <color name="vibrantRed">#c31432</color>
+    <color name="charcoalGray">#171717</color>
     <color name="pureBlack">#000000</color>
     <color name="lightGrey">#a9a9a9</color>
     <color name="darkGrey">#414243</color>
@@ -61,5 +62,7 @@
 
     <color name="search_bar_color">@color/colorAccent</color>
     <color name="search_hint_color">@color/colorPrimaryDark</color>
+    <color name="albumDetailArtistTotalSongsColor">@color/pureBlack</color>
+    <color name="albumDetailDividerColor">@color/lightGrey</color>
 
 </resources>
