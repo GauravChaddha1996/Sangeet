@@ -23,7 +23,8 @@ ext {
             rxandroid             : '2.0.2',
             dachshungTab          : 'v0.3.3',
             picasso               : '2.71828',
-            picassoTransformations: '2.2.1'
+            picassoTransformations: '2.2.1',
+            kenburnsview          : '1.0.7'
     ]
 
     /*
@@ -55,6 +56,7 @@ ext {
             rxandroid             : "io.reactivex.rxjava2:rxandroid:$versions.rxandroid",
             dachshungTab          : "com.github.Andy671:Dachshund-Tab-Layout:$versions.dachshungTab",
             picasso               : "com.squareup.picasso:picasso:$versions.picasso",
-            picassoTransformations: "jp.wasabeef:picasso-transformations:$versions.picassoTransformations"
+            picassoTransformations: "jp.wasabeef:picasso-transformations:$versions.picassoTransformations",
+            kenburnsview          : "com.flaviofaria:kenburnsview:$versions.kenburnsview"
     ]
 }

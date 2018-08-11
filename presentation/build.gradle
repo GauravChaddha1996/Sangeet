@@ -54,6 +54,7 @@ dependencies {
     implementation libraries.dachshungTab
     implementation libraries.picasso
     implementation libraries.picassoTransformations
+    implementation libraries.kenburnsview
 
     // Dependency Injection related - Dagger
     annotationProcessor libraries.daggerCompiler
