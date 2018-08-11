@@ -11,7 +11,6 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
-import android.support.v7.graphics.Target;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -27,8 +26,8 @@ import com.gaurav.sangeet.viewmodels.albumdetails.AlbumDetailViewModel;
 import com.gaurav.sangeet.viewmodels.albumdetails.AlbumDetailViewModelFactory;
 import com.gaurav.sangeet.viewmodels.bottomsheet.BottomSheetViewModel;
 import com.gaurav.sangeet.viewmodels.bottomsheet.BottomSheetViewModelFactory;
+import com.gaurav.sangeet.views.implementations.albumdetails.AlbumDetailsSongsRVAdapter;
 import com.gaurav.sangeet.views.implementations.bottomsheet.BottomSheetViewImpl;
-import com.gaurav.sangeet.views.implementations.songs.SongsRVAdapter;
 import com.gaurav.sangeet.views.interfaces.AlbumDetailView;
 import com.gaurav.sangeet.views.uievents.albumdetails.AlbumDetailUIEvent;
 import com.gaurav.sangeet.views.uievents.albumdetails.PlayAlbumDetailUIEvent;
@@ -56,7 +55,7 @@ public class AlbumDetailActivity extends AppCompatActivity implements AlbumDetai
 
     // View related objects
     private BottomSheetBehavior bottomSheetBehavior;
-    private SongsRVAdapter adapter;
+    private AlbumDetailsSongsRVAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,7 +142,7 @@ public class AlbumDetailActivity extends AppCompatActivity implements AlbumDetai
 
     private void setupViews() {
         // create view related objects
-        adapter = new SongsRVAdapter(new ArrayList<>());
+        adapter = new AlbumDetailsSongsRVAdapter(new ArrayList<>());
 
         // setup toolbar
         toolbar.setTitleTextAppearance(this, R.style.ToolbarTitleFont);
