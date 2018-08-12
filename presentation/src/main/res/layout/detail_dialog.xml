@@ -5,7 +5,7 @@
     android:id="@+id/dialogConstraintLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="4dp">
+    android:padding="16dp">
 
     <TextView
         android:id="@+id/dialog_title"
@@ -13,7 +13,6 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="4dp"
         android:ellipsize="end"
         android:gravity="center"
         android:maxLines="1"
@@ -53,7 +52,9 @@
         android:focusable="true"
         android:foreground="?android:attr/selectableItemBackground"
         android:gravity="center"
-        android:padding="8dp"
+        android:paddingEnd="8dp"
+        android:paddingStart="8dp"
+        android:paddingTop="8dp"
         android:text="Go to album"
         android:textColor="@color/dialogButtonTextColor"
         android:textSize="20sp"
@@ -72,10 +73,12 @@
         android:background="?android:attr/selectableItemBackground"
         android:clickable="true"
         android:focusable="true"
+        android:paddingEnd="8dp"
+        android:paddingStart="8dp"
+        android:paddingTop="8dp"
         android:foreground="?android:attr/selectableItemBackground"
         android:gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
-        android:padding="8dp"
         android:text="Go to artist"
         android:textColor="@color/dialogButtonTextColor"
         android:textSize="20sp"

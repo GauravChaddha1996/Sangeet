@@ -24,7 +24,7 @@
             android:layout_height="200dp"
             android:layout_alignParentTop="true"
             android:layout_marginTop="48dp"
-            android:src="@drawable/purplebliss" />
+            android:src="@drawable/inspiration2" />
 
         <TextView
             android:id="@+id/songTitle"

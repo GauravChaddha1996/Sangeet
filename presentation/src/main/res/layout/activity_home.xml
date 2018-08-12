@@ -35,7 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/tabLayoutBgColor"
-            android:elevation="@dimen/topAppBarElevation"
+            android:elevation="4dp"
             app:tabPaddingBottom="8dp"
             app:ddIndicatorColor="@color/tabLayoutIndicatorColor"
             app:tabSelectedTextColor="@color/tabLayoutSelectedTabColor"

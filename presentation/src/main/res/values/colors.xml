@@ -37,7 +37,6 @@
     <!-- Album item colors-->
     <color name="albumItemTitleTextColor">@color/pureBlack</color>
     <color name="albumItemArtistTotalSongsTextColor">@color/lightGrey</color>
-    <color name="albumDividerColor">@color/lightGrey</color>
 
     <!-- Artist item colors -->
     <color name="artistItemTitleTextColor">@color/pureBlack</color>

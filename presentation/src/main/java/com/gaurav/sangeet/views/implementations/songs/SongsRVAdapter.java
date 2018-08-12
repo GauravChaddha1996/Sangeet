@@ -64,7 +64,7 @@ public class SongsRVAdapter extends RecyclerView.Adapter<SongsRVAdapter.SongItem
                         .resize(256, 256)
                         .into(holder.songIcon);
             } else {
-                Picasso.get().load(R.drawable.default_song_item_icon)
+                Picasso.get().load(R.drawable.default_item_icon)
                         .transform(roundedCornerTransformation)
                         .centerCrop()
                         .resize(256, 256)

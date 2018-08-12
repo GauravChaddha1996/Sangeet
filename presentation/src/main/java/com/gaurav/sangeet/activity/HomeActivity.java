@@ -1,12 +1,9 @@
 package com.gaurav.sangeet.activity;
 
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
-import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.util.Pair;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v7.app.AppCompatActivity;
@@ -19,14 +16,11 @@ import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import com.gaurav.sangeet.R;
-import com.gaurav.sangeet.views.helperviews.BottomPaddingDachshundIndicator;
 import com.gaurav.sangeet.viewmodels.bottomsheet.BottomSheetViewModel;
 import com.gaurav.sangeet.viewmodels.bottomsheet.BottomSheetViewModelFactory;
+import com.gaurav.sangeet.views.helperviews.BottomPaddingDachshundIndicator;
 import com.gaurav.sangeet.views.implementations.bottomsheet.BottomSheetViewImpl;
 import com.kekstudio.dachshundtablayout.DachshundTabLayout;
-
-import static com.gaurav.sangeet.Constants.Search.EXTRA_CIRCULAR_REVEAL_X;
-import static com.gaurav.sangeet.Constants.Search.EXTRA_CIRCULAR_REVEAL_Y;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -50,6 +44,7 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         initViews();
         setUpViews();
+        animateToolbarAndTabLayout();
     }
 
     @Override
@@ -62,7 +57,6 @@ public class HomeActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.search_button:
-                presentSearchActivity(findViewById(R.id.search_button));
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -130,22 +124,6 @@ public class HomeActivity extends AppCompatActivity {
                         }))
                 .get(BottomSheetViewModel.class);
         viewModel.getViewState().observe(this, bottomSheetViewImpl::render);
-        animateToolbarAndTabLayout();
-    }
-
-    @SuppressWarnings("unchecked")
-    private void presentSearchActivity(View view) {
-        view.setTransitionName("search_icon");
-        ActivityOptionsCompat options = ActivityOptionsCompat.
-                makeSceneTransitionAnimation(this, new Pair<>(view, "search_icon"));
-
-        Intent intent = new Intent(this, SearchActivity.class);
-        intent.putExtra(EXTRA_CIRCULAR_REVEAL_X,
-                view.getX() + view.getWidth() / 2);
-        intent.putExtra(EXTRA_CIRCULAR_REVEAL_Y,
-                view.getY() + view.getHeight() / 2);
-
-        startActivity(intent, options.toBundle());
     }
 
     private void animateToolbarAndTabLayout() {

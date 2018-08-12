@@ -14,8 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
-        app:elevation="0dp"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        app:elevation="0dp">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar"
@@ -40,7 +39,7 @@
                     android:layout_height="match_parent"
                     android:fitsSystemWindows="true"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/inspiration2"
+                    tools:src="@drawable/inspiration2"
                     app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed" />
 
                 <View

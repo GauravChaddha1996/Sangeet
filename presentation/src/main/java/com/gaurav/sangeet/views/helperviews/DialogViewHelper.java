@@ -43,11 +43,11 @@ public class DialogViewHelper {
         title = song.title;
         body = String.format("%s • %s", song.artist, song.album);
         bitmap = !song.artworkPath.equals("null") ? BitmapFactory.decodeFile(song.artworkPath) :
-                BitmapFactory.decodeResource(context.getResources(), R.drawable.inspiration1);
+                BitmapFactory.decodeResource(context.getResources(), R.drawable.default_item_icon);
         albumId = song.albumId;
         artistId = song.artistId;
 
-        initViews();
+        initAndSetupViews();
     }
 
     public DialogViewHelper(Context context, Album album) {
@@ -60,10 +60,10 @@ public class DialogViewHelper {
                 album.songSet.size(), album.songSet.size() == 1 ? "Song" : "Songs");
         bitmap = !album.songSet.first().artworkPath.equals("null") ?
                 BitmapFactory.decodeFile(album.songSet.first().artworkPath) :
-                BitmapFactory.decodeResource(context.getResources(), R.drawable.inspiration1);
+                BitmapFactory.decodeResource(context.getResources(), R.drawable.default_item_icon);
         artistId = album.artistId;
 
-        initViews();
+        initAndSetupViews();
     }
 
     public AlertDialog getDialog() {
@@ -99,7 +99,7 @@ public class DialogViewHelper {
         return dialog;
     }
 
-    private void initViews() {
+    private void initAndSetupViews() {
         mainView = LayoutInflater.from(context).inflate(R.layout.detail_dialog, null);
         dialogTitle = mainView.findViewById(R.id.dialog_title);
         dialogArtistAlbum = mainView.findViewById(R.id.dialog_artist_album);

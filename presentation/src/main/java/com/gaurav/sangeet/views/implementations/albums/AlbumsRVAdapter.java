@@ -46,7 +46,7 @@ public class AlbumsRVAdapter extends RecyclerView.Adapter<AlbumsRVAdapter.Albums
                     .resize(256, 256)
                     .into(holder.backgroundImage);
         } else {
-            Picasso.get().load(R.drawable.default_album_item_icon)
+            Picasso.get().load(R.drawable.default_item_icon)
                     .transform(roundedCornersTransformation)
                     .centerCrop()
                     .resize(256, 256)

@@ -92,15 +92,14 @@ public class AlbumDetailActivity extends AppCompatActivity implements AlbumDetai
             adapter.updateData(new ArrayList<>(album.songSet));
 
             String artworkPath = album.songSet.first().artworkPath;
-            albumArtwork.setImageDrawable(getDrawable(R.drawable.inspiration2));
             if (!artworkPath.equals("null")) {
                 albumArtwork.setImageBitmap(BitmapFactory.decodeFile(artworkPath));
                 new Palette.Builder(BitmapFactory.decodeFile(artworkPath))
                         .generate(this::updateColors);
             } else {
-                albumArtwork.setImageDrawable(getDrawable(R.drawable.inspiration1));
+                albumArtwork.setImageDrawable(getDrawable(R.drawable.default_item_icon));
                 new Palette.Builder(BitmapFactory.decodeResource(getResources(),
-                        R.drawable.inspiration1)).generate(this::updateColors);
+                        R.drawable.default_item_icon)).generate(this::updateColors);
             }
         }
     }
@@ -143,6 +142,7 @@ public class AlbumDetailActivity extends AppCompatActivity implements AlbumDetai
     private void setupViews() {
         // create view related objects
         adapter = new AlbumDetailsSongsRVAdapter(new ArrayList<>());
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetViewImpl.getBaseView());
 
         // setup toolbar
         toolbar.setTitleTextAppearance(this, R.style.ToolbarTitleFont);
@@ -168,7 +168,6 @@ public class AlbumDetailActivity extends AppCompatActivity implements AlbumDetai
                                 adapter.getSong(position))));
 
         // TODO: 7/15/18 FInd a better way tro manage bottom sheet and it's info
-        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetViewImpl.getBaseView());
         bottomSheetBehavior.setHideable(false);
         bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
@@ -204,7 +203,6 @@ public class AlbumDetailActivity extends AppCompatActivity implements AlbumDetai
     private void updateColors(Palette palette) {
         Palette.Swatch swatch = palette.getVibrantSwatch();
         if (swatch == null) swatch = palette.getDominantSwatch();
-
         collapsingToolbarLayout.setContentScrimColor(swatch.getRgb());
         collapsingToolbarLayout.setStatusBarScrimColor(swatch.getRgb());
         collapsingToolbarLayout.setExpandedTitleColor(swatch.getTitleTextColor());
