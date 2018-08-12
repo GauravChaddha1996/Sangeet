@@ -43,9 +43,15 @@ public class ArtistsRVAdapter extends RecyclerView.Adapter<ArtistsRVAdapter.Arti
     @Override
     public void onBindViewHolder(@NonNull ArtistsViewHolder holder, int position) {
         artist = data.get(position);
-        song = !artist.albumSet.isEmpty() ? artist.albumSet.first().songSet.first() : artist.songSet.first();
-        if (!song.artworkPath.equals("null")) {
-            Picasso.get().load(new File(song.artworkPath))
+        String artworkPath = "null";
+        for (Song song : artist.songSet) {
+            if (!song.artworkPath.equals("null")) {
+                artworkPath = song.artworkPath;
+                break;
+            }
+        }
+        if (!artworkPath.equals("null")) {
+            Picasso.get().load(new File(artworkPath))
                     .transform(roundedCornersTransformation)
                     .centerCrop()
                     .resize(256, 256)

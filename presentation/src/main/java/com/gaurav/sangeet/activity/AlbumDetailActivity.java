@@ -5,7 +5,6 @@ import android.content.res.ColorStateList;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -39,12 +38,10 @@ import io.reactivex.subjects.PublishSubject;
 
 public class AlbumDetailActivity extends AppCompatActivity implements AlbumDetailView {
 
-
     private AlbumDetailViewModel viewModel;
     private PublishSubject<AlbumDetailUIEvent> uiEventsSubject;
 
     // Views
-    private AppBarLayout appBarLayout;
     private Toolbar toolbar;
     private TextView artistTotalSongs;
     private CollapsingToolbarLayout collapsingToolbarLayout;
@@ -129,7 +126,6 @@ public class AlbumDetailActivity extends AppCompatActivity implements AlbumDetai
     }
 
     private void initViews() {
-        appBarLayout = findViewById(R.id.appBarLayout);
         toolbar = findViewById(R.id.toolbar);
         collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar);
         artistTotalSongs = findViewById(R.id.artistTotalSongs);
@@ -145,7 +141,7 @@ public class AlbumDetailActivity extends AppCompatActivity implements AlbumDetai
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetViewImpl.getBaseView());
 
         // setup toolbar
-        toolbar.setTitleTextAppearance(this, R.style.ToolbarTitleFont);
+        toolbar.setTitleTextAppearance(this, R.style.toolbarTitleFont);
         toolbar.setTitleTextColor(getColor(R.color.toolbarTitleColor));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -181,7 +177,7 @@ public class AlbumDetailActivity extends AppCompatActivity implements AlbumDetai
 
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                float scale = 1 - 2 * slideOffset;
+                float scale = 1 - 3 * slideOffset;
                 scale = scale < 0 ? 0 : scale;
                 playAlbumButton.setScaleX(scale);
                 playAlbumButton.setScaleY(scale);

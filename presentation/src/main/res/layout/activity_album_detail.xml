@@ -60,7 +60,6 @@
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:text="Artist * Total Songs"
-                    android:textColor="@color/albumDetailArtistTotalSongsColor"
                     android:textSize="20sp" />
 
             </FrameLayout>

@@ -30,7 +30,6 @@
         <activity
             android:name=".activity.AlbumDetailActivity"
             android:launchMode="singleTask"
-            android:parentActivityName=".activity.HomeActivity"
             android:theme="@style/AlbumDetailActivityStyle" />
 
         <activity

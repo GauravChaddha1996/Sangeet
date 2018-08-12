@@ -86,7 +86,7 @@ public class HomeActivity extends AppCompatActivity {
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetViewImpl.getBaseView());
 
         // setup toolbar, viewPager and tab layout
-        toolbar.setTitleTextAppearance(this, R.style.ToolbarTitleFont);
+        toolbar.setTitleTextAppearance(this, R.style.toolbarTitleFont);
         toolbar.setTitleTextColor(getColor(R.color.toolbarTitleColor));
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.app_title_toolbar));

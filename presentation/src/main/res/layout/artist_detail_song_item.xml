@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:attr/selectableItemBackground"
+    android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:paddingEnd="16dp"
+    android:paddingStart="16dp"
+    android:paddingTop="1dp">
+
+    <ImageView
+        android:id="@+id/songIcon"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/inspiration1" />
+
+    <LinearLayout
+        android:id="@+id/songItemTitleArtistAlbumLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="@+id/songIcon"
+        app:layout_constraintEnd_toStartOf="@id/songDuration"
+        app:layout_constraintStart_toEndOf="@+id/songIcon"
+        app:layout_constraintTop_toTopOf="@+id/songIcon">
+
+        <TextView
+            android:id="@+id/songTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textColor="@color/songTitleTextColor"
+            android:textSize="16sp"
+            tools:text="Song name" />
+
+        <TextView
+            android:id="@+id/songArtistAlbum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="2dp"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textColor="@color/songArtistAlbumTextColor"
+            android:textSize="12sp"
+            tools:text="Song artist" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/songDuration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/songDurationTextColor"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/songItemTitleArtistAlbumLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="2:03" />
+
+    <View
+        android:id="@+id/song_item_divider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="16dp"
+        android:background="@color/songDividerColor"
+        android:visibility="visible"
+        app:layout_constraintStart_toEndOf="@id/songIcon"
+        app:layout_constraintTop_toBottomOf="@id/songItemTitleArtistAlbumLayout" />
+
+</android.support.constraint.ConstraintLayout>

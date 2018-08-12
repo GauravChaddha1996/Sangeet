@@ -10,6 +10,7 @@
     <color name="pureBlack">#000000</color>
     <color name="lightGrey">#a9a9a9</color>
     <color name="darkGrey">#414243</color>
+    <color name="darkPurple">#240b36</color>
 
     <!-- Base colors -->
     <color name="colorPrimary">@color/white</color>
@@ -42,6 +43,11 @@
     <color name="artistItemTitleTextColor">@color/pureBlack</color>
     <color name="artistItemTotalAlbumsSongsTextColor">@color/darkGrey</color>
 
+    <!-- Artist details item colors -->
+    <color name="artistDetailAlbumSection">@color/pureBlack</color>
+    <color name="artistDetailSongSection">@color/pureBlack</color>
+    <color name="artistDetailSectionDivider">@color/lightGrey</color>
+
     <!-- Dialog colors -->
     <color name="dialogTitleColor">@color/pureBlack</color>
     <color name="dialogArtistAlbumColor">@color/lightGrey</color>
@@ -61,7 +67,5 @@
 
     <color name="search_bar_color">@color/colorAccent</color>
     <color name="search_hint_color">@color/colorPrimaryDark</color>
-    <color name="albumDetailArtistTotalSongsColor">@color/pureBlack</color>
-    <color name="albumDetailDividerColor">@color/lightGrey</color>
 
 </resources>
