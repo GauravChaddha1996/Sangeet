@@ -53,8 +53,8 @@ public class SongsViewImpl extends Fragment implements SongsView {
         });
         ItemClickSupport.addTo(recyclerView)
                 .setOnItemLongClickListener((recyclerView, position, v) -> {
-                    new DialogViewHelper(getContext(), songsRVAdapter.getSong(position))
-                            .getDialog().show();
+                    new DialogViewHelper(getContext(), songsRVAdapter.getSong(position),
+                            true, true).getDialog().show();
                     return true;
                 });
         return view;

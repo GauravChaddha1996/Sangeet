@@ -55,8 +55,8 @@ public class AlbumsViewImpl extends Fragment implements AlbumsView {
                     "albumId", albumsRVAdapter.getAlbum(position).id));
         });
         ItemClickSupport.addTo(recyclerView).setOnItemLongClickListener((recyclerView1, position, v) -> {
-            new DialogViewHelper(getContext(), albumsRVAdapter.getAlbum(position))
-                    .getDialog().show();
+            new DialogViewHelper(getContext(), albumsRVAdapter.getAlbum(position),
+                    false, true).getDialog().show();
             return true;
         });
         return view;

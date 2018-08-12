@@ -23,10 +23,11 @@ public class DialogViewHelper {
     private View mainView;
     private TextView dialogTitle;
     private TextView dialogArtistAlbum;
-    private TextView dialogButtonGotoAlbum;
-    private TextView dialogButtonGotoArtist;
+    private TextView dialogGotoButton1;
+    private TextView dialogGotoButton2;
 
-    private boolean isSongDialog;
+    private boolean enableGotoAlbum;
+    private boolean enableGotoArtist;
     private String title;
     private String body;
     private Bitmap bitmap;
@@ -36,10 +37,11 @@ public class DialogViewHelper {
     private AlertDialog dialog;
 
 
-    public DialogViewHelper(Context context, Song song) {
+    public DialogViewHelper(Context context, Song song, boolean enableGotoAlbum, boolean enableGotoArtist) {
         this.context = context;
         // Find values to set
-        isSongDialog = true;
+        this.enableGotoAlbum = enableGotoAlbum;
+        this.enableGotoArtist = enableGotoArtist;
         title = song.title;
         body = String.format("%s • %s", song.artist, song.album);
         bitmap = !song.artworkPath.equals("null") ? BitmapFactory.decodeFile(song.artworkPath) :
@@ -50,10 +52,11 @@ public class DialogViewHelper {
         initAndSetupViews();
     }
 
-    public DialogViewHelper(Context context, Album album) {
+    public DialogViewHelper(Context context, Album album, boolean enableGotoAlbum, boolean enableGotoArtist) {
         this.context = context;
         // Find values to set
-        isSongDialog = false;
+        this.enableGotoAlbum = enableGotoAlbum;
+        this.enableGotoArtist = enableGotoArtist;
         title = album.name;
         body = String.format("%s • %s %s",
                 album.multipleArtists ? "Various Artists" : album.artistName,
@@ -80,21 +83,20 @@ public class DialogViewHelper {
                 mainView.setBackgroundColor(swatch.getRgb());
                 dialogTitle.setTextColor(swatch.getTitleTextColor());
                 dialogArtistAlbum.setTextColor(swatch.getTitleTextColor());
-                dialogButtonGotoAlbum.setTextColor(swatch.getBodyTextColor());
-                dialogButtonGotoArtist.setTextColor(swatch.getBodyTextColor());
+                dialogGotoButton1.setTextColor(swatch.getBodyTextColor());
+                dialogGotoButton2.setTextColor(swatch.getBodyTextColor());
             }
             swatch = palette.getDominantSwatch();
             if (swatch != null && !set) {
                 mainView.setBackgroundColor(swatch.getRgb());
                 dialogTitle.setTextColor(swatch.getTitleTextColor());
                 dialogArtistAlbum.setTextColor(swatch.getTitleTextColor());
-                dialogButtonGotoAlbum.setTextColor(swatch.getBodyTextColor());
-                dialogButtonGotoArtist.setTextColor(swatch.getBodyTextColor());
+                dialogGotoButton1.setTextColor(swatch.getBodyTextColor());
+                dialogGotoButton2.setTextColor(swatch.getBodyTextColor());
             }
         });
         builder.setView(mainView);
         dialog = builder.create();
-        setClickListeners();
         setAnimation();
         return dialog;
     }
@@ -103,26 +105,39 @@ public class DialogViewHelper {
         mainView = LayoutInflater.from(context).inflate(R.layout.detail_dialog, null);
         dialogTitle = mainView.findViewById(R.id.dialog_title);
         dialogArtistAlbum = mainView.findViewById(R.id.dialog_artist_album);
-        dialogButtonGotoAlbum = mainView.findViewById(R.id.dialog_button_goto_album);
-        dialogButtonGotoArtist = mainView.findViewById(R.id.dialog_button_goto_artist);
-        if (!isSongDialog) {
+        dialogGotoButton1 = mainView.findViewById(R.id.dialog_goto_button1);
+        dialogGotoButton2 = mainView.findViewById(R.id.dialog_goto_button2);
+        if (!(enableGotoAlbum && enableGotoArtist)) {
             dialogTitle.setGravity(Gravity.NO_GRAVITY);
             dialogArtistAlbum.setGravity(Gravity.NO_GRAVITY);
-            dialogButtonGotoAlbum.setVisibility(View.INVISIBLE);
         }
+        if (enableGotoAlbum && !enableGotoArtist) {
+            dialogGotoButton1.setVisibility(View.INVISIBLE);
+            dialogGotoButton2.setText("Go to album");
+            dialogGotoButton2.setOnClickListener(this::launchAlbumActivity);
+        } else if (enableGotoArtist && !enableGotoAlbum) {
+            dialogGotoButton1.setVisibility(View.INVISIBLE);
+            dialogGotoButton2.setText("Go to artist");
+            dialogGotoButton2.setOnClickListener(this::launchArtistActivity);
+        } else {
+            dialogGotoButton1.setText("Go to album");
+            dialogGotoButton1.setOnClickListener(this::launchAlbumActivity);
+            dialogGotoButton2.setText("Go to artist");
+            dialogGotoButton2.setOnClickListener(this::launchArtistActivity);
+        }
+
     }
 
-    private void setClickListeners() {
-        dialogButtonGotoAlbum.setOnClickListener(v -> {
-            context.startActivity(new Intent(context, AlbumDetailActivity.class)
-                    .putExtra("albumId", albumId));
-            dialog.dismiss();
-        });
-        dialogButtonGotoArtist.setOnClickListener(v -> {
-            context.startActivity(new Intent(context, ArtistDetailActivity.class)
-                    .putExtra("artistId", artistId));
-            dialog.dismiss();
-        });
+    private void launchAlbumActivity(View view) {
+        context.startActivity(new Intent(context, AlbumDetailActivity.class)
+                .putExtra("albumId", albumId));
+        dialog.dismiss();
+    }
+
+    private void launchArtistActivity(View view) {
+        context.startActivity(new Intent(context, ArtistDetailActivity.class)
+                .putExtra("artistId", artistId));
+        dialog.dismiss();
     }
 
     private void setAnimation() {

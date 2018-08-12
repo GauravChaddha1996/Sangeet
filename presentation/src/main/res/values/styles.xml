@@ -34,4 +34,8 @@
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 
+    <style name="collapsingToolbarTitleAppearance" parent="TextAppearance.AppCompat.Headline">
+        <item name="android:textSize">26sp</item>
+    </style>
+
 </resources>

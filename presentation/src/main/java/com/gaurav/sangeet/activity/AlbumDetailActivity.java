@@ -25,6 +25,7 @@ import com.gaurav.sangeet.viewmodels.albumdetails.AlbumDetailViewModel;
 import com.gaurav.sangeet.viewmodels.albumdetails.AlbumDetailViewModelFactory;
 import com.gaurav.sangeet.viewmodels.bottomsheet.BottomSheetViewModel;
 import com.gaurav.sangeet.viewmodels.bottomsheet.BottomSheetViewModelFactory;
+import com.gaurav.sangeet.views.helperviews.DialogViewHelper;
 import com.gaurav.sangeet.views.implementations.albumdetails.AlbumDetailsSongsRVAdapter;
 import com.gaurav.sangeet.views.implementations.bottomsheet.BottomSheetViewImpl;
 import com.gaurav.sangeet.views.interfaces.AlbumDetailView;
@@ -162,6 +163,12 @@ public class AlbumDetailActivity extends AppCompatActivity implements AlbumDetai
                         new PlayAlbumDetailUIEvent(((AlbumDetailViewState.Result)
                                 viewModel.getState().getValue()).getAlbum(),
                                 adapter.getSong(position))));
+        ItemClickSupport.addTo(albumSongRecyclerView)
+                .setOnItemLongClickListener((recyclerView, position, v) -> {
+                    new DialogViewHelper(this, adapter.getSong(position),
+                            false, true).getDialog().show();
+                    return true;
+                });
 
         // TODO: 7/15/18 FInd a better way tro manage bottom sheet and it's info
         bottomSheetBehavior.setHideable(false);

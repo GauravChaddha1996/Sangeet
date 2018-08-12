@@ -24,6 +24,7 @@
             app:contentScrim="@color/colorAccent"
             app:expandedTitleMarginBottom="40dp"
             app:expandedTitleMarginStart="20dp"
+            app:expandedTitleTextAppearance="@style/collapsingToolbarTitleAppearance"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:statusBarScrim="@color/colorAccent">
 
@@ -60,7 +61,7 @@
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:text="Total Albums * Total Songs"
-                    android:textSize="20sp" />
+                    android:textSize="18sp" />
 
             </FrameLayout>
 

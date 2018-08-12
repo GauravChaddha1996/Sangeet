@@ -15,6 +15,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -27,6 +28,7 @@ import com.gaurav.sangeet.viewmodels.artistdetails.ArtistDetailViewModel;
 import com.gaurav.sangeet.viewmodels.artistdetails.ArtistDetailViewModelFactory;
 import com.gaurav.sangeet.viewmodels.bottomsheet.BottomSheetViewModel;
 import com.gaurav.sangeet.viewmodels.bottomsheet.BottomSheetViewModelFactory;
+import com.gaurav.sangeet.views.helperviews.DialogViewHelper;
 import com.gaurav.sangeet.views.implementations.artistdetails.ArtistDetailsAlbumsRVAdapter;
 import com.gaurav.sangeet.views.implementations.artistdetails.ArtistDetailsSongsRVAdapter;
 import com.gaurav.sangeet.views.implementations.bottomsheet.BottomSheetViewImpl;
@@ -141,6 +143,14 @@ public class ArtistDetailActivity extends AppCompatActivity implements ArtistDet
         }
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private void initViews() {
         toolbar = findViewById(R.id.toolbar);
         collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar);
@@ -190,6 +200,12 @@ public class ArtistDetailActivity extends AppCompatActivity implements ArtistDet
                         uiEventsSubject.onNext(new PlayArtistDetailUIEvent(
                                 ((ArtistDetailViewState.Result) viewModel.getState().getValue()).getArtist()
                                 , songsRVAdapter.getSong(position))));
+        ItemClickSupport.addTo(songRecyclerView)
+                .setOnItemLongClickListener((recyclerView, position, v) -> {
+                    new DialogViewHelper(this, songsRVAdapter.getSong(position),
+                            true, false).getDialog().show();
+                    return true;
+                });
 
         // TODO: 7/15/18 FInd a better way tro manage bottom sheet and it's info
         bottomSheetBehavior.setHideable(false);
