@@ -7,7 +7,7 @@ import io.reactivex.disposables.CompositeDisposable;
 public abstract class BaseViewModel extends ViewModel {
     protected CompositeDisposable compositeDisposable = new CompositeDisposable();
 
-    public abstract void bindIntents();
+    protected abstract void bindIntents();
 
     @Override
     protected void onCleared() {

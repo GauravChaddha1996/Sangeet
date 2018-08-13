@@ -8,11 +8,9 @@ import com.gaurav.sangeet.views.interfaces.AlbumDetailView;
 
 public class AlbumDetailViewModelFactory extends ViewModelProvider.NewInstanceFactory {
 
-    AlbumDetailView albumDetailView;
     long albumId;
 
-    public AlbumDetailViewModelFactory(AlbumDetailView albumDetailView, long albumId) {
-        this.albumDetailView = albumDetailView;
+    public AlbumDetailViewModelFactory(long albumId) {
         this.albumId = albumId;
     }
 
@@ -21,7 +19,7 @@ public class AlbumDetailViewModelFactory extends ViewModelProvider.NewInstanceFa
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         if (modelClass == AlbumDetailViewModel.class) {
-            return (T) new AlbumDetailViewModel(albumDetailView, albumId);
+            return (T) new AlbumDetailViewModel(albumId);
         }
         return super.create(modelClass);
     }

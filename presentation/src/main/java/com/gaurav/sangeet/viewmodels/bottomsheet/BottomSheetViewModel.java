@@ -41,13 +41,8 @@ public class BottomSheetViewModel extends BaseViewModel {
     // helper vars
     private MusicState storedMusicState;
 
-    public BottomSheetViewModel(BottomSheetView bottomSheetView,
-                                View.OnClickListener onClickListener) {
-        this.bottomSheetView = bottomSheetView;
-        this.onClickListener = onClickListener;
+    public BottomSheetViewModel() {
         Injector.get().inject(this);
-
-        bindIntents();
 
         viewState = new MutableLiveData<>();
         compositeDisposable.add(musicStateManager.observeMusicState()
@@ -68,9 +63,18 @@ public class BottomSheetViewModel extends BaseViewModel {
                 .subscribe(viewState::setValue));
     }
 
+    public void attachBottomSheetView(BottomSheetView bottomSheetView) {
+        this.bottomSheetView = bottomSheetView;
+    }
+
+    public void setOnClickListener(View.OnClickListener onClickListener) {
+        this.onClickListener = onClickListener;
+        bindIntents();
+    }
+
     @SuppressWarnings("ConstantConditions")
     @Override
-    public void bindIntents() {
+    protected void bindIntents() {
         compositeDisposable.add(bottomSheetView.getUIEvents()
                 .subscribe(bottomSheetUIEvent -> {
                     if (bottomSheetUIEvent instanceof BaseViewUIEvent) {

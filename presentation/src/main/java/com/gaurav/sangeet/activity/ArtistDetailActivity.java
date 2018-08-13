@@ -27,7 +27,6 @@ import com.gaurav.sangeet.utils.ItemClickSupport;
 import com.gaurav.sangeet.viewmodels.artistdetails.ArtistDetailViewModel;
 import com.gaurav.sangeet.viewmodels.artistdetails.ArtistDetailViewModelFactory;
 import com.gaurav.sangeet.viewmodels.bottomsheet.BottomSheetViewModel;
-import com.gaurav.sangeet.viewmodels.bottomsheet.BottomSheetViewModelFactory;
 import com.gaurav.sangeet.views.helperviews.DialogViewHelper;
 import com.gaurav.sangeet.views.implementations.artistdetails.ArtistDetailsAlbumsRVAdapter;
 import com.gaurav.sangeet.views.implementations.artistdetails.ArtistDetailsSongsRVAdapter;
@@ -77,10 +76,10 @@ public class ArtistDetailActivity extends AppCompatActivity implements ArtistDet
     @Override
     protected void onStart() {
         super.onStart();
-        viewModel = ViewModelProviders.of(this,
-                new ArtistDetailViewModelFactory(this,
-                        getIntent().getLongExtra("artistId", -1)))
+        viewModel = ViewModelProviders.of(this, new ArtistDetailViewModelFactory(
+                getIntent().getLongExtra("artistId", -1)))
                 .get(ArtistDetailViewModel.class);
+        viewModel.attachArtistDetailView(this);
         viewModel.getState().observe(this, this::render);
     }
 
@@ -228,16 +227,16 @@ public class ArtistDetailActivity extends AppCompatActivity implements ArtistDet
                 // TODO: 7/8/18 UI task: change the position of views according to this.
             }
         });
-        BottomSheetViewModel viewModel = ViewModelProviders.of(this,
-                new BottomSheetViewModelFactory(bottomSheetViewImpl,
-                        v -> {
-                            if (bottomSheetBehavior.getState() ==
-                                    BottomSheetBehavior.STATE_COLLAPSED) {
-                                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                            }
-                        }))
-                .get(BottomSheetViewModel.class);
+        BottomSheetViewModel viewModel = ViewModelProviders.of(this).get(BottomSheetViewModel.class);
+        viewModel.attachBottomSheetView(bottomSheetViewImpl);
+        viewModel.setOnClickListener(v -> {
+            if (bottomSheetBehavior.getState() ==
+                    BottomSheetBehavior.STATE_COLLAPSED) {
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+            }
+        });
         viewModel.getViewState().observe(this, bottomSheetViewImpl::render);
+
     }
 
     private void updateColors(Palette palette) {

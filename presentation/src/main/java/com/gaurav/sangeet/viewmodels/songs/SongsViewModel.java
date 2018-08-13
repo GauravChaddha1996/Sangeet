@@ -2,6 +2,7 @@ package com.gaurav.sangeet.viewmodels.songs;
 
 import android.annotation.SuppressLint;
 import android.arch.lifecycle.MutableLiveData;
+import android.util.Log;
 
 import com.gaurav.domain.interfaces.MusicStateManager;
 import com.gaurav.domain.models.Song;
@@ -29,44 +30,42 @@ public class SongsViewModel extends BaseViewModel {
     @Inject
     MusicStateManager musicStateManager;
 
-    private SongsView songsView;
+    private SongsView songsView = null;
     private MutableLiveData<SongsViewState> state;
-    private Song currentSongPlaying = null;
+    private MutableLiveData<Song> currentSongPlaying;
 
     @SuppressLint("CheckResult")
-    public SongsViewModel(SongsView songsView) {
+    public SongsViewModel() {
         Injector.get().inject(this);
-        this.songsView = songsView;
-
-        bindIntents();
-
         state = new MutableLiveData<>();
-        state.setValue(new SongsViewState.Result(new ArrayList<>(), false,
-                null));
+        currentSongPlaying = new MutableLiveData<>();
+        state.setValue(new SongsViewState.Result(new ArrayList<>()));
+        currentSongPlaying.setValue(null);
 
         compositeDisposable.add(
                 fetchUseCases.getAllSongs()
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnSubscribe(__ -> state.setValue(new SongsViewState.Loading()))
-                        .subscribe(songs -> state.setValue(new SongsViewState.Result(songs,
-                                        false, null)),
+                        .subscribe(songs -> state.setValue(new SongsViewState.Result(songs)),
                                 throwable -> state.setValue(new SongsViewState.Error())));
 
         musicStateManager.observeMusicState()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(musicState -> {
-                    if (currentSongPlaying == null ||
-                            !currentSongPlaying.equals(musicState.getCurrentSong())) {
-                        currentSongPlaying = musicState.getCurrentSong();
-                        state.setValue(new SongsViewState.Result(
-                                ((SongsViewState.Result) state.getValue()).getSongList()
-                                , true, musicState.getCurrentSong()));
+                    if (currentSongPlaying.getValue() == null ||
+                            !currentSongPlaying.getValue().equals(musicState.getCurrentSong())) {
+                        currentSongPlaying.setValue(musicState.getCurrentSong());
                     }
                 }, Throwable::printStackTrace);
     }
 
+    public void attachSongsView(SongsView songsView) {
+        this.songsView = songsView;
+        bindIntents();
+    }
+
     @Override
-    public void bindIntents() {
+    protected void bindIntents() {
         compositeDisposable.add(
                 songsView.getUIEvents()
                         .map(songViewUIEvent -> {
@@ -83,6 +82,10 @@ public class SongsViewModel extends BaseViewModel {
 
     public MutableLiveData<SongsViewState> getState() {
         return state;
+    }
+
+    public MutableLiveData<Song> getCurrentSongPlaying() {
+        return currentSongPlaying;
     }
 
     public boolean isShouldAnimateList() {

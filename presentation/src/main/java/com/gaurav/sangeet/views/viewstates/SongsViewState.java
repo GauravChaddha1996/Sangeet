@@ -13,25 +13,13 @@ public interface SongsViewState {
 
     public class Result implements SongsViewState {
         private List<Song> songList;
-        private boolean currentSongIndexChanged;
-        private Song currentPlayingSong;
 
-        public Result(List<Song> songList, boolean currentSongIndexChanged, Song currentPlayingSong) {
+        public Result(List<Song> songList) {
             this.songList = songList;
-            this.currentSongIndexChanged = currentSongIndexChanged;
-            this.currentPlayingSong = currentPlayingSong;
         }
 
         public List<Song> getSongList() {
             return songList;
-        }
-
-        public boolean isCurrentSongIndexChanged() {
-            return currentSongIndexChanged;
-        }
-
-        public Song getCurrentPlayingSong() {
-            return currentPlayingSong;
         }
     }
 

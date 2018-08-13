@@ -8,15 +8,17 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 
+import com.gaurav.domain.models.Song;
 import com.gaurav.sangeet.R;
 import com.gaurav.sangeet.utils.ItemClickSupport;
 import com.gaurav.sangeet.viewmodels.songs.SongsViewModel;
-import com.gaurav.sangeet.viewmodels.songs.SongsViewModelFactory;
 import com.gaurav.sangeet.views.helperviews.DialogViewHelper;
 import com.gaurav.sangeet.views.interfaces.SongsView;
 import com.gaurav.sangeet.views.uievents.songs.SongItemClickUIEvent;
@@ -62,33 +64,33 @@ public class SongsViewImpl extends Fragment implements SongsView {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        viewModel = ViewModelProviders.of(this,
-                new SongsViewModelFactory(this))
-                .get(SongsViewModel.class);
+        viewModel = ViewModelProviders.of(this).get(SongsViewModel.class);
+        viewModel.attachSongsView(this);
         viewModel.getState().observe(this, this::render);
+        viewModel.getCurrentSongPlaying().observe(this, this::currentSongUpdated);
     }
 
     @Override
     public void render(SongsViewState songsViewState) {
+        Log.d("Render called", songsViewState.toString());
         if (songsViewState instanceof SongsViewState.Loading) {
             // show loading
         } else if (songsViewState instanceof SongsViewState.Error) {
             // show error
         } else {
-            if (((SongsViewState.Result) songsViewState).isCurrentSongIndexChanged()) {
-                songsRVAdapter.updateCurrentSongPlayingIndex(
-                        ((SongsViewState.Result) songsViewState).getCurrentPlayingSong()
-                );
-            } else {
-                songsRVAdapter.updateData(((SongsViewState.Result) songsViewState).getSongList());
-                if (viewModel.isShouldAnimateList()) {
-                    recyclerView.setLayoutAnimation(AnimationUtils.loadLayoutAnimation(
-                            this.getContext(), R.anim.song_list_layout_animation));
-                    recyclerView.scheduleLayoutAnimation();
-                }
+            songsRVAdapter.updateData(((SongsViewState.Result) songsViewState).getSongList());
+            if (viewModel.isShouldAnimateList()) {
+                LayoutAnimationController controller = AnimationUtils.loadLayoutAnimation(
+                        this.getContext(), R.anim.song_list_layout_animation);
+                recyclerView.setLayoutAnimation(controller);
+                recyclerView.scheduleLayoutAnimation();
             }
-
         }
+    }
+
+    @Override
+    public void currentSongUpdated(Song currentSong) {
+        if (currentSong != null) songsRVAdapter.updateCurrentSongPlayingIndex(currentSong);
     }
 
     @Override

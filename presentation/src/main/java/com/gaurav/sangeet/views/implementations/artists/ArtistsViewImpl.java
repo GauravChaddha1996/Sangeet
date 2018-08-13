@@ -17,7 +17,6 @@ import com.gaurav.sangeet.R;
 import com.gaurav.sangeet.activity.ArtistDetailActivity;
 import com.gaurav.sangeet.utils.ItemClickSupport;
 import com.gaurav.sangeet.viewmodels.artists.ArtistsViewModel;
-import com.gaurav.sangeet.viewmodels.artists.ArtistsViewModelFactory;
 import com.gaurav.sangeet.views.interfaces.ArtistsView;
 import com.gaurav.sangeet.views.uievents.artists.ArtistsViewUIEvent;
 import com.gaurav.sangeet.views.viewstates.ArtistsViewState;
@@ -59,9 +58,8 @@ public class ArtistsViewImpl extends Fragment implements ArtistsView {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        viewModel = ViewModelProviders.of(this,
-                new ArtistsViewModelFactory(this))
-                .get(ArtistsViewModel.class);
+        viewModel = ViewModelProviders.of(this).get(ArtistsViewModel.class);
+        viewModel.attachArtistsView(this);
         viewModel.getState().observe(this, this::render);
     }
 

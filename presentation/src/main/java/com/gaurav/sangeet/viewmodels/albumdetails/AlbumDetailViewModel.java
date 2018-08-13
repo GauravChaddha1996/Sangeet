@@ -24,10 +24,8 @@ public class AlbumDetailViewModel extends BaseViewModel {
     private AlbumDetailView albumDetailView;
     private MutableLiveData<AlbumDetailViewState> state;
 
-    public AlbumDetailViewModel( AlbumDetailView albumDetailView, long albumId) {
+    public AlbumDetailViewModel(long albumId) {
         Injector.get().inject(this);
-        this.albumDetailView = albumDetailView;
-        bindIntents();
 
         state = new MutableLiveData<>();
         compositeDisposable.add(
@@ -36,6 +34,11 @@ public class AlbumDetailViewModel extends BaseViewModel {
                         .doOnSubscribe(__ -> state.setValue(new AlbumDetailViewState.Loading()))
                         .subscribe(album -> state.setValue(new AlbumDetailViewState.Result(album)),
                                 throwable -> state.setValue(new AlbumDetailViewState.Error())));
+    }
+
+    public void attachAlbumDetailView(AlbumDetailView albumDetailView) {
+        this.albumDetailView = albumDetailView;
+        bindIntents();
     }
 
     @Override

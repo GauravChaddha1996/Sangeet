@@ -8,11 +8,9 @@ import com.gaurav.sangeet.views.interfaces.ArtistDetailView;
 
 public class ArtistDetailViewModelFactory extends ViewModelProvider.NewInstanceFactory {
 
-    ArtistDetailView artistDetailView;
     long artistId;
 
-    public ArtistDetailViewModelFactory( ArtistDetailView artistDetailView, long artistId) {
-        this.artistDetailView = artistDetailView;
+    public ArtistDetailViewModelFactory(long artistId) {
         this.artistId = artistId;
     }
 
@@ -21,7 +19,7 @@ public class ArtistDetailViewModelFactory extends ViewModelProvider.NewInstanceF
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         if (modelClass == ArtistDetailViewModel.class) {
-            return (T) new ArtistDetailViewModel(artistDetailView, artistId);
+            return (T) new ArtistDetailViewModel(artistId);
         }
         return super.create(modelClass);
     }

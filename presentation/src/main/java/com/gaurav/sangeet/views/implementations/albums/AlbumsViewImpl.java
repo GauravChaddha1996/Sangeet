@@ -17,7 +17,6 @@ import com.gaurav.sangeet.R;
 import com.gaurav.sangeet.activity.AlbumDetailActivity;
 import com.gaurav.sangeet.utils.ItemClickSupport;
 import com.gaurav.sangeet.viewmodels.albums.AlbumsViewModel;
-import com.gaurav.sangeet.viewmodels.albums.AlbumsViewModelFactory;
 import com.gaurav.sangeet.views.helperviews.DialogViewHelper;
 import com.gaurav.sangeet.views.interfaces.AlbumsView;
 import com.gaurav.sangeet.views.uievents.albums.AlbumViewUIEvent;
@@ -64,9 +63,8 @@ public class AlbumsViewImpl extends Fragment implements AlbumsView {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        viewModel = ViewModelProviders.of(this,
-                new AlbumsViewModelFactory(this))
-                .get(AlbumsViewModel.class);
+        viewModel = ViewModelProviders.of(this).get(AlbumsViewModel.class);
+        viewModel.attachAlbumsView(this);
         viewModel.getState().observe(this, this::render);
     }
 

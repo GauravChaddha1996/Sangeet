@@ -23,11 +23,8 @@ public class ArtistsViewModel extends BaseViewModel {
     private ArtistsView artistsView;
     private MutableLiveData<ArtistsViewState> state;
 
-    public ArtistsViewModel(ArtistsView artistsView) {
+    public ArtistsViewModel() {
         Injector.get().inject(this);
-        this.artistsView = artistsView;
-
-        bindIntents();
 
         state = new MutableLiveData<>();
         compositeDisposable.add(
@@ -38,8 +35,13 @@ public class ArtistsViewModel extends BaseViewModel {
                                 throwable -> state.setValue(new ArtistsViewState.Error())));
     }
 
+    public void attachArtistsView(ArtistsView artistsView) {
+        this.artistsView = artistsView;
+        bindIntents();
+    }
+
     @Override
-    public void bindIntents() {
+    protected void bindIntents() {
         compositeDisposable.add(artistsView.getUIEvents().map(artistsViewUIEvent -> {
             if (artistsViewUIEvent instanceof ArtistItemClickUIEvent) {
                 return new PlayArtistAction(

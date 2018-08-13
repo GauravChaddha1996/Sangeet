@@ -23,11 +23,8 @@ public class AlbumsViewModel extends BaseViewModel {
     private AlbumsView albumsView;
     private MutableLiveData<AlbumsViewState> state;
 
-    public AlbumsViewModel(AlbumsView albumsView) {
+    public AlbumsViewModel() {
         Injector.get().inject(this);
-        this.albumsView = albumsView;
-
-        bindIntents();
 
         state = new MutableLiveData<>();
         compositeDisposable.add(
@@ -50,6 +47,11 @@ public class AlbumsViewModel extends BaseViewModel {
                     return new PlayAlbumAction(null, null);
                 }).subscribe(playAlbumAction -> commandUseCases.actionSubject()
                         .onNext(playAlbumAction)));
+    }
+
+    public void attachAlbumsView(AlbumsView albumsView) {
+        this.albumsView = albumsView;
+        bindIntents();
     }
 
     public MutableLiveData<AlbumsViewState> getState() {

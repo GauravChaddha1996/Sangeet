@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 import com.gaurav.sangeet.R;
 import com.gaurav.sangeet.viewmodels.bottomsheet.BottomSheetViewModel;
-import com.gaurav.sangeet.viewmodels.bottomsheet.BottomSheetViewModelFactory;
 import com.gaurav.sangeet.views.helperviews.BottomPaddingDachshundIndicator;
 import com.gaurav.sangeet.views.implementations.bottomsheet.BottomSheetViewImpl;
 import com.kekstudio.dachshundtablayout.DachshundTabLayout;
@@ -114,16 +113,16 @@ public class HomeActivity extends AppCompatActivity {
                 // TODO: 7/8/18 UI task: change the position of views according to this.
             }
         });
-        BottomSheetViewModel viewModel = ViewModelProviders.of(HomeActivity.this,
-                new BottomSheetViewModelFactory(bottomSheetViewImpl,
-                        v -> {
-                            if (bottomSheetBehavior.getState() ==
-                                    BottomSheetBehavior.STATE_COLLAPSED) {
-                                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                            }
-                        }))
-                .get(BottomSheetViewModel.class);
+        BottomSheetViewModel viewModel = ViewModelProviders.of(this).get(BottomSheetViewModel.class);
+        viewModel.attachBottomSheetView(bottomSheetViewImpl);
+        viewModel.setOnClickListener(v -> {
+            if (bottomSheetBehavior.getState() ==
+                    BottomSheetBehavior.STATE_COLLAPSED) {
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+            }
+        });
         viewModel.getViewState().observe(this, bottomSheetViewImpl::render);
+
     }
 
     private void animateToolbarAndTabLayout() {

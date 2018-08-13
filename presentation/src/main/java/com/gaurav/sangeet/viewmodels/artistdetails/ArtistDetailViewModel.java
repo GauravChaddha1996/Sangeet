@@ -24,10 +24,8 @@ public class ArtistDetailViewModel extends BaseViewModel {
     private ArtistDetailView artistDetailView;
     private MutableLiveData<ArtistDetailViewState> state;
 
-    public ArtistDetailViewModel(ArtistDetailView artistDetailView, long artistId) {
+    public ArtistDetailViewModel(long artistId) {
         Injector.get().inject(this);
-        this.artistDetailView = artistDetailView;
-        bindIntents();
 
         state = new MutableLiveData<>();
         compositeDisposable.add(
@@ -55,6 +53,11 @@ public class ArtistDetailViewModel extends BaseViewModel {
                     return new PlayArtistAction(null, null);
                 }).subscribe(playArtistAction -> commandUseCases.actionSubject()
                         .onNext(playArtistAction)));
+    }
+
+    public void attachArtistDetailView(ArtistDetailView artistDetailView) {
+        this.artistDetailView = artistDetailView;
+        bindIntents();
     }
 
     public MutableLiveData<ArtistDetailViewState> getState() {
