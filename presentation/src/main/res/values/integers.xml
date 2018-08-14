@@ -8,4 +8,5 @@
     <integer name="toolbarTitleAnimDuration" >800</integer>
     <integer name="bottomSheetAnimDuration">800</integer>
     <integer name="detailDialogAnimDuration">300</integer>
+    <integer name="detailDialogAlphaDuration">250</integer>
 </resources>
