@@ -140,6 +140,13 @@ public class MusicRepositoryImpl implements MusicRepository {
             song.artist = c.getString(c.getColumnIndex("artist"));
             song.year = c.getInt(c.getColumnIndex("year"));
             song.track = c.getInt(c.getColumnIndex("track"));
+            if (song.track > 100) {
+                song.track %= 100;
+            } if (song.track > 1000) {
+                song.track %= 1000;
+            } if (song.track > 10000) {
+                song.track %= 10000;
+            }
             artworkCursor = contentResolver.query(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
                     new String[]{MediaStore.Audio.Albums._ID, MediaStore.Audio.Albums.ALBUM_ART},
                     MediaStore.Audio.Albums._ID + "=?",
