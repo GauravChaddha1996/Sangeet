@@ -6,6 +6,7 @@ import android.content.res.ColorStateList;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -46,6 +47,7 @@ public class ArtistDetailActivity extends AppCompatActivity implements ArtistDet
     private PublishSubject<ArtistDetailUIEvent> uiEventsSubject;
 
     // Views
+    private AppBarLayout appBarLayout;
     private Toolbar toolbar;
     private TextView artistTotalAlbumsSongs;
     private CollapsingToolbarLayout collapsingToolbarLayout;
@@ -151,6 +153,7 @@ public class ArtistDetailActivity extends AppCompatActivity implements ArtistDet
     }
 
     private void initViews() {
+        appBarLayout = findViewById(R.id.appBarLayout);
         toolbar = findViewById(R.id.toolbar);
         collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar);
         artistTotalAlbumsSongs = findViewById(R.id.artistTotalAlbumsSongs);
@@ -170,6 +173,9 @@ public class ArtistDetailActivity extends AppCompatActivity implements ArtistDet
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetViewImpl.getBaseView());
 
         // setup toolbar
+        appBarLayout.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
+            artistTotalAlbumsSongs.setTranslationY(verticalOffset / 3);
+        });
         toolbar.setTitleTextAppearance(this, R.style.toolbarTitleFont);
         toolbar.setTitleTextColor(getColor(R.color.toolbarTitleColor));
         setSupportActionBar(toolbar);
