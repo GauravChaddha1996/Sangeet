@@ -18,6 +18,9 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -68,6 +71,7 @@ public class ArtistDetailActivity extends AppCompatActivity implements ArtistDet
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         setContentView(R.layout.activity_artist_detail);
 
         uiEventsSubject = PublishSubject.create();
@@ -84,6 +88,19 @@ public class ArtistDetailActivity extends AppCompatActivity implements ArtistDet
         viewModel.attachArtistDetailView(this);
         viewModel.getState().observe(this, this::render);
     }
+
+    @Override
+    public void onEnterAnimationComplete() {
+        playArtistButton.animate()
+                .scaleX(1f)
+                .scaleY(1f)
+                .setDuration(getResources().getInteger(R.integer.detailPlayButtonAnimDuration))
+                .start();
+        bottomSheetViewImpl.getBaseView().setAlpha(1f);
+        bottomSheetViewImpl.getBaseView().startAnimation(
+                AnimationUtils.loadAnimation(this, R.anim.bottom_sheet_slide_up));
+    }
+
 
     @Override
     public void render(ArtistDetailViewState state) {
@@ -104,9 +121,24 @@ public class ArtistDetailActivity extends AppCompatActivity implements ArtistDet
             songsString += artist.songSet.size() == 1 ? "Song" : "Songs";
             albumSection.setText(albumsString);
             songSection.setText(songsString);
+            albumSection.animate().alpha(1f).setDuration(getResources().getInteger(R.integer.detailArtistAlbumSongSectionDuration))
+                    .setStartDelay(getResources().getInteger(R.integer.detailArtistAlbumSongSectionDuration)).start();
+            songSection.animate().alpha(1f).setDuration(getResources().getInteger(R.integer.detailArtistAlbumSongSectionDuration))
+                    .setStartDelay(getResources().getInteger(R.integer.detailArtistAlbumSongSectionDuration)).start();
             artistTotalAlbumsSongs.setText(String.format("%s • %s", albumsString, songsString));
             songsRVAdapter.updateData(new ArrayList<>(artist.songSet));
             albumsRVAdapter.updateData(new ArrayList<>(artist.albumSet));
+
+            LayoutAnimationController songController = AnimationUtils.loadLayoutAnimation(this,
+                    R.anim.song_list_layout_animation);
+            LayoutAnimationController albumController = AnimationUtils.loadLayoutAnimation(this,
+                    R.anim.album_list_layout_animation);
+            songController.getAnimation().setStartOffset(getResources().getInteger(R.integer.detailListOffset));
+            albumController.getAnimation().setStartOffset(getResources().getInteger(R.integer.detailListOffset));
+            songRecyclerView.setLayoutAnimation(songController);
+            songRecyclerView.scheduleLayoutAnimation();
+            albumRecyclerView.setLayoutAnimation(albumController);
+            albumRecyclerView.scheduleLayoutAnimation();
 
             String artworkPath = "null";
             for (Song song : artist.songSet) {
@@ -140,6 +172,7 @@ public class ArtistDetailActivity extends AppCompatActivity implements ArtistDet
                 bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_SETTLING) {
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         } else {
+            finishWithAnimation();
             super.onBackPressed();
         }
     }
@@ -147,7 +180,7 @@ public class ArtistDetailActivity extends AppCompatActivity implements ArtistDet
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            finish();
+            finishWithAnimation();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -187,7 +220,11 @@ public class ArtistDetailActivity extends AppCompatActivity implements ArtistDet
         playArtistButton.setOnClickListener(v -> uiEventsSubject.onNext(new PlayArtistDetailUIEvent(
                 ((ArtistDetailViewState.Result) viewModel.getState().getValue()).getArtist(),
                 null)));
+        playArtistButton.setScaleX(0f);
+        playArtistButton.setScaleY(0f);
 
+        albumSection.setAlpha(0f);
+        songSection.setAlpha(0f);
 
         // setup recycler views
         albumRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
@@ -214,6 +251,7 @@ public class ArtistDetailActivity extends AppCompatActivity implements ArtistDet
 
         // TODO: 7/15/18 FInd a better way tro manage bottom sheet and it's info
         bottomSheetBehavior.setHideable(false);
+        bottomSheetViewImpl.getBaseView().setAlpha(0f);
         bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
@@ -255,5 +293,10 @@ public class ArtistDetailActivity extends AppCompatActivity implements ArtistDet
         artistTotalAlbumsSongs.setTextColor(swatch.getBodyTextColor());
         playArtistButton.setBackgroundTintList(ColorStateList.valueOf(
                 palette.getVibrantColor(getColor(R.color.colorAccent))));
+    }
+
+    private void finishWithAnimation() {
+        finish();
+        overridePendingTransition(R.anim.scale_down, R.anim.detail_fade_out);
     }
 }

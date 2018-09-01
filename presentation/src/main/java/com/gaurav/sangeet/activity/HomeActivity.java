@@ -8,9 +8,14 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.transition.Explode;
+import android.transition.Fade;
+import android.transition.Slide;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
@@ -40,6 +45,8 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
+        getWindow().setAllowReturnTransitionOverlap(false);
         setContentView(R.layout.activity_home);
         initViews();
         setUpViews();
@@ -153,5 +160,6 @@ public class HomeActivity extends AppCompatActivity {
                     .setDuration(getResources().getInteger(R.integer.toolbarTitleAnimDuration))
                     .setInterpolator(new FastOutSlowInInterpolator());
         }
+
     }
 }

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.gaurav.sangeet.R;
+import com.gaurav.sangeet.activity.AlbumDetailActivity;
 import com.gaurav.sangeet.activity.ArtistDetailActivity;
 import com.gaurav.sangeet.utils.ItemClickSupport;
 import com.gaurav.sangeet.viewmodels.artists.ArtistsViewModel;
@@ -48,10 +50,11 @@ public class ArtistsViewImpl extends Fragment implements ArtistsView {
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(artistsRVAdapter);
         ItemClickSupport.addTo(recyclerView).setOnItemClickListener((recyclerView, position, v) -> {
-//            uiEventsSubject.onNext(
-// new ArtistItemClickUIEvent(artistsRVAdapter.getArtist(position)));
-            startActivity(new Intent(inflater.getContext(), ArtistDetailActivity.class).putExtra(
-                    "artistId", artistsRVAdapter.getArtist(position).id));
+            ActivityOptionsCompat compat = ActivityOptionsCompat.makeScaleUpAnimation(v,
+                    0, 0, v.getWidth(), v.getHeight());
+            Intent intent = new Intent(inflater.getContext(), ArtistDetailActivity.class).putExtra(
+                    "artistId", artistsRVAdapter.getArtist(position).id);
+            startActivity(intent, compat.toBundle());
         });
         return view;
     }

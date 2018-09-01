@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -49,9 +50,11 @@ public class AlbumsViewImpl extends Fragment implements AlbumsView {
         recyclerView.setAdapter(albumsRVAdapter);
         ItemClickSupport.addTo(recyclerView).setOnItemClickListener((recyclerView, position, v) -> {
             // TODO: 7/15/18 Do this via proper navigation channels
-//            uiEventsSubject.onNext(new AlbumItemClickUIEvent(albumsRVAdapter.getAlbum(position)));
-            startActivity(new Intent(inflater.getContext(), AlbumDetailActivity.class).putExtra(
-                    "albumId", albumsRVAdapter.getAlbum(position).id));
+            ActivityOptionsCompat compat = ActivityOptionsCompat.makeScaleUpAnimation(v,
+                    0, 0, v.getWidth(), v.getHeight());
+            Intent intent = new Intent(getActivity(), AlbumDetailActivity.class).putExtra(
+                    "albumId", albumsRVAdapter.getAlbum(position).id);
+            startActivity(intent, compat.toBundle());
         });
         ItemClickSupport.addTo(recyclerView).setOnItemLongClickListener((recyclerView1, position, v) -> {
             new DialogViewHelper(getContext(), albumsRVAdapter.getAlbum(position),

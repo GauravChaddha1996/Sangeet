@@ -29,12 +29,12 @@
 
         <activity
             android:name=".activity.AlbumDetailActivity"
-            android:launchMode="singleTask"
+            android:launchMode="singleTop"
             android:theme="@style/AlbumDetailActivityStyle" />
 
         <activity
             android:name=".activity.ArtistDetailActivity"
-            android:launchMode="singleTask"
+            android:launchMode="singleTop"
             android:theme="@style/ArtistDetailActivityStyle" />
 
     </application>

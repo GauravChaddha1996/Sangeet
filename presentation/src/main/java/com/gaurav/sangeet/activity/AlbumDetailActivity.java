@@ -16,6 +16,9 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -59,6 +62,7 @@ public class AlbumDetailActivity extends AppCompatActivity implements AlbumDetai
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         setContentView(R.layout.activity_album_detail);
 
         uiEventsSubject = PublishSubject.create();
@@ -77,6 +81,18 @@ public class AlbumDetailActivity extends AppCompatActivity implements AlbumDetai
     }
 
     @Override
+    public void onEnterAnimationComplete() {
+        playAlbumButton.animate()
+                .scaleX(1f)
+                .scaleY(1f)
+                .setDuration(getResources().getInteger(R.integer.detailPlayButtonAnimDuration))
+                .start();
+        bottomSheetViewImpl.getBaseView().setAlpha(1f);
+        bottomSheetViewImpl.getBaseView().startAnimation(
+                AnimationUtils.loadAnimation(this, R.anim.bottom_sheet_slide_up));
+    }
+
+    @Override
     public void render(AlbumDetailViewState state) {
         if (state instanceof AlbumDetailViewState.Loading) {
             // show loading
@@ -89,6 +105,11 @@ public class AlbumDetailActivity extends AppCompatActivity implements AlbumDetai
                     album.multipleArtists ? "Various Artists" : album.artistName,
                     album.songSet.size(), album.songSet.size() == 1 ? "Song" : "Songs"));
             adapter.updateData(new ArrayList<>(album.songSet));
+            LayoutAnimationController controller = AnimationUtils.loadLayoutAnimation(this,
+                    R.anim.song_list_layout_animation);
+            controller.getAnimation().setStartOffset(getResources().getInteger(R.integer.detailListOffset));
+            albumSongRecyclerView.setLayoutAnimation(controller);
+            albumSongRecyclerView.scheduleLayoutAnimation();
 
             String artworkPath = album.songSet.first().artworkPath;
             if (!artworkPath.equals("null")) {
@@ -115,14 +136,14 @@ public class AlbumDetailActivity extends AppCompatActivity implements AlbumDetai
                 bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_SETTLING) {
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         } else {
-            super.onBackPressed();
+            finishWithAnimation();
         }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            finish();
+            finishWithAnimation();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -158,6 +179,8 @@ public class AlbumDetailActivity extends AppCompatActivity implements AlbumDetai
         playAlbumButton.setOnClickListener(v -> uiEventsSubject.onNext(new PlayAlbumDetailUIEvent(
                 ((AlbumDetailViewState.Result) viewModel.getState().getValue()).getAlbum(),
                 null)));
+        playAlbumButton.setScaleX(0f);
+        playAlbumButton.setScaleY(0f);
 
         // setup song recycler view
         albumSongRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -177,6 +200,7 @@ public class AlbumDetailActivity extends AppCompatActivity implements AlbumDetai
 
         // TODO: 7/15/18 FInd a better way tro manage bottom sheet and it's info
         bottomSheetBehavior.setHideable(false);
+        bottomSheetViewImpl.getBaseView().setAlpha(0f);
         bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
@@ -217,5 +241,10 @@ public class AlbumDetailActivity extends AppCompatActivity implements AlbumDetai
         artistTotalSongs.setTextColor(swatch.getBodyTextColor());
         playAlbumButton.setBackgroundTintList(ColorStateList.valueOf(
                 palette.getVibrantColor(getColor(R.color.colorAccent))));
+    }
+
+    private void finishWithAnimation() {
+        finish();
+        overridePendingTransition(R.anim.scale_down, R.anim.detail_fade_out);
     }
 }

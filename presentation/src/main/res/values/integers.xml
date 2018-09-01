@@ -1,12 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Anim durations-->
-    <integer name="song_item_anim_duration">350</integer>
     <integer name="toolbarAnimDuration" >800</integer>
-    <integer name="tabLayoutAnimDuration" >800</integer>
     <integer name="toolbarTitleStartDelay" >300</integer>
     <integer name="toolbarTitleAnimDuration" >800</integer>
+    <integer name="tabLayoutAnimDuration">800</integer>
+
     <integer name="bottomSheetAnimDuration">800</integer>
+    <integer name="bottomSheetAnimSmallDuration">300</integer>
+
     <integer name="detailDialogAnimDuration">300</integer>
     <integer name="detailDialogAlphaDuration">250</integer>
+
+    <integer name="detailArtistAlbumSongSectionDuration">300</integer>
+    <integer name="detailSongItemAnimDuration">350</integer>
+    <integer name="detailAlbumItemAnimDuration">350</integer>
+    <integer name="detailListOffset">200</integer>
+    <integer name="detailPlayButtonAnimDuration">100</integer>
+
+    <integer name="detailFadeOutDuration">250</integer>
+    <integer name="detailReturnScaleDownDuration">250</integer>
 </resources>
